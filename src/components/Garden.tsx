@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ROCK_ASSETS } from '../meadowRocks';
 import { useStore } from '../store/useStore';
 import { MeadowPanBackground } from './MeadowPanBackground';
+import { MeadowPet } from './MeadowPet';
 import './Garden.css';
 
 function debrisRockSrc(kind: 'rock' | 'tree' | 'rubble', assetIndex?: number) {
@@ -27,6 +28,7 @@ export function Garden({ locked, onUnlockHint }: GardenProps) {
   const welcomeBonusClaimed = useStore((s) => s.welcomeBonusClaimed);
 
   const [showAccessDialog, setShowAccessDialog] = useState(false);
+  const [hideTutorialCard, setHideTutorialCard] = useState(false);
 
   useEffect(() => {
     if (tutorialStage === 'introMeadow') {
@@ -36,6 +38,14 @@ export function Garden({ locked, onUnlockHint }: GardenProps) {
       }
     }
   }, [tutorialStage, welcomeBonusClaimed]);
+
+  const isClearingTutorial = tutorialStage === 'clearDebris';
+
+  useEffect(() => {
+    if (!isClearingTutorial) {
+      setHideTutorialCard(false);
+    }
+  }, [isClearingTutorial]);
 
   if (locked) {
     return (
@@ -88,19 +98,9 @@ export function Garden({ locked, onUnlockHint }: GardenProps) {
     );
   }
 
-  const isClearingTutorial = tutorialStage === 'clearDebris';
-  const [hideTutorialCard, setHideTutorialCard] = useState(false);
-
-  useEffect(() => {
-    // Reset hidden state if we ever leave and re-enter this stage
-    if (!isClearingTutorial) {
-      setHideTutorialCard(false);
-    }
-  }, [isClearingTutorial]);
-
   return (
     <div className="garden garden-unlocked">
-      <div className="garden-meadow-bg" aria-hidden>
+      <div className="garden-meadow-bg">
         <MeadowPanBackground>
           {isClearingTutorial &&
             debris
@@ -130,6 +130,19 @@ export function Garden({ locked, onUnlockHint }: GardenProps) {
                   />
                 </button>
               ))}
+
+          {pets.map((p, i) => (
+            <MeadowPet
+              key={p.id}
+              pet={p}
+              points={points}
+              canWander={!isClearingTutorial}
+              animOffset={i}
+              onFeed={() => {
+                if (spendPoints(5)) feedPet(p.id);
+              }}
+            />
+          ))}
         </MeadowPanBackground>
       </div>
 
@@ -147,35 +160,13 @@ export function Garden({ locked, onUnlockHint }: GardenProps) {
               </button>
               <p className="garden-tutorial-message">
                 <strong>Oh no!</strong>{' '}
-                Some rumbly rubble is blocking the way! Help your Mochi clear the path to earn 100 starter points.
+                Some rumbly rubble is blocking the way! Help your Mochi clear the path to earn 100
+                starter points.
               </p>
             </div>
           </div>
         </div>
       )}
-
-      <div className="garden-shelter">
-        <div className="garden-pets">
-          {pets.map((p) => (
-            <div key={p.id} className={`pet pet-${p.mood}`} title={p.name}>
-              <div className="pet-mochi">
-                <span className="pet-blush" />
-              </div>
-              <span className="pet-name">{p.name}</span>
-              <div className="pet-energy">
-                <div className="pet-energy-bar" style={{ width: `${p.energy}%` }} />
-              </div>
-              <button
-                className="pet-feed"
-                disabled={points < 5}
-                onClick={() => spendPoints(5) && feedPet(p.id)}
-              >
-                Feed (5 pts) 🍡
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

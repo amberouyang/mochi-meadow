@@ -56,7 +56,7 @@ export function MeadowPanBackground({ children }: MeadowPanBackgroundProps) {
   }, []);
 
   return (
-    <div className="meadow-pan" ref={containerRef} aria-hidden>
+    <div className="meadow-pan" ref={containerRef}>
       <div className="meadow-pan-track" style={{ transform: `translate3d(${offset}px, 0, 0)` }}>
         <img
           ref={imgRef}

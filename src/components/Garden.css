@@ -314,118 +314,248 @@
   font-weight: 700;
 }
 
-/* Cute pet cards with blush */
-.garden-pets {
+/* Free-roaming meadow pets (Fantage-style idle) */
+.meadow-pet {
+  position: absolute;
+  z-index: 3;
+  transform: translateX(-50%);
+  transition: left 2.6s ease-in-out, bottom 2.6s ease-in-out;
+  pointer-events: auto;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.22));
+}
+
+.meadow-pet.is-selected {
+  z-index: 4;
+}
+
+/* During rock tutorial: still bob/blink, but don’t steal clicks from debris */
+.meadow-pet.is-paused {
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.92;
+}
+
+.meadow-pet-hit {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1.25rem;
-  margin-top: 1rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
 }
 
-.pet {
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(8px);
-  border-radius: 24px;
-  padding: 1.25rem;
-  text-align: center;
-  min-width: 130px;
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s ease;
+.meadow-pet-bob {
+  animation: meadow-pet-bob var(--pet-bob-dur, 1.4s) ease-in-out infinite;
 }
 
-.pet:hover {
-  transform: translateY(-2px);
+.meadow-pet[data-facing='left'] .meadow-pet-bob {
+  animation-name: meadow-pet-bob-flip;
 }
 
-.pet-mochi {
+@keyframes meadow-pet-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes meadow-pet-bob-flip {
+  0%,
+  100% {
+    transform: scaleX(-1) translateY(0);
+  }
+  50% {
+    transform: scaleX(-1) translateY(-5px);
+  }
+}
+
+.meadow-pet.is-hop .meadow-pet-bob {
+  animation: meadow-pet-hop 0.45s ease-out;
+}
+
+.meadow-pet.is-hop[data-facing='left'] .meadow-pet-bob {
+  animation: meadow-pet-hop-flip 0.45s ease-out;
+}
+
+@keyframes meadow-pet-hop {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  40% {
+    transform: translateY(-14px) scale(1.06, 0.94);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes meadow-pet-hop-flip {
+  0% {
+    transform: scaleX(-1) translateY(0);
+  }
+  40% {
+    transform: scaleX(-1) translateY(-14px) scale(1.06, 0.94);
+  }
+  100% {
+    transform: scaleX(-1) translateY(0);
+  }
+}
+
+.meadow-pet-mochi {
   position: relative;
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 0.5rem;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   background: linear-gradient(145deg, #ffe0e8 0%, #f5c6d0 40%, #e8b4be 100%);
-  box-shadow: inset -3px -3px 10px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(232, 180, 190, 0.4);
+  box-shadow:
+    inset -3px -3px 10px rgba(0, 0, 0, 0.1),
+    0 4px 12px rgba(232, 180, 190, 0.4);
 }
 
-.pet-blush {
-  position: absolute;
-  bottom: 10px;
-  left: 8px;
-  width: 14px;
-  height: 7px;
-  background: rgba(255, 182, 193, 0.65);
-  border-radius: 50%;
-  transform: rotate(-12deg);
-}
-
-.pet-blush::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 36px;
-  width: 14px;
-  height: 7px;
-  background: rgba(255, 182, 193, 0.65);
-  border-radius: 50%;
-  transform: rotate(12deg);
-}
-
-.pet-sad .pet-mochi {
+.meadow-pet.pet-sad .meadow-pet-mochi {
   filter: saturate(0.85);
   opacity: 0.92;
 }
 
-.pet-sad .pet-blush {
-  opacity: 0.4;
+.meadow-pet.pet-happy .meadow-pet-mochi {
+  box-shadow:
+    inset -3px -3px 10px rgba(0, 0, 0, 0.08),
+    0 0 18px rgba(158, 206, 106, 0.4);
 }
 
-.pet-happy .pet-mochi {
-  box-shadow: inset -3px -3px 10px rgba(0, 0, 0, 0.08), 0 0 20px rgba(158, 206, 106, 0.35);
-}
-
-.pet-name {
-  display: block;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: #4a3a3a;
-  font-size: 0.95rem;
-}
-
-.pet-energy {
+.meadow-pet-eye {
+  position: absolute;
+  top: 20px;
+  width: 6px;
   height: 8px;
-  background: rgba(255, 255, 255, 0.5);
+  background: #3a2a2a;
+  border-radius: 50%;
+  transform-origin: center;
+  animation: meadow-pet-blink var(--pet-blink-dur, 4s) ease-in-out infinite;
+  animation-delay: var(--pet-blink-delay, 0s);
+}
+
+.meadow-pet-eye--left {
+  left: 16px;
+}
+
+.meadow-pet-eye--right {
+  right: 16px;
+  animation-delay: calc(var(--pet-blink-delay, 0s) + 0.04s);
+}
+
+@keyframes meadow-pet-blink {
+  0%,
+  90%,
+  100% {
+    transform: scaleY(1);
+  }
+  92%,
+  96% {
+    transform: scaleY(0.12);
+  }
+}
+
+.meadow-pet-blush {
+  position: absolute;
+  bottom: 12px;
+  left: 8px;
+  width: 12px;
+  height: 6px;
+  background: rgba(255, 182, 193, 0.7);
+  border-radius: 50%;
+  transform: rotate(-12deg);
+}
+
+.meadow-pet-blush::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 28px;
+  width: 12px;
+  height: 6px;
+  background: rgba(255, 182, 193, 0.7);
+  border-radius: 50%;
+  transform: rotate(12deg);
+}
+
+.meadow-pet-name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fffef8;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+  white-space: nowrap;
+}
+
+.meadow-pet-bubble {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%);
+  min-width: 118px;
+  padding: 0.55rem 0.65rem 0.5rem;
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: 14px;
+  border: 2px solid rgba(255, 228, 225, 0.85);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: stretch;
+}
+
+.meadow-pet-energy {
+  height: 7px;
+  background: rgba(0, 0, 0, 0.08);
   border-radius: 999px;
   overflow: hidden;
-  margin-bottom: 0.5rem;
 }
 
-.pet-energy-bar {
+.meadow-pet-energy-bar {
   height: 100%;
   background: linear-gradient(90deg, #b5e7a0, #9ece6a);
   border-radius: 999px;
   transition: width 0.3s ease;
 }
 
-.pet-feed {
-  font-size: 0.8rem;
-  padding: 0.4rem 0.75rem;
+.meadow-pet-feed {
+  font-size: 0.72rem;
+  padding: 0.35rem 0.5rem;
   border: none;
   border-radius: 999px;
   background: linear-gradient(145deg, #b5e7a0 0%, #9ece6a 100%);
   color: #2d4a2d;
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(158, 206, 106, 0.35);
-  transition: transform 0.15s ease;
+  cursor: pointer;
 }
 
-.pet-feed:hover:not(:disabled) {
-  transform: scale(1.05);
+.meadow-pet-feed:hover:not(:disabled) {
+  transform: scale(1.03);
 }
 
-.pet-feed:disabled {
+.meadow-pet-feed:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.meadow-pet-close {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  border: none;
+  background: transparent;
+  font-size: 0.9rem;
+  line-height: 1;
+  color: #7a6a6a;
+  cursor: pointer;
+  padding: 0.15rem;
 }
 
 /* Popup when checking garden access */
