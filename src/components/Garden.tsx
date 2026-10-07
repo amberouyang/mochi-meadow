@@ -40,6 +40,12 @@ export function Garden({ locked, onUnlockHint }: GardenProps) {
   }, [tutorialStage, welcomeBonusClaimed]);
 
   const isClearingTutorial = tutorialStage === 'clearDebris';
+  const isMochiReveal = tutorialStage === 'mochiReveal';
+  const showPets =
+    tutorialStage === 'mochiReveal' ||
+    tutorialStage === 'showSanctuaryArrow' ||
+    tutorialStage === 'done';
+  const setTutorialStage = useStore((s) => s.setTutorialStage);
 
   useEffect(() => {
     if (!isClearingTutorial) {
@@ -131,18 +137,19 @@ export function Garden({ locked, onUnlockHint }: GardenProps) {
                 </button>
               ))}
 
-          {pets.map((p, i) => (
-            <MeadowPet
-              key={p.id}
-              pet={p}
-              points={points}
-              canWander={!isClearingTutorial}
-              animOffset={i}
-              onFeed={() => {
-                if (spendPoints(5)) feedPet(p.id);
-              }}
-            />
-          ))}
+          {showPets &&
+            pets.map((p, i) => (
+              <MeadowPet
+                key={p.id}
+                pet={p}
+                points={points}
+                canWander={!isMochiReveal}
+                animOffset={i}
+                onFeed={() => {
+                  if (spendPoints(5)) feedPet(p.id);
+                }}
+              />
+            ))}
         </MeadowPanBackground>
       </div>
 
@@ -160,9 +167,30 @@ export function Garden({ locked, onUnlockHint }: GardenProps) {
               </button>
               <p className="garden-tutorial-message">
                 <strong>Oh no!</strong>{' '}
-                Some rumbly rubble is blocking the way! Help your Mochi clear the path to earn 100
-                starter points.
+                Some rumbly rubble is blocking the way! Clear the rocks to tidy the meadow and earn
+                100 starter points.
               </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isMochiReveal && (
+        <div className="garden-tutorial-overlay">
+          <div className="garden-tutorial-card garden-reveal-card">
+            <div className="garden-tutorial-card-chrome">
+              <p className="garden-tutorial-message">
+                <strong>Look who showed up!</strong>
+                <br />
+                A little mochi decided to move in now that the meadow is clean.
+              </p>
+              <button
+                type="button"
+                className="garden-reveal-btn"
+                onClick={() => setTutorialStage('showSanctuaryArrow')}
+              >
+                Say hi
+              </button>
             </div>
           </div>
         </div>

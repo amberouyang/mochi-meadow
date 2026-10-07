@@ -152,13 +152,14 @@ export const useStore = create<Store>((set, get) => ({
     const { points, debris, tutorialStage } = get();
     const allCleared = debris.every((d) => d.cleared);
     if (!allCleared || tutorialStage !== 'clearDebris') return;
+    // Meadow is clean — next beat reveals the first mochi who “moved in.”
     if (points >= 100) {
-      set({ tutorialStage: 'showSanctuaryArrow' });
+      set({ tutorialStage: 'mochiReveal' });
       return;
     }
     set((s) => ({
       points: s.points + 100,
-      tutorialStage: 'showSanctuaryArrow',
+      tutorialStage: 'mochiReveal',
     }));
   },
   setTutorialStage: (stage) => set({ tutorialStage: stage }),

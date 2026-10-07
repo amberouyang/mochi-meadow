@@ -22,7 +22,12 @@ export type ShopItem = {
   type: 'food' | 'mist' | 'shelter' | 'decoration';
 };
 
-export type TutorialStage = 'introMeadow' | 'clearDebris' | 'showSanctuaryArrow' | 'done';
+export type TutorialStage =
+  | 'introMeadow'
+  | 'clearDebris'
+  | 'mochiReveal'
+  | 'showSanctuaryArrow'
+  | 'done';
 
 export type GardenDebris = {
   id: string;

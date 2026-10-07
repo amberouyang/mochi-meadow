@@ -93,7 +93,7 @@ export function MeadowPet({ pet, points, canWander, animOffset, onFeed }: Meadow
 
   return (
     <div
-      className={`meadow-pet pet-${pet.mood}${selected ? ' is-selected' : ''}${hop ? ' is-hop' : ''}${canWander ? '' : ' is-paused'}`}
+      className={`meadow-pet pet-${pet.mood}${selected ? ' is-selected' : ''}${hop ? ' is-hop' : ''}`}
       data-facing={facing}
       style={{
         left: `${pos.x}%`,
