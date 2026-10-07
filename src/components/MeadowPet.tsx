@@ -39,6 +39,7 @@ export function MeadowPet({ pet, points, canWander, animOffset, onFeed }: Meadow
   const [selected, setSelected] = useState(false);
   const [hop, setHop] = useState(false);
   const posRef = useRef(pos);
+  const hopTimeoutRef = useRef<number | null>(null);
   posRef.current = pos;
 
   useEffect(() => {
@@ -66,11 +67,25 @@ export function MeadowPet({ pet, points, canWander, animOffset, onFeed }: Meadow
     };
   }, [canWander, animOffset]);
 
+  useEffect(() => {
+    return () => {
+      if (hopTimeoutRef.current != null) {
+        window.clearTimeout(hopTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleFeed = () => {
     if (points < 5) return;
     onFeed();
     setHop(true);
-    window.setTimeout(() => setHop(false), 450);
+    if (hopTimeoutRef.current != null) {
+      window.clearTimeout(hopTimeoutRef.current);
+    }
+    hopTimeoutRef.current = window.setTimeout(() => {
+      hopTimeoutRef.current = null;
+      setHop(false);
+    }, 450);
   };
 
   const bobDuration = `${1.25 + animOffset * 0.22}s`;
