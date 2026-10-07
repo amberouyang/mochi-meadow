@@ -10,27 +10,42 @@ type MeadowPanBackgroundProps = {
 /**
  * Full-bleed meadow image that pans horizontally with the mouse, bounded so you can
  * look from one side of the art to the other (not infinite scroll).
+ * Scaled with a CSS “cover” so the viewport never shows empty side strips.
  */
 export function MeadowPanBackground({ children }: MeadowPanBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const maxPanRef = useRef(0);
   const [offset, setOffset] = useState(0);
+  const [size, setSize] = useState({ w: 0, h: 0 });
 
-  const recalcMaxPan = useCallback(() => {
+  const recalc = useCallback(() => {
     const c = containerRef.current;
     const img = imgRef.current;
-    if (!c || !img || !img.complete) return;
-    maxPanRef.current = Math.max(0, img.offsetWidth - c.clientWidth);
+    if (!c || !img || !img.naturalWidth || !img.naturalHeight) return;
+
+    const cw = c.clientWidth;
+    const ch = c.clientHeight;
+    if (cw <= 0 || ch <= 0) return;
+
+    // Cover: scale so the image always fills both axes (may overflow one side).
+    const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+    const w = img.naturalWidth * scale;
+    const h = img.naturalHeight * scale;
+    const maxPan = Math.max(0, w - cw);
+
+    maxPanRef.current = maxPan;
+    setSize({ w, h });
+    setOffset((prev) => Math.max(-maxPan, Math.min(0, prev)));
   }, []);
 
   useEffect(() => {
     const c = containerRef.current;
     if (!c) return;
-    const ro = new ResizeObserver(() => recalcMaxPan());
+    const ro = new ResizeObserver(() => recalc());
     ro.observe(c);
     return () => ro.disconnect();
-  }, [recalcMaxPan]);
+  }, [recalc]);
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
@@ -57,13 +72,26 @@ export function MeadowPanBackground({ children }: MeadowPanBackgroundProps) {
 
   return (
     <div className="meadow-pan" ref={containerRef}>
-      <div className="meadow-pan-track" style={{ transform: `translate3d(${offset}px, 0, 0)` }}>
+      <div
+        className="meadow-pan-track"
+        style={{
+          width: size.w || '100%',
+          height: size.h || '100%',
+          /* -50% Y keeps cover-scaled art vertically centered in the viewport */
+          transform: `translate3d(${offset}px, -50%, 0)`,
+        }}
+      >
         <img
           ref={imgRef}
           src={meadowUrl}
           alt=""
           className="meadow-pan-img"
-          onLoad={recalcMaxPan}
+          style={
+            size.w
+              ? { width: size.w, height: size.h }
+              : { width: '100%', height: '100%', objectFit: 'cover' }
+          }
+          onLoad={recalc}
           draggable={false}
         />
         {children}

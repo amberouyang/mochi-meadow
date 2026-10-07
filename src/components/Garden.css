@@ -31,9 +31,8 @@
 
 .meadow-pan-track {
   position: absolute;
-  top: 0;
+  top: 50%;
   left: 0;
-  height: 100%;
   will-change: transform;
   /* Allow absolutely-positioned rocks/debris to anchor to the moving meadow layer */
   pointer-events: auto;
@@ -59,12 +58,8 @@
 
 .meadow-pan-img {
   display: block;
-  height: 100%;
-  width: auto;
-  min-width: 100%;
-  min-height: 100%;
-  object-fit: cover;
-  object-position: center center;
+  /* Width/height set in JS so the art always cover-fills (no empty side strips) */
+  max-width: none;
   image-rendering: pixelated;
   user-select: none;
   pointer-events: none;
