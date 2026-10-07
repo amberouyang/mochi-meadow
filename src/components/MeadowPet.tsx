@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Pet } from '../types';
+import { MochiCloud } from './MochiCloud';
 
 type MeadowPetProps = {
   pet: Pet;
@@ -95,9 +96,7 @@ export function MeadowPet({ pet, points, canWander, animOffset, onFeed }: Meadow
       >
         <div className="meadow-pet-bob">
           <div className="meadow-pet-mochi">
-            <span className="meadow-pet-eye meadow-pet-eye--left" aria-hidden />
-            <span className="meadow-pet-eye meadow-pet-eye--right" aria-hidden />
-            <span className="meadow-pet-blush" aria-hidden />
+            <MochiCloud />
           </div>
         </div>
         <span className="meadow-pet-name">{pet.name}</span>

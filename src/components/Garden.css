@@ -410,44 +410,40 @@
 
 .meadow-pet-mochi {
   position: relative;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: linear-gradient(145deg, #ffe0e8 0%, #f5c6d0 40%, #e8b4be 100%);
-  box-shadow:
-    inset -3px -3px 10px rgba(0, 0, 0, 0.1),
-    0 4px 12px rgba(232, 180, 190, 0.4);
+  width: 96px;
+  height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.meadow-pet-mochi .mochi-cloud {
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.12));
+}
+
+.meadow-pet.pet-sad .meadow-pet-mochi .mochi-cloud-body {
+  fill: #9bb8cc;
 }
 
 .meadow-pet.pet-sad .meadow-pet-mochi {
-  filter: saturate(0.85);
   opacity: 0.92;
 }
 
-.meadow-pet.pet-happy .meadow-pet-mochi {
-  box-shadow:
-    inset -3px -3px 10px rgba(0, 0, 0, 0.08),
-    0 0 18px rgba(158, 206, 106, 0.4);
+.meadow-pet.pet-happy .meadow-pet-mochi .mochi-cloud {
+  filter: drop-shadow(0 0 10px rgba(158, 206, 106, 0.45));
 }
 
-.meadow-pet-eye {
-  position: absolute;
-  top: 20px;
-  width: 6px;
-  height: 8px;
-  background: #3a2a2a;
-  border-radius: 50%;
+.meadow-pet .mochi-cloud-eye {
   transform-origin: center;
+  transform-box: fill-box;
   animation: meadow-pet-blink var(--pet-blink-dur, 4s) ease-in-out infinite;
   animation-delay: var(--pet-blink-delay, 0s);
 }
 
-.meadow-pet-eye--left {
-  left: 16px;
-}
-
-.meadow-pet-eye--right {
-  right: 16px;
+.meadow-pet .mochi-cloud-eye--right {
   animation-delay: calc(var(--pet-blink-delay, 0s) + 0.04s);
 }
 
@@ -461,29 +457,6 @@
   96% {
     transform: scaleY(0.12);
   }
-}
-
-.meadow-pet-blush {
-  position: absolute;
-  bottom: 12px;
-  left: 8px;
-  width: 12px;
-  height: 6px;
-  background: rgba(255, 182, 193, 0.7);
-  border-radius: 50%;
-  transform: rotate(-12deg);
-}
-
-.meadow-pet-blush::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 28px;
-  width: 12px;
-  height: 6px;
-  background: rgba(255, 182, 193, 0.7);
-  border-radius: 50%;
-  transform: rotate(12deg);
 }
 
 .meadow-pet-name {
