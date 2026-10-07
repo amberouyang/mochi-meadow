@@ -8,23 +8,20 @@
   overflow: hidden;
   background: var(--bg);
 
-  /* Dock palette — soft meadow teal (Fantage-inspired layout, not a blue clone) */
-  --dock-bg: rgba(28, 52, 42, 0.88);
-  --dock-edge: rgba(168, 220, 180, 0.55);
-  --dock-btn: linear-gradient(165deg, #3d6b55 0%, #2a4f3e 55%, #1e3b2f 100%);
-  --dock-btn-active: linear-gradient(165deg, #5a9a72 0%, #3d7a58 100%);
+  --dock-bg: var(--mm-dock);
+  --dock-edge: var(--mm-dock-edge);
+  --dock-btn: var(--mm-dock-btn);
+  --dock-btn-active: var(--mm-dock-btn-active);
   --dock-ink: #f4fff6;
   --dock-muted: rgba(232, 255, 236, 0.72);
 }
 
 .main-view[data-season='summer'] {
-  --dock-bg: rgba(24, 58, 52, 0.88);
   --dock-edge: rgba(140, 230, 200, 0.5);
-  --dock-btn: linear-gradient(165deg, #3a7a68 0%, #286054 55%, #1a453c 100%);
 }
 
 .main-view[data-season='autumn'] {
-  --dock-bg: rgba(48, 40, 32, 0.9);
+  --dock-bg: rgba(48, 40, 32, 0.92);
   --dock-edge: rgba(220, 180, 120, 0.45);
   --dock-btn: linear-gradient(165deg, #6b5640 0%, #4a3c2c 55%, #32281e 100%);
   --dock-btn-active: linear-gradient(165deg, #8a6e48 0%, #6a5238 100%);
@@ -93,18 +90,20 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.55rem;
-  max-width: 920px;
+  gap: 0.45rem;
+  width: 100%;
+  max-width: 980px;
   margin: 0 auto;
-  padding: 0.45rem 0.55rem;
-  border-radius: 18px;
+  padding: 0.4rem 0.5rem;
+  border-radius: var(--mm-radius);
   background: var(--dock-bg);
   border: 2px solid var(--dock-edge);
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.08) inset,
-    0 10px 28px rgba(0, 0, 0, 0.28),
-    0 0 18px rgba(120, 200, 150, 0.12);
+    var(--mm-shadow);
   backdrop-filter: blur(10px);
+  overflow-x: auto;
+  scrollbar-width: thin;
 }
 
 .main-dock-group {
@@ -124,10 +123,11 @@
   border: 2px solid rgba(255, 255, 255, 0.14);
   background: var(--dock-btn);
   color: var(--dock-ink);
-  width: 52px;
-  min-height: 52px;
+  width: 48px;
+  min-height: 48px;
   padding: 0.28rem 0.2rem 0.2rem;
-  border-radius: 12px;
+  border-radius: var(--mm-radius-sm);
+  flex-shrink: 0;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
@@ -233,11 +233,12 @@
   z-index: 70;
   padding: 0.55rem 1rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.94);
-  color: #1e3d2a;
+  background: var(--mm-cream);
+  color: var(--mm-ink);
+  border: 2px solid var(--mm-leaf);
   font-size: 0.85rem;
   font-weight: 700;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--mm-shadow);
   pointer-events: none;
 }
 
@@ -304,13 +305,22 @@
   transform: translateX(-50%);
   width: min(320px, calc(100vw - 1.5rem));
   max-height: calc(100vh - 8rem);
-  background: rgba(36, 40, 59, 0.97);
-  backdrop-filter: blur(12px);
-  border-radius: 16px;
+  background: linear-gradient(180deg, var(--mm-cream) 0%, var(--mm-cream-deep) 100%);
+  border: 3px solid var(--mm-leaf);
+  border-radius: var(--mm-radius);
   padding: 1rem;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  box-shadow: var(--mm-shadow);
+  color: var(--mm-ink);
   overflow: auto;
   z-index: 60;
+  /* Remap legacy dark-panel tokens so nested panels match meadow cards */
+  --text: var(--mm-ink);
+  --muted: var(--mm-ink-muted);
+  --surface: rgba(255, 255, 255, 0.72);
+  --bg: var(--mm-cream-deep);
+  --accent: var(--mm-leaf-mid);
+  --pink: var(--mm-leaf);
+  --yellow: #9a6b20;
 }
 
 @media (max-width: 720px) {

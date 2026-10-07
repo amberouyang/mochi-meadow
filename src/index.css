@@ -1,14 +1,33 @@
 :root {
-  --bg: #1a1b26;
-  --surface: #24283b;
-  --muted: #565f89;
-  --accent: #7aa2f7;
+  /* App chrome (behind meadow) */
+  --bg: #1a2a20;
+  --surface: #24352c;
+  --muted: #6a8574;
+  --accent: #7cbc6a;
   --green: #9ece6a;
   --yellow: #e0af68;
   --red: #f7768e;
   --pink: #bb9af7;
-  --text: #c0caf5;
+  --text: #e8f2e4;
   --font: 'Nunito', system-ui, sans-serif;
+
+  /* Shared meadow UI — cards, dock, toasts, buttons */
+  --mm-ink: #1a3d28;
+  --mm-ink-muted: #4a6b55;
+  --mm-cream: #f3f7e9;
+  --mm-cream-deep: #e2efd4;
+  --mm-leaf: #2f5f3d;
+  --mm-leaf-mid: #4a8a5c;
+  --mm-accent: #9ece6a;
+  --mm-accent-deep: #7ab05a;
+  --mm-gold: #e8c56a;
+  --mm-dock: rgba(28, 44, 34, 0.92);
+  --mm-dock-edge: rgba(168, 210, 160, 0.45);
+  --mm-dock-btn: linear-gradient(165deg, #4a7358 0%, #355a42 55%, #2a4534 100%);
+  --mm-dock-btn-active: linear-gradient(165deg, #5f9a6e 0%, #457a52 100%);
+  --mm-radius: 16px;
+  --mm-radius-sm: 12px;
+  --mm-shadow: 0 10px 28px rgba(12, 28, 18, 0.28);
 }
 
 * {

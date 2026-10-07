@@ -1,40 +1,51 @@
 .bonus-popup-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(12, 28, 18, 0.52);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9998;
+  padding: 1rem;
 }
 
 .bonus-popup {
-  max-width: 320px;
-  padding: 1.5rem 1.75rem;
-  border-radius: 18px;
-  background: var(--surface);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  max-width: 340px;
+  width: 100%;
+  padding: 1.4rem 1.5rem 1.25rem;
+  border-radius: var(--mm-radius);
+  background: linear-gradient(180deg, var(--mm-cream) 0%, var(--mm-cream-deep) 100%);
+  border: 3px solid var(--mm-leaf);
+  box-shadow: var(--mm-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.65);
   text-align: center;
+  color: var(--mm-ink);
 }
 
 .bonus-popup-text {
   margin: 0 0 1rem;
-  font-size: 1.1rem;
-  color: var(--text);
+  font-size: 1.05rem;
+  line-height: 1.4;
+  color: var(--mm-ink);
+  font-weight: 600;
 }
 
 .bonus-popup-btn {
-  padding: 0.6rem 1.4rem;
+  padding: 0.55rem 1.4rem;
   border-radius: 999px;
   border: none;
-  background: var(--accent);
-  color: var(--bg);
-  font-weight: 700;
+  background: linear-gradient(145deg, var(--mm-accent) 0%, var(--mm-accent-deep) 100%);
+  color: var(--mm-ink);
+  font-weight: 800;
   font-size: 0.95rem;
+  box-shadow: 0 3px 10px rgba(122, 176, 90, 0.35);
+}
+
+.bonus-popup-btn:hover:not(:disabled) {
+  filter: brightness(1.05);
 }
 
 .bonus-popup-btn:disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: not-allowed;
 }
 
@@ -42,14 +53,14 @@
   width: 100%;
   padding: 0.65rem 0.8rem;
   margin: 0 0 0.9rem;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(0, 0, 0, 0.15);
-  color: var(--text);
+  border-radius: var(--mm-radius-sm);
+  border: 2px solid rgba(47, 95, 61, 0.28);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--mm-ink);
 }
 
 .name-popup-input::placeholder {
-  color: rgba(192, 202, 245, 0.65);
+  color: var(--mm-ink-muted);
 }
 
 .meadow-intro-card {
@@ -60,8 +71,8 @@
 .meadow-intro-title {
   margin: 0 0 0.85rem;
   font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--text);
+  font-weight: 800;
+  color: var(--mm-ink);
   text-align: center;
 }
 
@@ -70,8 +81,7 @@
   padding-left: 1.15rem;
   font-size: 0.92rem;
   line-height: 1.45;
-  color: var(--text);
-  opacity: 0.95;
+  color: var(--mm-ink-muted);
 }
 
 .meadow-intro-list li {
@@ -80,6 +90,10 @@
 
 .meadow-intro-list li:last-child {
   margin-bottom: 0;
+}
+
+.meadow-intro-list strong {
+  color: var(--mm-ink);
 }
 
 .meadow-intro-btn {
