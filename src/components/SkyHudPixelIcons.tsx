@@ -108,3 +108,46 @@ export function SkyIconGear() {
     </PixelIcon>
   );
 }
+
+export function SkyIconFriends() {
+  return (
+    <PixelIcon>
+      <rect x="3" y="5" width="3" height="3" fill="currentColor" opacity="0.88" />
+      <rect x="2" y="8" width="5" height="4" fill="currentColor" opacity="0.72" />
+      <rect x="10" y="5" width="3" height="3" fill="currentColor" opacity="0.88" />
+      <rect x="9" y="8" width="5" height="4" fill="currentColor" opacity="0.72" />
+      <rect x="6" y="3" width="4" height="3" fill="currentColor" opacity="0.55" />
+    </PixelIcon>
+  );
+}
+
+export function SkyIconBoard() {
+  return (
+    <PixelIcon>
+      <rect x="3" y="2" width="10" height="12" fill="currentColor" opacity="0.2" />
+      <rect x="3" y="2" width="10" height="1" fill="currentColor" opacity="0.9" />
+      <rect x="3" y="13" width="10" height="1" fill="currentColor" opacity="0.9" />
+      <rect x="3" y="2" width="1" height="12" fill="currentColor" opacity="0.9" />
+      <rect x="12" y="2" width="1" height="12" fill="currentColor" opacity="0.9" />
+      <rect x="5" y="5" width="6" height="1" fill="currentColor" opacity="0.75" />
+      <rect x="5" y="8" width="4" height="1" fill="currentColor" opacity="0.55" />
+      <rect x="5" y="11" width="5" height="1" fill="currentColor" opacity="0.55" />
+      <rect x="7" y="1" width="2" height="1" fill="currentColor" opacity="0.7" />
+    </PixelIcon>
+  );
+}
+
+export function SkyIconRooms() {
+  return (
+    <PixelIcon>
+      <rect x="2" y="6" width="5" height="7" fill="currentColor" opacity="0.55" />
+      <rect x="9" y="4" width="5" height="9" fill="currentColor" opacity="0.72" />
+      <rect x="3" y="8" width="1" height="1" fill="currentColor" opacity="0.35" />
+      <rect x="5" y="8" width="1" height="1" fill="currentColor" opacity="0.35" />
+      <rect x="10" y="6" width="1" height="1" fill="currentColor" opacity="0.35" />
+      <rect x="12" y="6" width="1" height="1" fill="currentColor" opacity="0.35" />
+      <rect x="11" y="10" width="1" height="3" fill="currentColor" opacity="0.4" />
+      <rect x="4" y="4" width="3" height="2" fill="currentColor" opacity="0.45" />
+    </PixelIcon>
+  );
+}

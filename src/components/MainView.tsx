@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useStore } from '../store/useStore';
 import { getCalendarSeason } from '../utils/calendarSeason';
 import { TodoList } from './TodoList';
@@ -7,8 +7,11 @@ import { Garden } from './Garden';
 import { EggSanctuary } from './EggSanctuary';
 import { StorePanel } from './StorePanel';
 import {
+  SkyIconBoard,
   SkyIconEgg,
+  SkyIconFriends,
   SkyIconGear,
+  SkyIconRooms,
   SkyIconStore,
   SkyIconStudy,
   SkyIconTodo,
@@ -19,11 +22,17 @@ type Panel = 'none' | 'todo' | 'study' | 'sanctuary' | 'store';
 
 export function MainView() {
   const [panel, setPanel] = useState<Panel>('none');
+  const [soonToast, setSoonToast] = useState<string | null>(null);
+  const soonTimeoutRef = useRef<number | null>(null);
   const points = useStore((s) => s.points);
   const gardenUnlocked = useStore((s) => s.gardenUnlocked);
   const checkGardenAccess = useStore((s) => s.checkGardenAccess);
   const tutorialStage = useStore((s) => s.tutorialStage);
   const setTutorialStage = useStore((s) => s.setTutorialStage);
+  const studyMinutesToday = useStore((s) => s.studyMinutesToday);
+  const studyMinutesGoal = useStore((s) => s.studyMinutesGoal);
+  const studyState = useStore((s) => s.studyState);
+  const playerName = useStore((s) => s.playerName);
 
   const season = useMemo(() => getCalendarSeason(), []);
 
@@ -31,83 +40,47 @@ export function MainView() {
     if (next === 'sanctuary' && tutorialStage === 'showSanctuaryArrow') {
       setTutorialStage('done');
     }
+    setSoonToast(null);
     setPanel((current) => (current === next ? 'none' : next));
+  };
+
+  useEffect(() => {
+    return () => {
+      if (soonTimeoutRef.current != null) {
+        window.clearTimeout(soonTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const showComingSoon = (label: string) => {
+    setPanel('none');
+    setSoonToast(`${label} — coming soon!`);
+    if (soonTimeoutRef.current != null) {
+      window.clearTimeout(soonTimeoutRef.current);
+    }
+    soonTimeoutRef.current = window.setTimeout(() => {
+      soonTimeoutRef.current = null;
+      setSoonToast(null);
+    }, 2200);
   };
 
   const showSanctuaryArrow = tutorialStage === 'showSanctuaryArrow';
 
+  const focusLabel =
+    studyState === 'studying'
+      ? 'Focusing…'
+      : studyMinutesToday >= studyMinutesGoal
+        ? 'Goal met today!'
+        : 'Ready to study';
+
   return (
     <div className="main-view" data-season={season}>
       <section className="main-garden-area">
-        <div className="main-sky-hud" role="toolbar" aria-label="Mochi Meadow tools">
-          <div className="main-sky-icons">
-            <div
-              className="main-points-badge main-sky-btn-bob main-sky-bob--d0"
-              aria-label={`Points: ${points}`}
-            >
-              <span className="main-points-label">Points</span>
-              <span className="main-points-value">{points}</span>
-            </div>
-            <button
-              type="button"
-              className={`main-sky-btn main-sky-btn--todo ${panel === 'todo' ? 'is-active' : ''}`}
-              onClick={() => openPanel('todo')}
-              aria-label="Open to-do list"
-            >
-              <span className="main-sky-btn-bob main-sky-bob--d1">
-                <SkyIconTodo />
-              </span>
-            </button>
-            <button
-              type="button"
-              className={`main-sky-btn main-sky-btn--study ${panel === 'study' ? 'is-active' : ''}`}
-              onClick={() => openPanel('study')}
-              aria-label="Open study timer"
-            >
-              <span className="main-sky-btn-bob main-sky-bob--d2">
-                <SkyIconStudy />
-              </span>
-            </button>
-            <div className="main-sky-btn-cluster">
-              <button
-                type="button"
-                className={`main-sky-btn main-sky-btn--egg ${panel === 'sanctuary' ? 'is-active' : ''}`}
-                onClick={() => openPanel('sanctuary')}
-                aria-label="Open pet egg sanctuary"
-              >
-                <span className="main-sky-btn-bob main-sky-bob--d3">
-                  <SkyIconEgg />
-                </span>
-              </button>
-              {showSanctuaryArrow && (
-                <div className="egg-hint" aria-hidden>
-                  <span className="egg-hint-arrow">⬆︎</span>
-                  <span className="egg-hint-text">Tap to visit the egg sanctuary</span>
-                </div>
-              )}
-            </div>
-            <button
-              type="button"
-              className={`main-sky-btn main-sky-btn--store ${panel === 'store' ? 'is-active' : ''}`}
-              onClick={() => openPanel('store')}
-              aria-label="Open store"
-            >
-              <span className="main-sky-btn-bob main-sky-bob--d4">
-                <SkyIconStore />
-              </span>
-            </button>
-            <button
-              type="button"
-              className="main-sky-btn main-sky-btn--gear"
-              onClick={() => openPanel('none')}
-              aria-label="Settings (coming soon)"
-            >
-              <span className="main-sky-btn-bob main-sky-bob--d5">
-                <SkyIconGear />
-              </span>
-            </button>
-          </div>
+        <div className="main-top-chip" aria-label={`Points: ${points}`}>
+          <span className="main-points-label">Points</span>
+          <span className="main-points-value">{points}</span>
         </div>
+
         <Garden locked={!gardenUnlocked && tutorialStage === 'done'} onUnlockHint={checkGardenAccess} />
       </section>
 
@@ -119,6 +92,122 @@ export function MainView() {
           {panel === 'store' && <StorePanel />}
         </div>
       )}
+
+      {soonToast && (
+        <div className="main-soon-toast" role="status">
+          {soonToast}
+        </div>
+      )}
+
+      <nav className="main-dock" aria-label="Mochi Meadow controls">
+        <div className="main-dock-inner">
+          <div className="main-dock-group" aria-label="Study tools">
+            <button
+              type="button"
+              className={`main-dock-btn ${panel === 'todo' ? 'is-active' : ''}`}
+              onClick={() => openPanel('todo')}
+            >
+              <span className="main-dock-icon">
+                <SkyIconTodo />
+              </span>
+              <span className="main-dock-label">Tasks</span>
+            </button>
+            <button
+              type="button"
+              className={`main-dock-btn ${panel === 'study' ? 'is-active' : ''}`}
+              onClick={() => openPanel('study')}
+            >
+              <span className="main-dock-icon">
+                <SkyIconStudy />
+              </span>
+              <span className="main-dock-label">Study</span>
+            </button>
+            <div className="main-dock-btn-wrap">
+              <button
+                type="button"
+                className={`main-dock-btn ${panel === 'sanctuary' ? 'is-active' : ''}`}
+                onClick={() => openPanel('sanctuary')}
+              >
+                <span className="main-dock-icon">
+                  <SkyIconEgg />
+                </span>
+                <span className="main-dock-label">Egg</span>
+              </button>
+              {showSanctuaryArrow && (
+                <div className="egg-hint egg-hint--dock" aria-hidden>
+                  <span className="egg-hint-text">Egg sanctuary</span>
+                  <span className="egg-hint-arrow">⬇︎</span>
+                </div>
+              )}
+            </div>
+            <button
+              type="button"
+              className={`main-dock-btn ${panel === 'store' ? 'is-active' : ''}`}
+              onClick={() => openPanel('store')}
+            >
+              <span className="main-dock-icon">
+                <SkyIconStore />
+              </span>
+              <span className="main-dock-label">Store</span>
+            </button>
+          </div>
+
+          <div className="main-dock-center" aria-live="polite">
+            <span className="main-dock-focus-name">{playerName || 'Friend'}</span>
+            <span className="main-dock-focus-status">{focusLabel}</span>
+            <span className="main-dock-focus-time">
+              {studyMinutesToday}/{studyMinutesGoal} min
+            </span>
+          </div>
+
+          <div className="main-dock-group" aria-label="Social and settings">
+            <button
+              type="button"
+              className="main-dock-btn main-dock-btn--soon"
+              onClick={() => showComingSoon('Friends')}
+              title="Connect with friends online (coming soon)"
+            >
+              <span className="main-dock-icon">
+                <SkyIconFriends />
+              </span>
+              <span className="main-dock-label">Friends</span>
+            </button>
+            <button
+              type="button"
+              className="main-dock-btn main-dock-btn--soon"
+              onClick={() => showComingSoon('Scoreboard')}
+              title="See who studied the most (coming soon)"
+            >
+              <span className="main-dock-icon">
+                <SkyIconBoard />
+              </span>
+              <span className="main-dock-label">Board</span>
+            </button>
+            <button
+              type="button"
+              className="main-dock-btn main-dock-btn--soon"
+              onClick={() => showComingSoon('Study rooms')}
+              title="Study together online (coming soon)"
+            >
+              <span className="main-dock-icon">
+                <SkyIconRooms />
+              </span>
+              <span className="main-dock-label">Rooms</span>
+            </button>
+            <button
+              type="button"
+              className="main-dock-btn"
+              onClick={() => showComingSoon('Settings')}
+              aria-label="Settings (coming soon)"
+            >
+              <span className="main-dock-icon">
+                <SkyIconGear />
+              </span>
+              <span className="main-dock-label">Settings</span>
+            </button>
+          </div>
+        </div>
+      </nav>
     </div>
   );
 }
