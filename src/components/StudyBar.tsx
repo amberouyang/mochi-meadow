@@ -14,6 +14,21 @@ export function StudyBar() {
 
   const [secondsThisSession, setSecondsThisSession] = useState(0);
   const [showGoalOverlay, setShowGoalOverlay] = useState(false);
+  const [goalDraft, setGoalDraft] = useState(String(studyMinutesGoal));
+
+  useEffect(() => {
+    setGoalDraft(String(studyMinutesGoal));
+  }, [studyMinutesGoal]);
+
+  const commitGoalDraft = () => {
+    const parsed = Number.parseInt(goalDraft, 10);
+    if (!Number.isFinite(parsed) || parsed < 1) {
+      setGoalDraft(String(studyMinutesGoal));
+      return;
+    }
+    setStudyMinutesGoal(parsed);
+    setGoalDraft(String(parsed));
+  };
 
   useEffect(() => {
     if (studyState !== 'studying') return;
@@ -77,8 +92,15 @@ export function StudyBar() {
         <input
           type="number"
           min={1}
-          value={studyMinutesGoal}
-          onChange={(e) => setStudyMinutesGoal(Number(e.target.value) || 60)}
+          inputMode="numeric"
+          value={goalDraft}
+          onChange={(e) => setGoalDraft(e.target.value)}
+          onBlur={commitGoalDraft}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.currentTarget.blur();
+            }
+          }}
         />
       </div>
       <div className="study-timer">
