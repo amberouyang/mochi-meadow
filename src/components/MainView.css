@@ -303,7 +303,7 @@
   bottom: 5.75rem;
   left: 50%;
   transform: translateX(-50%);
-  width: min(320px, calc(100vw - 1.5rem));
+  width: min(360px, calc(100vw - 1.5rem));
   max-height: calc(100vh - 8rem);
   background: linear-gradient(180deg, var(--mm-cream) 0%, var(--mm-cream-deep) 100%);
   border: 3px solid var(--mm-leaf);

@@ -131,11 +131,11 @@ export function MainView() {
                 <span className="main-dock-icon">
                   <SkyIconEgg />
                 </span>
-                <span className="main-dock-label">Egg</span>
+                <span className="main-dock-label">Nest</span>
               </button>
               {showSanctuaryArrow && (
                 <div className="egg-hint egg-hint--dock" aria-hidden>
-                  <span className="egg-hint-text">Egg sanctuary</span>
+                  <span className="egg-hint-text">Open your nest</span>
                   <span className="egg-hint-arrow">⬇︎</span>
                 </div>
               )}

@@ -14,8 +14,8 @@ Built with Electron, React, TypeScript, and Vite.
 | Meadow | Unlocks when the daily study goal is met or all tasks are done |
 | Onboarding | Clear debris on first visit; the first mochi appears once the meadow is clean |
 | Pets | Idle bounce, blink, and wander; click to view energy and feed |
-| Egg sanctuary | Progress fills from study and points; hatch and choose an egg in the store |
-| Controls | Bottom dock for Tasks, Study, Egg, Store, plus placeholders for Friends, Board, and Rooms |
+| Meadow Nest | Collection shelf for unlocked pets, locked perches, and a hatching nest |
+| Controls | Bottom dock for Tasks, Study, Nest, Store, plus placeholders for Friends, Board, and Rooms |
 
 ## Tech stack
 
@@ -70,7 +70,7 @@ Mochi-Meadow/
 1. Study with the timer and/or complete tasks to earn points.
 2. Meeting the daily study goal **or** finishing all tasks unlocks the meadow.
 3. First time in the meadow: clear rocks, then the first mochi moves in.
-4. Keep studying to fill the egg sanctuary; spend points in the store and on feeding.
+4. Keep studying to fill the hatching nest; spend points in the store and on feeding.
 
 ## Roadmap
 
