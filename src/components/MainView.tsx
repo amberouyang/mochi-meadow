@@ -34,8 +34,13 @@ export function MainView() {
   const studyMinutesGoal = useStore((s) => s.studyMinutesGoal);
   const studyState = useStore((s) => s.studyState);
   const playerName = useStore((s) => s.playerName);
+  const evaluateBrainRot = useStore((s) => s.evaluateBrainRot);
 
   const season = useMemo(() => getCalendarSeason(), []);
+
+  useEffect(() => {
+    evaluateBrainRot();
+  }, [evaluateBrainRot]);
 
   const openPanel = (next: Panel) => {
     if (next === 'sanctuary' && tutorialStage === 'showSanctuaryArrow') {

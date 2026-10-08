@@ -8,6 +8,7 @@ type MeadowPetProps = {
   canWander: boolean;
   /** Stagger bob/blink so pets don’t move in sync */
   animOffset: number;
+  sick?: boolean;
   onFeed: () => void;
 };
 
@@ -33,7 +34,14 @@ function randomPos(avoid?: Pos): Pos {
   return next;
 }
 
-export function MeadowPet({ pet, points, canWander, animOffset, onFeed }: MeadowPetProps) {
+export function MeadowPet({
+  pet,
+  points,
+  canWander,
+  animOffset,
+  sick = false,
+  onFeed,
+}: MeadowPetProps) {
   const [pos, setPos] = useState<Pos>(() => randomPos());
   const [facing, setFacing] = useState<'left' | 'right'>('right');
   const [selected, setSelected] = useState(false);
@@ -43,7 +51,7 @@ export function MeadowPet({ pet, points, canWander, animOffset, onFeed }: Meadow
   posRef.current = pos;
 
   useEffect(() => {
-    if (!canWander) return;
+    if (!canWander || sick) return;
 
     let cancelled = false;
     let timeoutId = 0;
@@ -65,7 +73,7 @@ export function MeadowPet({ pet, points, canWander, animOffset, onFeed }: Meadow
       cancelled = true;
       window.clearTimeout(timeoutId);
     };
-  }, [canWander, animOffset]);
+  }, [canWander, sick, animOffset]);
 
   useEffect(() => {
     return () => {
@@ -75,8 +83,14 @@ export function MeadowPet({ pet, points, canWander, animOffset, onFeed }: Meadow
     };
   }, []);
 
+  useEffect(() => {
+    if (!selected || !sick) return;
+    const id = window.setTimeout(() => setSelected(false), 2000);
+    return () => window.clearTimeout(id);
+  }, [selected, sick]);
+
   const handleFeed = () => {
-    if (points < 5) return;
+    if (sick || points < 5) return;
     onFeed();
     setHop(true);
     if (hopTimeoutRef.current != null) {
@@ -90,10 +104,11 @@ export function MeadowPet({ pet, points, canWander, animOffset, onFeed }: Meadow
 
   const bobDuration = `${1.25 + animOffset * 0.22}s`;
   const blinkDuration = `${3.6 + animOffset * 0.7}s`;
+  const moodClass = sick ? 'pet-sad' : `pet-${pet.mood}`;
 
   return (
     <div
-      className={`meadow-pet pet-${pet.mood}${selected ? ' is-selected' : ''}${hop ? ' is-hop' : ''}`}
+      className={`meadow-pet ${moodClass}${selected ? ' is-selected' : ''}${hop ? ' is-hop' : ''}${sick ? ' is-sick' : ''}`}
       data-facing={facing}
       style={{
         left: `${pos.x}%`,
@@ -106,7 +121,7 @@ export function MeadowPet({ pet, points, canWander, animOffset, onFeed }: Meadow
       <button
         type="button"
         className="meadow-pet-hit"
-        aria-label={`${pet.name}. Click for options.`}
+        aria-label={sick ? `${pet.name} says I'm sick` : `${pet.name}. Click for options.`}
         onClick={() => setSelected((s) => !s)}
       >
         <div className="meadow-pet-bob">
@@ -118,26 +133,36 @@ export function MeadowPet({ pet, points, canWander, animOffset, onFeed }: Meadow
       </button>
 
       {selected && (
-        <div className="meadow-pet-bubble" role="dialog" aria-label={`${pet.name} care`}>
-          <div className="meadow-pet-energy" aria-label={`Energy ${pet.energy}%`}>
-            <div className="meadow-pet-energy-bar" style={{ width: `${pet.energy}%` }} />
-          </div>
-          <button
-            type="button"
-            className="meadow-pet-feed"
-            disabled={points < 5}
-            onClick={handleFeed}
-          >
-            Feed (5 pts) 🍡
-          </button>
-          <button
-            type="button"
-            className="meadow-pet-close"
-            onClick={() => setSelected(false)}
-            aria-label="Close"
-          >
-            ×
-          </button>
+        <div
+          className={`meadow-pet-bubble${sick ? ' is-sick-bubble' : ''}`}
+          role="dialog"
+          aria-label={sick ? `${pet.name} says I'm sick` : `${pet.name} care`}
+        >
+          {sick ? (
+            <p className="meadow-pet-sick-note">I&apos;m sick :(</p>
+          ) : (
+            <>
+              <div className="meadow-pet-energy" aria-label={`Energy ${pet.energy}%`}>
+                <div className="meadow-pet-energy-bar" style={{ width: `${pet.energy}%` }} />
+              </div>
+              <button
+                type="button"
+                className="meadow-pet-feed"
+                disabled={points < 5}
+                onClick={handleFeed}
+              >
+                Feed (5 pts) 🍡
+              </button>
+              <button
+                type="button"
+                className="meadow-pet-close"
+                onClick={() => setSelected(false)}
+                aria-label="Close"
+              >
+                ×
+              </button>
+            </>
+          )}
         </div>
       )}
     </div>

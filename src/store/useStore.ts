@@ -1,17 +1,30 @@
 import { create } from 'zustand';
 import type { Task, Pet, TutorialStage, GardenDebris, StorePurchase } from '../types';
+import {
+  loadStudyStreak,
+  saveStudyStreak,
+  shouldActivateBrainRot,
+  todayKey,
+} from '../utils/studyCalendar';
 
 type StudyState = 'idle' | 'studying';
+
+const streakSave = loadStudyStreak();
 
 type Store = {
   // Study
   studyMinutesGoal: number;
   studyMinutesToday: number;
   studyState: StudyState;
+  lastStudyDate: string | null;
+  brainRotActive: boolean;
   setStudyMinutesGoal: (n: number) => void;
   setStudyMinutesToday: (n: number) => void;
   addStudyMinute: () => void;
   setStudyState: (s: StudyState) => void;
+  recordStudyDay: () => void;
+  evaluateBrainRot: () => void;
+  buyMist: () => boolean;
 
   // Tasks
   tasks: Task[];
@@ -51,6 +64,7 @@ type Store = {
 
   // Store
   storeEggOptions: StorePurchase[];
+  storeCareItems: StorePurchase[];
   lastEggChoiceName?: string;
   welcomeBonusClaimed: boolean;
   claimWelcomeBonus: () => void;
@@ -64,9 +78,12 @@ export const useStore = create<Store>((set, get) => ({
   studyMinutesGoal: 60,
   studyMinutesToday: 0,
   studyState: 'idle',
+  lastStudyDate: streakSave.lastStudyDate,
+  brainRotActive: streakSave.brainRotActive,
   setStudyMinutesGoal: (n) => set({ studyMinutesGoal: Math.max(0, n) }),
   setStudyMinutesToday: (n) => set({ studyMinutesToday: Math.max(0, n) }),
-  addStudyMinute: () =>
+  addStudyMinute: () => {
+    get().recordStudyDay();
     set((s) => {
       const nextMinutes = s.studyMinutesToday + 1;
       const nextEggProgress = Math.min(1000, s.eggProgress + 5);
@@ -76,8 +93,50 @@ export const useStore = create<Store>((set, get) => ({
         eggProgress: nextEggProgress,
         eggHatched,
       };
-    }),
-  setStudyState: (s) => set({ studyState: s }),
+    });
+  },
+  setStudyState: (s) => {
+    if (s === 'studying') get().recordStudyDay();
+    set({ studyState: s });
+  },
+  recordStudyDay: () => {
+    const today = todayKey();
+    const { lastStudyDate, brainRotActive } = get();
+    if (lastStudyDate === today) return;
+    set({ lastStudyDate: today });
+    saveStudyStreak({ lastStudyDate: today, brainRotActive });
+  },
+  evaluateBrainRot: () => {
+    const { lastStudyDate, brainRotActive } = get();
+    const missedDay = shouldActivateBrainRot(lastStudyDate);
+    if (!missedDay && !brainRotActive) return;
+
+    const nextRot = missedDay || brainRotActive;
+    set((s) => ({
+      brainRotActive: nextRot,
+      pets: s.pets.map((p) => ({
+        ...p,
+        mood: nextRot ? ('sad' as const) : p.mood,
+        energy: nextRot ? Math.min(p.energy, 25) : p.energy,
+      })),
+    }));
+    saveStudyStreak({ lastStudyDate, brainRotActive: nextRot });
+  },
+  buyMist: () => {
+    const mist = get().storeCareItems.find((i) => i.type === 'mist');
+    if (!mist) return false;
+    if (!get().spendPoints(mist.cost)) return false;
+    set((s) => ({
+      brainRotActive: false,
+      pets: s.pets.map((p) => ({
+        ...p,
+        mood: 'happy' as const,
+        energy: Math.min(100, p.energy + 30),
+      })),
+    }));
+    saveStudyStreak({ lastStudyDate: get().lastStudyDate, brainRotActive: false });
+    return true;
+  },
 
   tasks: [
     { id: '1', title: 'Finish math homework', done: false, points: 10 },
@@ -180,6 +239,15 @@ export const useStore = create<Store>((set, get) => ({
     { id: 'egg2', name: 'Matcha Mochi', cost: 50, description: 'A calm green mochi who loves tea.', type: 'egg' },
     { id: 'egg3', name: 'Yuzu Mochi', cost: 50, description: 'A bright citrus mochi full of energy.', type: 'egg' },
   ],
+  storeCareItems: [
+    {
+      id: 'mist1',
+      name: 'Meadow Mist',
+      cost: 35,
+      description: 'Clears brain-rot fog and heals sick mochi pets after a missed study day.',
+      type: 'mist',
+    },
+  ],
   lastEggChoiceName: undefined,
   welcomeBonusClaimed: false,
   claimWelcomeBonus: () => {
@@ -195,3 +263,7 @@ export const useStore = create<Store>((set, get) => ({
   playerName: '',
   setPlayerName: (name) => set({ playerName: name.trim().slice(0, 24) }),
 }));
+
+if (typeof window !== 'undefined' && import.meta.env.DEV) {
+  (window as unknown as { __mochiStore: typeof useStore }).__mochiStore = useStore;
+}

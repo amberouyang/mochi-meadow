@@ -45,5 +45,5 @@ export type StorePurchase = {
   name: string;
   cost: number;
   description: string;
-  type: 'egg';
+  type: 'egg' | 'mist';
 };

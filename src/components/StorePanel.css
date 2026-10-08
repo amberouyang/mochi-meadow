@@ -17,6 +17,44 @@
   color: var(--muted);
 }
 
+.store-section-title {
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.store-care {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid rgba(47, 95, 61, 0.2);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.store-care.is-urgent {
+  border-color: rgba(120, 60, 40, 0.45);
+  background: rgba(255, 230, 220, 0.75);
+}
+
+.store-care-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  font-size: 0.8rem;
+  min-width: 0;
+}
+
+.store-mist-btn {
+  margin-top: 0;
+  flex-shrink: 0;
+}
+
 .store-options {
   display: flex;
   flex-direction: column;

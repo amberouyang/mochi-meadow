@@ -27,9 +27,11 @@ export function Garden({ locked, onUnlockHint }: GardenProps) {
   const studyMinutesGoal = useStore((s) => s.studyMinutesGoal);
   const studyMinutesToday = useStore((s) => s.studyMinutesToday);
   const welcomeBonusClaimed = useStore((s) => s.welcomeBonusClaimed);
+  const brainRotActive = useStore((s) => s.brainRotActive);
 
   const [showAccessDialog, setShowAccessDialog] = useState(false);
   const [hideTutorialCard, setHideTutorialCard] = useState(false);
+  const [hideBrainRotBanner, setHideBrainRotBanner] = useState(false);
 
   useEffect(() => {
     if (tutorialStage === 'introMeadow') {
@@ -39,6 +41,10 @@ export function Garden({ locked, onUnlockHint }: GardenProps) {
       }
     }
   }, [tutorialStage, welcomeBonusClaimed]);
+
+  useEffect(() => {
+    if (brainRotActive) setHideBrainRotBanner(false);
+  }, [brainRotActive]);
 
   const isClearingTutorial = tutorialStage === 'clearDebris';
   const isMochiReveal = tutorialStage === 'mochiReveal';
@@ -106,7 +112,7 @@ export function Garden({ locked, onUnlockHint }: GardenProps) {
   }
 
   return (
-    <div className="garden garden-unlocked">
+    <div className={`garden garden-unlocked${brainRotActive ? ' has-brain-rot' : ''}`}>
       <div className="garden-meadow-bg">
         <MeadowPanBackground>
           {isClearingTutorial &&
@@ -144,7 +150,8 @@ export function Garden({ locked, onUnlockHint }: GardenProps) {
                 key={p.id}
                 pet={p}
                 points={points}
-                canWander={!isMochiReveal}
+                canWander={!isMochiReveal && !brainRotActive}
+                sick={brainRotActive}
                 animOffset={i}
                 onFeed={() => {
                   if (spendPoints(5)) feedPet(p.id);
@@ -152,6 +159,29 @@ export function Garden({ locked, onUnlockHint }: GardenProps) {
               />
             ))}
         </MeadowPanBackground>
+        {brainRotActive && (
+          <div className="garden-brain-rot" aria-live="polite">
+            <div className="garden-brain-rot-fog" aria-hidden />
+            {!hideBrainRotBanner && (
+              <div className="garden-tutorial-card garden-brain-rot-banner" role="status">
+                <div className="garden-tutorial-card-chrome">
+                  <button
+                    type="button"
+                    className="garden-tutorial-close"
+                    onClick={() => setHideBrainRotBanner(true)}
+                    aria-label="Dismiss notification"
+                  >
+                    ×
+                  </button>
+                  <p className="garden-tutorial-message">
+                    Brain-rot fog rolled in after a missed study day. Your mochi pets feel sick. Buy
+                    Meadow Mist in the store to clear it.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {isClearingTutorial && !hideTutorialCard && (

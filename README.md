@@ -12,6 +12,7 @@ Built with Electron, React, TypeScript, and Vite.
 | Tasks | Create, complete, and remove to-dos; completions award points |
 | Points | Shared currency for the store and pet care (feeding) |
 | Meadow | Unlocks when the daily study goal is met or all tasks are done |
+| Brain-rot fog | Miss a full calendar day of studying and dark fog blocks pet care until you buy Meadow Mist |
 | Onboarding | Clear debris on first visit; the first mochi appears once the meadow is clean |
 | Pets | Idle bounce, blink, and wander; click to view energy and feed |
 | Meadow Nest | Collection shelf for unlocked pets, locked perches, and a hatching nest |
