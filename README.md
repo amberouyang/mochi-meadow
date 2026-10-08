@@ -8,7 +8,7 @@ Built with Electron, React, TypeScript, and Vite.
 
 | Area | Description |
 |------|-------------|
-| Study timer | Set a daily minute goal, start/stop sessions, earn points per minute |
+| Study timer | Set a daily hours + minutes goal, start/stop sessions, earn points per minute |
 | Tasks | Create, complete, and remove to-dos; completions award points |
 | Points | Shared currency for the store and pet care (feeding) |
 | Meadow | Unlocks when the daily study goal is met or all tasks are done |

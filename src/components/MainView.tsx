@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useStore } from '../store/useStore';
 import { getCalendarSeason } from '../utils/calendarSeason';
+import { formatStudyMinutes } from '../utils/formatStudyTime';
 import { TodoList } from './TodoList';
 import { StudyBar } from './StudyBar';
 import { Garden } from './Garden';
@@ -156,7 +157,7 @@ export function MainView() {
             <span className="main-dock-focus-name">{playerName || 'Friend'}</span>
             <span className="main-dock-focus-status">{focusLabel}</span>
             <span className="main-dock-focus-time">
-              {studyMinutesToday}/{studyMinutesGoal} min
+              {formatStudyMinutes(studyMinutesToday)} / {formatStudyMinutes(studyMinutesGoal)}
             </span>
           </div>
 

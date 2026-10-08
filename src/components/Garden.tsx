@@ -3,6 +3,7 @@ import { ROCK_ASSETS } from '../meadowRocks';
 import { useStore } from '../store/useStore';
 import { MeadowPanBackground } from './MeadowPanBackground';
 import { MeadowPet } from './MeadowPet';
+import { formatStudyMinutes } from '../utils/formatStudyTime';
 import './Garden.css';
 
 function debrisRockSrc(kind: 'rock' | 'tree' | 'rubble', assetIndex?: number) {
@@ -74,9 +75,9 @@ export function Garden({ locked, onUnlockHint }: GardenProps) {
             <div className="garden-access-card">
               <p className="garden-access-title">Garden access</p>
               <p className="garden-access-text">
-                Today&apos;s study goal: {studyMinutesGoal} minutes.
+                Today&apos;s study goal: {formatStudyMinutes(studyMinutesGoal)}.
                 <br />
-                Studied so far: {studyMinutesToday} minutes.
+                Studied so far: {formatStudyMinutes(studyMinutesToday)}.
               </p>
               <div className="garden-access-actions">
                 <button
