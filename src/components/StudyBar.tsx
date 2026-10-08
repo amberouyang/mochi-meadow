@@ -138,7 +138,7 @@ export function StudyBar() {
           <div className="study-overlay-card">
             <p className="study-overlay-title">Study goal reached!</p>
             <p className="study-overlay-text">
-              Nice work — you&apos;ve finished today&apos;s study time. Your garden and pets are proud of you.
+              Nice work! You&apos;ve finished today&apos;s study time. Your garden and pets are proud of you.
             </p>
             <button className="study-overlay-btn" onClick={() => setShowGoalOverlay(false)}>
               Close
