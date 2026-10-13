@@ -7,19 +7,21 @@ import { StudyBar } from './StudyBar';
 import { Garden } from './Garden';
 import { EggSanctuary } from './EggSanctuary';
 import { StorePanel } from './StorePanel';
+import { StoragePanel } from './StoragePanel';
 import {
   SkyIconBoard,
   SkyIconEgg,
   SkyIconFriends,
   SkyIconGear,
   SkyIconRooms,
+  SkyIconStorage,
   SkyIconStore,
   SkyIconStudy,
   SkyIconTodo,
 } from './SkyHudPixelIcons';
 import './MainView.css';
 
-type Panel = 'none' | 'todo' | 'study' | 'sanctuary' | 'store';
+type Panel = 'none' | 'todo' | 'study' | 'sanctuary' | 'store' | 'storage';
 
 export function MainView() {
   const [panel, setPanel] = useState<Panel>('none');
@@ -96,6 +98,7 @@ export function MainView() {
           {panel === 'study' && <StudyBar />}
           {panel === 'sanctuary' && <EggSanctuary />}
           {panel === 'store' && <StorePanel />}
+          {panel === 'storage' && <StoragePanel />}
         </div>
       )}
 
@@ -155,6 +158,17 @@ export function MainView() {
                 <SkyIconStore />
               </span>
               <span className="main-dock-label">Store</span>
+            </button>
+            <button
+              type="button"
+              className={`main-dock-btn ${panel === 'storage' ? 'is-active' : ''}`}
+              onClick={() => openPanel('storage')}
+              title="Open storage"
+            >
+              <span className="main-dock-icon">
+                <SkyIconStorage />
+              </span>
+              <span className="main-dock-label">Storage</span>
             </button>
           </div>
 

@@ -89,6 +89,25 @@ export function SkyIconStore() {
   );
 }
 
+export function SkyIconStorage() {
+  return (
+    <PixelIcon>
+      {/* chest body */}
+      <rect x="2" y="7" width="12" height="6" fill="currentColor" opacity="0.55" />
+      <rect x="2" y="7" width="12" height="1" fill="currentColor" opacity="0.9" />
+      <rect x="2" y="12" width="12" height="1" fill="currentColor" opacity="0.9" />
+      <rect x="2" y="7" width="1" height="6" fill="currentColor" opacity="0.9" />
+      <rect x="13" y="7" width="1" height="6" fill="currentColor" opacity="0.9" />
+      {/* lid */}
+      <rect x="3" y="5" width="10" height="2" fill="currentColor" opacity="0.72" />
+      <rect x="4" y="4" width="8" height="1" fill="currentColor" opacity="0.72" />
+      {/* latch */}
+      <rect x="7" y="8" width="2" height="2" fill="currentColor" opacity="0.88" />
+      <rect x="7" y="10" width="2" height="1" fill="currentColor" opacity="0.4" />
+    </PixelIcon>
+  );
+}
+
 export function SkyIconGear() {
   return (
     <PixelIcon>
