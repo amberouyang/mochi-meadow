@@ -197,9 +197,8 @@ export function Garden({ locked, onUnlockHint }: GardenProps) {
                 ×
               </button>
               <p className="garden-tutorial-message">
-                <strong>Oh no!</strong>{' '}
-                Some rumbly rubble is blocking the way! Clear the rocks to tidy the meadow and earn
-                100 starter points.
+                <strong>Oh no!</strong> There&apos;s rubble! Clear the rubble and earn 100 starter
+                points.
               </p>
             </div>
           </div>
