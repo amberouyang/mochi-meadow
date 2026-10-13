@@ -1,4 +1,4 @@
-import type { Pet, Task } from '../types';
+import type { IncubatingEgg, Pet, Task } from '../types';
 
 const STORAGE_KEY = 'mochiMeadow.progress.v1';
 
@@ -9,6 +9,9 @@ export type ProgressSave = {
   playerName: string;
   tasks: Task[];
   pets: Pet[];
+  eggProgress: number;
+  eggHatched: boolean;
+  incubatingEgg: IncubatingEgg | null;
 };
 
 export const DEFAULT_TASKS: Task[] = [
@@ -26,6 +29,9 @@ const DEFAULTS: ProgressSave = {
   playerName: '',
   tasks: DEFAULT_TASKS.map((t) => ({ ...t })),
   pets: DEFAULT_PETS.map((p) => ({ ...p })),
+  eggProgress: 0,
+  eggHatched: false,
+  incubatingEgg: null,
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -87,6 +93,16 @@ function parsePets(value: unknown): Pet[] {
   return pets.length > 0 ? pets : DEFAULT_PETS.map((p) => ({ ...p }));
 }
 
+function parseIncubatingEgg(value: unknown): IncubatingEgg | null {
+  if (!isRecord(value)) return null;
+  if (typeof value.catalogId !== 'string' || !value.catalogId) return null;
+  if (typeof value.name !== 'string' || !value.name.trim()) return null;
+  return {
+    catalogId: value.catalogId,
+    name: value.name.trim().slice(0, 24),
+  };
+}
+
 function cloneDefaults(): ProgressSave {
   return {
     ...DEFAULTS,
@@ -109,8 +125,14 @@ export function loadProgress(): ProgressSave {
       typeof parsed.playerName === 'string' ? parsed.playerName.trim().slice(0, 24) : '';
     const tasks = parseTasks(parsed.tasks);
     const pets = parsePets(parsed.pets);
+    const eggProgress =
+      typeof parsed.eggProgress === 'number' && Number.isFinite(parsed.eggProgress)
+        ? Math.min(1000, Math.max(0, Math.floor(parsed.eggProgress)))
+        : 0;
+    const eggHatched = Boolean(parsed.eggHatched);
+    const incubatingEgg = parseIncubatingEgg(parsed.incubatingEgg);
 
-    return { v: 1, points, playerName, tasks, pets };
+    return { v: 1, points, playerName, tasks, pets, eggProgress, eggHatched, incubatingEgg };
   } catch {
     return cloneDefaults();
   }
@@ -128,6 +150,13 @@ export function saveProgress(patch: Partial<Omit<ProgressSave, 'v'>>): void {
           : current.playerName,
       tasks: patch.tasks !== undefined ? patch.tasks.map((t) => ({ ...t })) : current.tasks,
       pets: patch.pets !== undefined ? patch.pets.map((p) => ({ ...p })) : current.pets,
+      eggProgress:
+        patch.eggProgress !== undefined
+          ? Math.min(1000, Math.max(0, Math.floor(patch.eggProgress)))
+          : current.eggProgress,
+      eggHatched: patch.eggHatched !== undefined ? patch.eggHatched : current.eggHatched,
+      incubatingEgg:
+        patch.incubatingEgg !== undefined ? patch.incubatingEgg : current.incubatingEgg,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   } catch {

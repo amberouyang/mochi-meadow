@@ -128,8 +128,14 @@
   box-shadow: 0 3px 10px rgba(122, 176, 90, 0.35);
 }
 
-.store-adopt-btn:hover {
+.store-adopt-btn:hover:not(:disabled) {
   filter: brightness(1.05);
+}
+
+.store-adopt-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 .store-points {

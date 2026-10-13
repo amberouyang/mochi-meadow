@@ -4,29 +4,29 @@ import './StorePanel.css';
 
 export function StorePanel() {
   const points = useStore((s) => s.points);
-  const spendPoints = useStore((s) => s.spendPoints);
-  const pets = useStore((s) => s.pets);
-  const setPetName = useStore((s) => s.setPetName);
   const eggOptions = useStore((s) => s.storeEggOptions);
   const careItems = useStore((s) => s.storeCareItems);
   const brainRotActive = useStore((s) => s.brainRotActive);
   const buyMist = useStore((s) => s.buyMist);
+  const buyEgg = useStore((s) => s.buyEgg);
+  const incubatingEgg = useStore((s) => s.incubatingEgg);
+  const eggHatched = useStore((s) => s.eggHatched);
 
   const [selectedId, setSelectedId] = useState<string | null>(eggOptions[0]?.id ?? null);
   const [message, setMessage] = useState<string | null>(null);
 
   const active = eggOptions.find((e) => e.id === selectedId) ?? eggOptions[0];
   const mist = careItems.find((i) => i.type === 'mist');
+  const nestBusy = Boolean(incubatingEgg && !eggHatched);
 
-  const handleAdopt = () => {
+  const handleBuyEgg = () => {
     if (!active) return;
-    if (!pets.length) return;
-    if (!spendPoints(active.cost)) {
-      setMessage('Not enough points to adopt this egg.');
+    const error = buyEgg(active.id);
+    if (error) {
+      setMessage(error);
       return;
     }
-    setPetName(pets[0].id, active.name);
-    setMessage(`You picked a ${active.name} egg! It will hatch as you study.`);
+    setMessage(`${active.name} is in your nest! Study to incubate and hatch them.`);
   };
 
   const handleBuyMist = () => {
@@ -46,8 +46,8 @@ export function StorePanel() {
     <div className="store-panel">
       <h2 className="store-title">Mochi store</h2>
       <p className="store-text">
-        Spend points on eggs and care items. Miss a full day of studying and brain-rot fog rolls in.
-        Meadow Mist clears it.
+        Buy eggs to incubate in your nest — they hatch into new mochi pets. Miss a full day of
+        studying and brain-rot fog rolls in; Meadow Mist clears it.
       </p>
 
       <h3 className="store-section-title">Care</h3>
@@ -65,6 +65,11 @@ export function StorePanel() {
       )}
 
       <h3 className="store-section-title">Eggs</h3>
+      {nestBusy && (
+        <p className="store-message">
+          Nest busy: {incubatingEgg?.name} is incubating. Hatch it before buying another.
+        </p>
+      )}
       <div className="store-options">
         {eggOptions.map((egg) => (
           <button
@@ -82,8 +87,13 @@ export function StorePanel() {
           </button>
         ))}
       </div>
-      <button className="store-adopt-btn" type="button" onClick={handleAdopt}>
-        Adopt this egg
+      <button
+        className="store-adopt-btn"
+        type="button"
+        onClick={handleBuyEgg}
+        disabled={nestBusy || !active}
+      >
+        Buy egg for nest
       </button>
       <p className="store-points">You have {points} points.</p>
       {message && <p className="store-message">{message}</p>}

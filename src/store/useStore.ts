@@ -1,5 +1,12 @@
 import { create } from 'zustand';
-import type { Task, Pet, TutorialStage, GardenDebris, StorePurchase } from '../types';
+import type {
+  Task,
+  Pet,
+  TutorialStage,
+  GardenDebris,
+  StorePurchase,
+  IncubatingEgg,
+} from '../types';
 import {
   loadStudyStreak,
   saveStudyStreak,
@@ -22,6 +29,43 @@ const streakSave = loadStudyStreak();
 const savedStudyGoal = loadStudyGoalDefault();
 const savedSoundMuted = loadSoundMuted();
 const savedProgress = loadProgress();
+
+type NestSlice = {
+  eggProgress: number;
+  eggHatched: boolean;
+  incubatingEgg: IncubatingEgg | null;
+  pets: Pet[];
+};
+
+/** Warm the nest egg; at 100% hatch a new pet (original mochi stays). */
+function advanceIncubation(s: NestSlice, delta: number): Partial<NestSlice> {
+  if (!s.incubatingEgg || s.eggHatched) return {};
+  const nextEggProgress = Math.min(1000, s.eggProgress + delta);
+  if (nextEggProgress < 1000) {
+    return { eggProgress: nextEggProgress };
+  }
+
+  const name = s.incubatingEgg.name;
+  const alreadyOwned = s.pets.some((p) => p.name.toLowerCase() === name.toLowerCase());
+  const pets = alreadyOwned
+    ? s.pets
+    : [
+        ...s.pets,
+        {
+          id: crypto.randomUUID(),
+          name,
+          mood: 'happy' as const,
+          energy: 80,
+          level: 1,
+        },
+      ];
+
+  return {
+    eggProgress: 1000,
+    eggHatched: true,
+    pets,
+  };
+}
 
 type Store = {
   // Study
@@ -72,7 +116,10 @@ type Store = {
   // Egg sanctuary / hatching
   eggProgress: number;
   eggHatched: boolean;
+  incubatingEgg: IncubatingEgg | null;
   incrementEggProgress: (delta: number) => void;
+  /** Buy a store egg into the nest. Returns an error message, or null on success. */
+  buyEgg: (catalogId: string) => string | null;
 
   // Store
   storeEggOptions: StorePurchase[];
@@ -107,16 +154,10 @@ export const useStore = create<Store>((set, get) => ({
   setStudyMinutesToday: (n) => set({ studyMinutesToday: Math.max(0, n) }),
   addStudyMinute: () => {
     get().recordStudyDay();
-    set((s) => {
-      const nextMinutes = s.studyMinutesToday + 1;
-      const nextEggProgress = Math.min(1000, s.eggProgress + 5);
-      const eggHatched = s.eggHatched || nextEggProgress >= 1000;
-      return {
-        studyMinutesToday: nextMinutes,
-        eggProgress: nextEggProgress,
-        eggHatched,
-      };
-    });
+    set((s) => ({
+      studyMinutesToday: s.studyMinutesToday + 1,
+      ...advanceIncubation(s, 5),
+    }));
   },
   setStudyState: (s) => {
     if (s === 'studying') get().recordStudyDay();
@@ -174,12 +215,10 @@ export const useStore = create<Store>((set, get) => ({
 
   points: savedProgress.points,
   addPoints: (n) =>
-    set((s) => {
-      const nextPoints = s.points + n;
-      const nextEggProgress = Math.min(1000, s.eggProgress + n);
-      const eggHatched = s.eggHatched || nextEggProgress >= 1000;
-      return { points: nextPoints, eggProgress: nextEggProgress, eggHatched };
-    }),
+    set((s) => ({
+      points: s.points + n,
+      ...advanceIncubation(s, n),
+    })),
   spendPoints: (n) => {
     const { points } = get();
     if (points < n) return false;
@@ -244,14 +283,33 @@ export const useStore = create<Store>((set, get) => ({
   setTutorialStage: (stage) => set({ tutorialStage: stage }),
 
   // Egg sanctuary / hatching
-  eggProgress: 0,
-  eggHatched: false,
-  incrementEggProgress: (delta) =>
-    set((s) => {
-      const next = Math.min(1000, s.eggProgress + delta);
-      const eggHatched = s.eggHatched || next >= 1000;
-      return { eggProgress: next, eggHatched };
-    }),
+  eggProgress: savedProgress.eggProgress,
+  eggHatched: savedProgress.eggHatched,
+  incubatingEgg: savedProgress.incubatingEgg,
+  incrementEggProgress: (delta) => set((s) => ({ ...advanceIncubation(s, delta) })),
+  buyEgg: (catalogId) => {
+    const egg = get().storeEggOptions.find((e) => e.id === catalogId && e.type === 'egg');
+    if (!egg) return 'That egg is not in the store.';
+
+    const { pets, incubatingEgg, eggHatched } = get();
+    if (pets.some((p) => p.name.toLowerCase() === egg.name.toLowerCase())) {
+      return `You already have ${egg.name} in your meadow.`;
+    }
+    if (incubatingEgg && !eggHatched) {
+      return `${incubatingEgg.name} is still incubating. Finish hatching it first.`;
+    }
+    if (!get().spendPoints(egg.cost)) {
+      return 'Not enough points for this egg.';
+    }
+
+    set({
+      incubatingEgg: { catalogId: egg.id, name: egg.name },
+      eggProgress: 0,
+      eggHatched: false,
+      lastEggChoiceName: egg.name,
+    });
+    return null;
+  },
 
   // Store
   storeEggOptions: [
@@ -268,7 +326,7 @@ export const useStore = create<Store>((set, get) => ({
       type: 'mist',
     },
   ],
-  lastEggChoiceName: undefined,
+  lastEggChoiceName: savedProgress.incubatingEgg?.name,
   welcomeBonusClaimed: false,
   claimWelcomeBonus: () => {
     const { welcomeBonusClaimed } = get();
@@ -312,6 +370,7 @@ export const useStore = create<Store>((set, get) => ({
       ],
       eggProgress: 0,
       eggHatched: false,
+      incubatingEgg: null,
       lastEggChoiceName: undefined,
       welcomeBonusClaimed: false,
       playerName: '',
@@ -336,7 +395,10 @@ useStore.subscribe((state, prev) => {
     state.points === prev.points &&
     state.playerName === prev.playerName &&
     state.tasks === prev.tasks &&
-    state.pets === prev.pets
+    state.pets === prev.pets &&
+    state.eggProgress === prev.eggProgress &&
+    state.eggHatched === prev.eggHatched &&
+    state.incubatingEgg === prev.incubatingEgg
   ) {
     return;
   }
@@ -345,6 +407,9 @@ useStore.subscribe((state, prev) => {
     playerName: state.playerName,
     tasks: state.tasks,
     pets: state.pets,
+    eggProgress: state.eggProgress,
+    eggHatched: state.eggHatched,
+    incubatingEgg: state.incubatingEgg,
   });
 });
 

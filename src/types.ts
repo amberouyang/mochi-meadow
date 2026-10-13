@@ -47,3 +47,9 @@ export type StorePurchase = {
   description: string;
   type: 'egg' | 'mist';
 };
+
+/** Egg currently warming in the nest (bought from the store). */
+export type IncubatingEgg = {
+  catalogId: string;
+  name: string;
+};

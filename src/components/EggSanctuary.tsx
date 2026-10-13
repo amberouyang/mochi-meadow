@@ -13,9 +13,9 @@ type NestSlot = {
 export function EggSanctuary() {
   const eggProgress = useStore((s) => s.eggProgress);
   const eggHatched = useStore((s) => s.eggHatched);
+  const incubatingEgg = useStore((s) => s.incubatingEgg);
   const pets = useStore((s) => s.pets);
   const storeEggOptions = useStore((s) => s.storeEggOptions);
-  const lastEggChoiceName = useStore((s) => s.lastEggChoiceName);
   const tutorialStage = useStore((s) => s.tutorialStage);
   const playerName = useStore((s) => s.playerName);
 
@@ -27,7 +27,6 @@ export function EggSanctuary() {
 
   const slots: NestSlot[] = useMemo(() => {
     const ownedNames = new Set(pets.map((p) => p.name.toLowerCase()));
-    if (lastEggChoiceName) ownedNames.add(lastEggChoiceName.toLowerCase());
 
     const starter: NestSlot = {
       id: 'starter',
@@ -43,22 +42,22 @@ export function EggSanctuary() {
       hint: egg.description,
     }));
 
-    // Extra mystery slots for later collection growth
     const mystery: NestSlot[] = [
       { id: 'mystery-a', name: '???', unlocked: false, hint: 'Keep studying to discover more mochi' },
       { id: 'mystery-b', name: '???', unlocked: false, hint: 'Keep studying to discover more mochi' },
     ];
 
-    // Avoid duplicating starter if their name matches a store egg
     const filteredStore = fromStore.filter(
       (s) => s.name.toLowerCase() !== (pets[0]?.name || 'mochi').toLowerCase(),
     );
 
     return [starter, ...filteredStore, ...mystery].slice(0, 8);
-  }, [pets, storeEggOptions, lastEggChoiceName, mochiMovedIn]);
+  }, [pets, storeEggOptions, mochiMovedIn]);
 
   const unlockedCount = slots.filter((s) => s.unlocked).length;
   const nestOwner = playerName ? `${playerName}'s Nest` : 'Meadow Nest';
+  const isIncubating = Boolean(incubatingEgg && !eggHatched);
+  const justHatched = Boolean(incubatingEgg && eggHatched);
 
   return (
     <div className="egg-sanctuary">
@@ -70,8 +69,8 @@ export function EggSanctuary() {
       </header>
 
       <p className="egg-text">
-        Your collection lives here. Study to hatch eggs, adopt from the store, and fill empty
-        perches over time.
+        Your collection lives here. Buy eggs in the store, incubate them in the hatching nest, and
+        fill empty perches as new mochis hatch.
       </p>
 
       <div className="nest-shelf" role="list" aria-label="Pet collection">
@@ -96,10 +95,15 @@ export function EggSanctuary() {
 
       <section className="nest-hatch" aria-label="Hatching nest">
         <h3 className="nest-hatch-title">Hatching nest</h3>
-        {!eggHatched ? (
+        {!incubatingEgg ? (
+          <p className="egg-text">
+            The nest is empty. Buy an egg in the store to start incubating a new mochi pet.
+          </p>
+        ) : isIncubating ? (
           <>
             <p className="egg-text">
-              Study and finish tasks to warm the egg. At 100% it hatches into a mochi.
+              <strong>{incubatingEgg.name}</strong> is warming here. Study and finish tasks to hatch
+              them — your original mochi stays in the meadow.
             </p>
             <div className="egg-visual">
               <div className="egg-outer">
@@ -113,15 +117,18 @@ export function EggSanctuary() {
               <span className="egg-progress-label">{pct}% to hatch</span>
             </div>
           </>
-        ) : (
+        ) : justHatched ? (
           <>
-            <p className="egg-text">This egg already hatched. Visit the store to pick another type.</p>
+            <p className="egg-text">
+              <strong>{incubatingEgg.name}</strong> hatched and joined your meadow! Buy another egg
+              when you&apos;re ready.
+            </p>
             <div className="egg-hatched">
               <MochiCloud />
-              <span className="egg-hatched-name">{pets[0]?.name ?? 'Your mochi'}</span>
+              <span className="egg-hatched-name">{incubatingEgg.name}</span>
             </div>
           </>
-        )}
+        ) : null}
       </section>
     </div>
   );

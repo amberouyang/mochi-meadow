@@ -5,6 +5,9 @@ export function StoragePanel() {
   const pets = useStore((s) => s.pets);
   const points = useStore((s) => s.points);
   const brainRotActive = useStore((s) => s.brainRotActive);
+  const incubatingEgg = useStore((s) => s.incubatingEgg);
+  const eggHatched = useStore((s) => s.eggHatched);
+  const eggProgress = useStore((s) => s.eggProgress);
 
   const items = [
     {
@@ -13,6 +16,16 @@ export function StoragePanel() {
       name: 'Study points',
       detail: `${points} ready to spend`,
     },
+    ...(incubatingEgg && !eggHatched
+      ? [
+          {
+            id: 'incubating',
+            icon: '🥚',
+            name: incubatingEgg.name,
+            detail: `Incubating in nest — ${Math.round((eggProgress / 1000) * 100)}%`,
+          },
+        ]
+      : []),
     ...pets.map((pet) => ({
       id: pet.id,
       icon: '☁',
