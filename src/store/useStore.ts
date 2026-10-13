@@ -74,6 +74,9 @@ type Store = {
   // Player
   playerName: string;
   setPlayerName: (name: string) => void;
+
+  /** Wipe progress and local meadow saves back to a fresh start. */
+  resetProgress: () => void;
 };
 
 export const useStore = create<Store>((set, get) => ({
@@ -268,6 +271,46 @@ export const useStore = create<Store>((set, get) => ({
   // Player
   playerName: '',
   setPlayerName: (name) => set({ playerName: name.trim().slice(0, 24) }),
+
+  resetProgress: () => {
+    const goal = loadStudyGoalDefault();
+    set({
+      studyMinutesGoal: goal,
+      studyMinutesToday: 0,
+      studyState: 'idle',
+      lastStudyDate: null,
+      brainRotActive: false,
+      tasks: [
+        { id: '1', title: 'Finish math homework', done: false, points: 10 },
+        { id: '2', title: 'Read chapter 3', done: false, points: 15 },
+      ],
+      points: 0,
+      pets: [{ id: 'm1', name: 'Mochi', mood: 'neutral', energy: 50, level: 1 }],
+      gardenUnlocked: false,
+      tutorialStage: 'introMeadow',
+      introStartedAt: Date.now(),
+      debris: [
+        { id: 'd1', kind: 'rock', cleared: false, assetIndex: 0, leftPct: 18, bottomPct: 20 },
+        { id: 'd2', kind: 'rock', cleared: false, assetIndex: 1, leftPct: 34, bottomPct: 16 },
+        { id: 'd3', kind: 'rock', cleared: false, assetIndex: 2, leftPct: 50, bottomPct: 22 },
+        { id: 'd4', kind: 'rock', cleared: false, assetIndex: 3, leftPct: 66, bottomPct: 15 },
+        { id: 'd5', kind: 'rock', cleared: false, assetIndex: 4, leftPct: 70, bottomPct: 28 },
+      ],
+      eggProgress: 0,
+      eggHatched: false,
+      lastEggChoiceName: undefined,
+      welcomeBonusClaimed: false,
+      playerName: '',
+    });
+    saveStudyStreak({ lastStudyDate: null, brainRotActive: false });
+    try {
+      localStorage.removeItem('mochiMeadow.meadowIntro.v1');
+      localStorage.removeItem('mochiMeadow.studyStreak.v1');
+      localStorage.removeItem('mochiMeadow.clearForcedBrainRot.v1');
+    } catch {
+      /* ignore */
+    }
+  },
 }));
 
 if (typeof window !== 'undefined' && import.meta.env.DEV) {

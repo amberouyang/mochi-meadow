@@ -15,11 +15,13 @@ export function SettingsPanel() {
   const setPlayerName = useStore((s) => s.setPlayerName);
   const studyMinutesGoal = useStore((s) => s.studyMinutesGoal);
   const setStudyMinutesGoal = useStore((s) => s.setStudyMinutesGoal);
+  const resetProgress = useStore((s) => s.resetProgress);
 
   const parts = goalParts(studyMinutesGoal);
   const [nameDraft, setNameDraft] = useState(playerName);
   const [hoursDraft, setHoursDraft] = useState(String(parts.hours));
   const [minsDraft, setMinsDraft] = useState(String(parts.minutes));
+  const [confirmReset, setConfirmReset] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -56,6 +58,18 @@ export function SettingsPanel() {
     const total = hoursRaw * 60 + minsRaw;
     setStudyMinutesGoal(total);
     setMessage(`Daily study goal set to ${formatStudyMinutes(total)}.`);
+  };
+
+  const handleReset = () => {
+    if (!confirmReset) {
+      setConfirmReset(true);
+      setMessage('Press again to confirm reset.');
+      return;
+    }
+    resetProgress();
+    setConfirmReset(false);
+    setNameDraft('');
+    setMessage('Progress reset. Reload or restart intro to begin again.');
   };
 
   return (
@@ -122,6 +136,23 @@ export function SettingsPanel() {
         </div>
         <button type="button" className="settings-btn settings-btn-primary" onClick={saveGoalDefault}>
           Save goal
+        </button>
+      </section>
+
+      <section className="settings-section" aria-labelledby="settings-reset-heading">
+        <h3 id="settings-reset-heading" className="settings-section-title">
+          Danger zone
+        </h3>
+        <p className="settings-hint">
+          Clears points, tasks, pets, tutorial, and study streak. Keeps your saved study goal default.
+        </p>
+        <button
+          type="button"
+          className="settings-btn settings-btn-danger"
+          onClick={handleReset}
+          onBlur={() => setConfirmReset(false)}
+        >
+          {confirmReset ? 'Confirm reset' : 'Reset progress'}
         </button>
       </section>
 

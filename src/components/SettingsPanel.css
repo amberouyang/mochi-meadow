@@ -116,6 +116,16 @@
   filter: brightness(1.05);
 }
 
+.settings-btn-danger {
+  background: rgba(120, 50, 45, 0.12);
+  color: #7a2f2a;
+  border: 1.5px solid rgba(120, 50, 45, 0.35);
+}
+
+.settings-btn-danger:hover {
+  background: rgba(120, 50, 45, 0.18);
+}
+
 .settings-message {
   margin: 0;
   font-size: 0.78rem;
