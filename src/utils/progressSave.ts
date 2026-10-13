@@ -1,4 +1,4 @@
-import type { Task } from '../types';
+import type { Pet, Task } from '../types';
 
 const STORAGE_KEY = 'mochiMeadow.progress.v1';
 
@@ -8,6 +8,7 @@ export type ProgressSave = {
   points: number;
   playerName: string;
   tasks: Task[];
+  pets: Pet[];
 };
 
 export const DEFAULT_TASKS: Task[] = [
@@ -15,11 +16,16 @@ export const DEFAULT_TASKS: Task[] = [
   { id: '2', title: 'Read chapter 3', done: false, points: 15 },
 ];
 
+export const DEFAULT_PETS: Pet[] = [
+  { id: 'm1', name: 'Mochi', mood: 'neutral', energy: 50, level: 1 },
+];
+
 const DEFAULTS: ProgressSave = {
   v: 1,
   points: 0,
   playerName: '',
   tasks: DEFAULT_TASKS.map((t) => ({ ...t })),
+  pets: DEFAULT_PETS.map((p) => ({ ...p })),
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -49,12 +55,52 @@ function parseTasks(value: unknown): Task[] {
   return tasks.length > 0 ? tasks : DEFAULT_TASKS.map((t) => ({ ...t }));
 }
 
+function parseMood(value: unknown): Pet['mood'] {
+  if (value === 'happy' || value === 'sad' || value === 'neutral') return value;
+  return 'neutral';
+}
+
+function parsePet(value: unknown): Pet | null {
+  if (!isRecord(value)) return null;
+  if (typeof value.id !== 'string' || !value.id) return null;
+  if (typeof value.name !== 'string' || !value.name.trim()) return null;
+  const energy =
+    typeof value.energy === 'number' && Number.isFinite(value.energy)
+      ? Math.min(100, Math.max(0, Math.floor(value.energy)))
+      : 50;
+  const level =
+    typeof value.level === 'number' && Number.isFinite(value.level)
+      ? Math.max(1, Math.floor(value.level))
+      : 1;
+  return {
+    id: value.id,
+    name: value.name.trim().slice(0, 24),
+    mood: parseMood(value.mood),
+    energy,
+    level,
+  };
+}
+
+function parsePets(value: unknown): Pet[] {
+  if (!Array.isArray(value)) return DEFAULT_PETS.map((p) => ({ ...p }));
+  const pets = value.map(parsePet).filter((p): p is Pet => p != null);
+  return pets.length > 0 ? pets : DEFAULT_PETS.map((p) => ({ ...p }));
+}
+
+function cloneDefaults(): ProgressSave {
+  return {
+    ...DEFAULTS,
+    tasks: DEFAULT_TASKS.map((t) => ({ ...t })),
+    pets: DEFAULT_PETS.map((p) => ({ ...p })),
+  };
+}
+
 export function loadProgress(): ProgressSave {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { ...DEFAULTS, tasks: DEFAULT_TASKS.map((t) => ({ ...t })) };
+    if (!raw) return cloneDefaults();
     const parsed: unknown = JSON.parse(raw);
-    if (!isRecord(parsed)) return { ...DEFAULTS, tasks: DEFAULT_TASKS.map((t) => ({ ...t })) };
+    if (!isRecord(parsed)) return cloneDefaults();
 
     const points = typeof parsed.points === 'number' && Number.isFinite(parsed.points)
       ? Math.max(0, Math.floor(parsed.points))
@@ -62,10 +108,11 @@ export function loadProgress(): ProgressSave {
     const playerName =
       typeof parsed.playerName === 'string' ? parsed.playerName.trim().slice(0, 24) : '';
     const tasks = parseTasks(parsed.tasks);
+    const pets = parsePets(parsed.pets);
 
-    return { v: 1, points, playerName, tasks };
+    return { v: 1, points, playerName, tasks, pets };
   } catch {
-    return { ...DEFAULTS, tasks: DEFAULT_TASKS.map((t) => ({ ...t })) };
+    return cloneDefaults();
   }
 }
 
@@ -80,6 +127,7 @@ export function saveProgress(patch: Partial<Omit<ProgressSave, 'v'>>): void {
           ? patch.playerName.trim().slice(0, 24)
           : current.playerName,
       tasks: patch.tasks !== undefined ? patch.tasks.map((t) => ({ ...t })) : current.tasks,
+      pets: patch.pets !== undefined ? patch.pets.map((p) => ({ ...p })) : current.pets,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   } catch {

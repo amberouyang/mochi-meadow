@@ -10,6 +10,7 @@ import { loadStudyGoalDefault, saveStudyGoalDefault } from '../utils/studyGoalDe
 import { loadSoundMuted, saveSoundMuted } from '../utils/soundSettings';
 import {
   clearProgressSave,
+  DEFAULT_PETS,
   DEFAULT_TASKS,
   loadProgress,
   saveProgress,
@@ -186,7 +187,7 @@ export const useStore = create<Store>((set, get) => ({
     return true;
   },
 
-  pets: [{ id: 'm1', name: 'Mochi', mood: 'neutral', energy: 50, level: 1 }],
+  pets: savedProgress.pets,
   setPetMood: (id, mood) =>
     set((s) => ({
       pets: s.pets.map((p) => (p.id === id ? { ...p, mood } : p)),
@@ -298,7 +299,7 @@ export const useStore = create<Store>((set, get) => ({
       brainRotActive: false,
       tasks: DEFAULT_TASKS.map((t) => ({ ...t })),
       points: 0,
-      pets: [{ id: 'm1', name: 'Mochi', mood: 'neutral', energy: 50, level: 1 }],
+      pets: DEFAULT_PETS.map((p) => ({ ...p })),
       gardenUnlocked: false,
       tutorialStage: 'introMeadow',
       introStartedAt: Date.now(),
@@ -334,7 +335,8 @@ useStore.subscribe((state, prev) => {
   if (
     state.points === prev.points &&
     state.playerName === prev.playerName &&
-    state.tasks === prev.tasks
+    state.tasks === prev.tasks &&
+    state.pets === prev.pets
   ) {
     return;
   }
@@ -342,6 +344,7 @@ useStore.subscribe((state, prev) => {
     points: state.points,
     playerName: state.playerName,
     tasks: state.tasks,
+    pets: state.pets,
   });
 });
 
