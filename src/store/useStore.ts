@@ -8,12 +8,14 @@ import {
 } from '../utils/studyCalendar';
 import { loadStudyGoalDefault, saveStudyGoalDefault } from '../utils/studyGoalDefault';
 import { loadSoundMuted, saveSoundMuted } from '../utils/soundSettings';
+import { clearProgressSave, loadProgress, saveProgress } from '../utils/progressSave';
 
 type StudyState = 'idle' | 'studying';
 
 const streakSave = loadStudyStreak();
 const savedStudyGoal = loadStudyGoalDefault();
 const savedSoundMuted = loadSoundMuted();
+const savedProgress = loadProgress();
 
 type Store = {
   // Study
@@ -167,7 +169,7 @@ export const useStore = create<Store>((set, get) => ({
     })),
   removeTask: (id) => set((s) => ({ tasks: s.tasks.filter((t) => t.id !== id) })),
 
-  points: 0,
+  points: savedProgress.points,
   addPoints: (n) =>
     set((s) => {
       const nextPoints = s.points + n;
@@ -275,7 +277,7 @@ export const useStore = create<Store>((set, get) => ({
   },
 
   // Player
-  playerName: '',
+  playerName: savedProgress.playerName,
   setPlayerName: (name) => set({ playerName: name.trim().slice(0, 24) }),
 
   soundMuted: savedSoundMuted,
@@ -315,6 +317,7 @@ export const useStore = create<Store>((set, get) => ({
       playerName: '',
     });
     saveStudyStreak({ lastStudyDate: null, brainRotActive: false });
+    clearProgressSave();
     try {
       localStorage.removeItem('mochiMeadow.meadowIntro.v1');
       localStorage.removeItem('mochiMeadow.studyStreak.v1');
@@ -327,6 +330,11 @@ export const useStore = create<Store>((set, get) => ({
     window.location.reload();
   },
 }));
+
+useStore.subscribe((state, prev) => {
+  if (state.points === prev.points && state.playerName === prev.playerName) return;
+  saveProgress({ points: state.points, playerName: state.playerName });
+});
 
 if (typeof window !== 'undefined' && import.meta.env.DEV) {
   (window as unknown as { __mochiStore: typeof useStore }).__mochiStore = useStore;
