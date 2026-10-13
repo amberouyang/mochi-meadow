@@ -59,6 +59,43 @@
   outline-offset: 1px;
 }
 
+.settings-hint {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--mm-ink-muted);
+  line-height: 1.35;
+}
+
+.settings-goal-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.settings-goal-field {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.settings-goal-field input {
+  width: 3.25rem;
+  padding: 0.4rem 0.45rem;
+  border-radius: var(--mm-radius-sm);
+  border: 2px solid rgba(47, 95, 61, 0.28);
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--mm-ink);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.settings-goal-field span {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--mm-ink-muted);
+}
+
 .settings-btn {
   align-self: flex-start;
   padding: 0.45rem 0.9rem;

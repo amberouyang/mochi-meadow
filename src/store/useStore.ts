@@ -6,10 +6,12 @@ import {
   shouldActivateBrainRot,
   todayKey,
 } from '../utils/studyCalendar';
+import { loadStudyGoalDefault, saveStudyGoalDefault } from '../utils/studyGoalDefault';
 
 type StudyState = 'idle' | 'studying';
 
 const streakSave = loadStudyStreak();
+const savedStudyGoal = loadStudyGoalDefault();
 
 type Store = {
   // Study
@@ -75,12 +77,16 @@ type Store = {
 };
 
 export const useStore = create<Store>((set, get) => ({
-  studyMinutesGoal: 60,
+  studyMinutesGoal: savedStudyGoal,
   studyMinutesToday: 0,
   studyState: 'idle',
   lastStudyDate: streakSave.lastStudyDate,
   brainRotActive: streakSave.brainRotActive,
-  setStudyMinutesGoal: (n) => set({ studyMinutesGoal: Math.max(0, n) }),
+  setStudyMinutesGoal: (n) => {
+    const next = Math.max(0, n);
+    set({ studyMinutesGoal: next });
+    saveStudyGoalDefault(next);
+  },
   setStudyMinutesToday: (n) => set({ studyMinutesToday: Math.max(0, n) }),
   addStudyMinute: () => {
     get().recordStudyDay();
