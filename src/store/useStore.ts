@@ -7,11 +7,13 @@ import {
   todayKey,
 } from '../utils/studyCalendar';
 import { loadStudyGoalDefault, saveStudyGoalDefault } from '../utils/studyGoalDefault';
+import { loadSoundMuted, saveSoundMuted } from '../utils/soundSettings';
 
 type StudyState = 'idle' | 'studying';
 
 const streakSave = loadStudyStreak();
 const savedStudyGoal = loadStudyGoalDefault();
+const savedSoundMuted = loadSoundMuted();
 
 type Store = {
   // Study
@@ -74,6 +76,10 @@ type Store = {
   // Player
   playerName: string;
   setPlayerName: (name: string) => void;
+
+  // Audio prefs (ready for theme / SFX later)
+  soundMuted: boolean;
+  setSoundMuted: (muted: boolean) => void;
 
   /** Wipe progress and local meadow saves back to a fresh start. */
   resetProgress: () => void;
@@ -271,6 +277,12 @@ export const useStore = create<Store>((set, get) => ({
   // Player
   playerName: '',
   setPlayerName: (name) => set({ playerName: name.trim().slice(0, 24) }),
+
+  soundMuted: savedSoundMuted,
+  setSoundMuted: (muted) => {
+    set({ soundMuted: muted });
+    saveSoundMuted(muted);
+  },
 
   resetProgress: () => {
     const goal = loadStudyGoalDefault();

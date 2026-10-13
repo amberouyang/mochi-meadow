@@ -16,6 +16,8 @@ export function SettingsPanel() {
   const studyMinutesGoal = useStore((s) => s.studyMinutesGoal);
   const setStudyMinutesGoal = useStore((s) => s.setStudyMinutesGoal);
   const resetProgress = useStore((s) => s.resetProgress);
+  const soundMuted = useStore((s) => s.soundMuted);
+  const setSoundMuted = useStore((s) => s.setSoundMuted);
 
   const parts = goalParts(studyMinutesGoal);
   const [nameDraft, setNameDraft] = useState(playerName);
@@ -135,6 +137,34 @@ export function SettingsPanel() {
         <button type="button" className="settings-btn settings-btn-primary" onClick={saveGoalDefault}>
           Save goal
         </button>
+      </section>
+
+      <section className="settings-section" aria-labelledby="settings-sound-heading">
+        <h3 id="settings-sound-heading" className="settings-section-title">
+          Sound
+        </h3>
+        <div className="settings-row">
+          <div>
+            <p className="settings-label" id="settings-mute-label">
+              Mute sounds
+            </p>
+            <p className="settings-hint">Ready for theme music and UI sounds later.</p>
+          </div>
+          <button
+            type="button"
+            className={`settings-toggle${soundMuted ? ' is-on' : ''}`}
+            role="switch"
+            aria-checked={soundMuted}
+            aria-labelledby="settings-mute-label"
+            onClick={() => {
+              const next = !soundMuted;
+              setSoundMuted(next);
+              setMessage(next ? 'Sounds muted.' : 'Sounds unmuted.');
+            }}
+          >
+            <span className="settings-toggle-knob" />
+          </button>
+        </div>
       </section>
 
       <section className="settings-section" aria-labelledby="settings-reset-heading">
