@@ -8,6 +8,7 @@ import { Garden } from './Garden';
 import { EggSanctuary } from './EggSanctuary';
 import { StorePanel } from './StorePanel';
 import { StoragePanel } from './StoragePanel';
+import { SettingsPanel } from './SettingsPanel';
 import {
   SkyIconBoard,
   SkyIconEgg,
@@ -21,7 +22,7 @@ import {
 } from './SkyHudPixelIcons';
 import './MainView.css';
 
-type Panel = 'none' | 'todo' | 'study' | 'sanctuary' | 'store' | 'storage';
+type Panel = 'none' | 'todo' | 'study' | 'sanctuary' | 'store' | 'storage' | 'settings';
 
 export function MainView() {
   const [panel, setPanel] = useState<Panel>('none');
@@ -99,6 +100,7 @@ export function MainView() {
           {panel === 'sanctuary' && <EggSanctuary />}
           {panel === 'store' && <StorePanel />}
           {panel === 'storage' && <StoragePanel />}
+          {panel === 'settings' && <SettingsPanel />}
         </div>
       )}
 
@@ -216,9 +218,9 @@ export function MainView() {
             </button>
             <button
               type="button"
-              className="main-dock-btn"
-              onClick={() => showComingSoon('Settings')}
-              aria-label="Settings (coming soon)"
+              className={`main-dock-btn ${panel === 'settings' ? 'is-active' : ''}`}
+              onClick={() => openPanel('settings')}
+              aria-label="Settings"
             >
               <span className="main-dock-icon">
                 <SkyIconGear />
