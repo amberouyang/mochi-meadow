@@ -306,10 +306,13 @@ export const useStore = create<Store>((set, get) => ({
     try {
       localStorage.removeItem('mochiMeadow.meadowIntro.v1');
       localStorage.removeItem('mochiMeadow.studyStreak.v1');
+      localStorage.removeItem('mochiMeadow.studyStreak.v2');
       localStorage.removeItem('mochiMeadow.clearForcedBrainRot.v1');
     } catch {
       /* ignore */
     }
+    // Intro / name / rubble live in App UI state — reload restarts that flow cleanly.
+    window.location.reload();
   },
 }));
 

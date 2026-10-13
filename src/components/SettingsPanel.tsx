@@ -63,13 +63,11 @@ export function SettingsPanel() {
   const handleReset = () => {
     if (!confirmReset) {
       setConfirmReset(true);
-      setMessage('Press again to confirm reset.');
+      setMessage('Press again to confirm reset. You will restart from the beginning.');
       return;
     }
+    // Clears save data, then reloads so intro → name → rubble → first mochi run again.
     resetProgress();
-    setConfirmReset(false);
-    setNameDraft('');
-    setMessage('Progress reset. Reload or restart intro to begin again.');
   };
 
   return (
@@ -144,7 +142,8 @@ export function SettingsPanel() {
           Danger zone
         </h3>
         <p className="settings-hint">
-          Clears points, tasks, pets, tutorial, and study streak. Keeps your saved study goal default.
+          Clears progress and restarts from the intro (name, rubble, first mochi). Keeps your saved
+          study goal default.
         </p>
         <button
           type="button"
