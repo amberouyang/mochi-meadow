@@ -8,7 +8,12 @@ import {
 } from '../utils/studyCalendar';
 import { loadStudyGoalDefault, saveStudyGoalDefault } from '../utils/studyGoalDefault';
 import { loadSoundMuted, saveSoundMuted } from '../utils/soundSettings';
-import { clearProgressSave, loadProgress, saveProgress } from '../utils/progressSave';
+import {
+  clearProgressSave,
+  DEFAULT_TASKS,
+  loadProgress,
+  saveProgress,
+} from '../utils/progressSave';
 
 type StudyState = 'idle' | 'studying';
 
@@ -155,10 +160,7 @@ export const useStore = create<Store>((set, get) => ({
     return true;
   },
 
-  tasks: [
-    { id: '1', title: 'Finish math homework', done: false, points: 10 },
-    { id: '2', title: 'Read chapter 3', done: false, points: 15 },
-  ],
+  tasks: savedProgress.tasks,
   addTask: (title, points = 5) =>
     set((s) => ({
       tasks: [...s.tasks, { id: crypto.randomUUID(), title, done: false, points }],
@@ -294,10 +296,7 @@ export const useStore = create<Store>((set, get) => ({
       studyState: 'idle',
       lastStudyDate: null,
       brainRotActive: false,
-      tasks: [
-        { id: '1', title: 'Finish math homework', done: false, points: 10 },
-        { id: '2', title: 'Read chapter 3', done: false, points: 15 },
-      ],
+      tasks: DEFAULT_TASKS.map((t) => ({ ...t })),
       points: 0,
       pets: [{ id: 'm1', name: 'Mochi', mood: 'neutral', energy: 50, level: 1 }],
       gardenUnlocked: false,
@@ -332,8 +331,18 @@ export const useStore = create<Store>((set, get) => ({
 }));
 
 useStore.subscribe((state, prev) => {
-  if (state.points === prev.points && state.playerName === prev.playerName) return;
-  saveProgress({ points: state.points, playerName: state.playerName });
+  if (
+    state.points === prev.points &&
+    state.playerName === prev.playerName &&
+    state.tasks === prev.tasks
+  ) {
+    return;
+  }
+  saveProgress({
+    points: state.points,
+    playerName: state.playerName,
+    tasks: state.tasks,
+  });
 });
 
 if (typeof window !== 'undefined' && import.meta.env.DEV) {
