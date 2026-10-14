@@ -298,6 +298,12 @@
   flex-direction: column;
 }
 
+.main-garden-area.is-nest-page {
+  background: #3a5a40;
+  display: flex;
+  flex-direction: column;
+}
+
 .main-panel {
   position: fixed;
   bottom: 5.75rem;

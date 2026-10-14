@@ -22,9 +22,11 @@ import {
 } from './SkyHudPixelIcons';
 import './MainView.css';
 
-type Panel = 'none' | 'todo' | 'study' | 'sanctuary' | 'store' | 'storage' | 'settings';
+type Panel = 'none' | 'todo' | 'study' | 'store' | 'storage' | 'settings';
+type Screen = 'meadow' | 'nest';
 
 export function MainView() {
+  const [screen, setScreen] = useState<Screen>('meadow');
   const [panel, setPanel] = useState<Panel>('none');
   const [soonToast, setSoonToast] = useState<string | null>(null);
   const soonTimeoutRef = useRef<number | null>(null);
@@ -46,11 +48,18 @@ export function MainView() {
   }, [evaluateBrainRot]);
 
   const openPanel = (next: Panel) => {
-    if (next === 'sanctuary' && tutorialStage === 'showSanctuaryArrow') {
+    setSoonToast(null);
+    setScreen('meadow');
+    setPanel((current) => (current === next ? 'none' : next));
+  };
+
+  const openNest = () => {
+    if (tutorialStage === 'showSanctuaryArrow') {
       setTutorialStage('done');
     }
     setSoonToast(null);
-    setPanel((current) => (current === next ? 'none' : next));
+    setPanel('none');
+    setScreen((current) => (current === 'nest' ? 'meadow' : 'nest'));
   };
 
   useEffect(() => {
@@ -84,20 +93,23 @@ export function MainView() {
 
   return (
     <div className="main-view" data-season={season}>
-      <section className="main-garden-area">
+      <section className={`main-garden-area${screen === 'nest' ? ' is-nest-page' : ''}`}>
         <div className="main-top-chip" aria-label={`Points: ${points}`}>
           <span className="main-points-label">Points</span>
           <span className="main-points-value">{points}</span>
         </div>
 
-        <Garden locked={!gardenUnlocked && tutorialStage === 'done'} onUnlockHint={checkGardenAccess} />
+        {screen === 'nest' ? (
+          <EggSanctuary onBackToMeadow={() => setScreen('meadow')} />
+        ) : (
+          <Garden locked={!gardenUnlocked && tutorialStage === 'done'} onUnlockHint={checkGardenAccess} />
+        )}
       </section>
 
-      {panel !== 'none' && (
+      {panel !== 'none' && screen === 'meadow' && (
         <div className="main-panel">
           {panel === 'todo' && <TodoList />}
           {panel === 'study' && <StudyBar />}
-          {panel === 'sanctuary' && <EggSanctuary />}
           {panel === 'store' && <StorePanel />}
           {panel === 'storage' && <StoragePanel />}
           {panel === 'settings' && <SettingsPanel />}
@@ -136,8 +148,8 @@ export function MainView() {
             <div className="main-dock-btn-wrap">
               <button
                 type="button"
-                className={`main-dock-btn ${panel === 'sanctuary' ? 'is-active' : ''}`}
-                onClick={() => openPanel('sanctuary')}
+                className={`main-dock-btn ${screen === 'nest' ? 'is-active' : ''}`}
+                onClick={openNest}
               >
                 <span className="main-dock-icon">
                   <SkyIconEgg />

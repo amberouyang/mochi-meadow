@@ -1,128 +1,334 @@
-.egg-sanctuary {
+/* Nest as a visit-able room scene (meadow → nest den) */
+
+.nest-scene {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
 }
 
-.nest-header {
+.nest-scene-sky {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 40% at 50% 8%, rgba(255, 236, 190, 0.35) 0%, transparent 65%),
+    linear-gradient(180deg, #6a9a6e 0%, #4a7a52 35%, #3a5a40 100%);
+  pointer-events: none;
+}
+
+.nest-scene-room {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0.55rem 0.65rem 0.35rem;
+  border-radius: 18px 18px 10px 10px;
+  border: 4px solid #5a3d28;
+  box-shadow:
+    inset 0 0 0 3px #c4a574,
+    0 10px 28px rgba(12, 28, 18, 0.28);
+  background:
+    linear-gradient(180deg, rgba(255, 248, 230, 0.2) 0%, transparent 28%),
+    repeating-linear-gradient(
+      90deg,
+      #8b5e3c 0px,
+      #8b5e3c 14px,
+      #7a5134 14px,
+      #7a5134 28px
+    );
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.5rem;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-.egg-title {
-  margin: 0;
-  font-size: 1.05rem;
+.nest-scene-room::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, #d8b88a 0%, #c9a572 18%, transparent 18%),
+    linear-gradient(0deg, #6b4a30 0%, #5a3d28 12%, transparent 12%);
+  pointer-events: none;
+  opacity: 0.95;
+}
+
+.nest-scene-exit {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.75rem;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 2px solid #4a2f1c;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #f0d9a8 0%, #d4b07a 100%);
+  color: #3d2614;
+  font-size: 0.78rem;
   font-weight: 800;
-  color: var(--mm-ink, var(--text));
+  padding: 0.4rem 0.7rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
 }
 
-.nest-stats {
+.nest-scene-exit:hover {
+  filter: brightness(1.05);
+}
+
+.nest-scene-exit-icon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.nest-scene-signboard {
+  position: relative;
+  z-index: 2;
+  align-self: flex-start;
+  margin: 1.1rem 0 0 1rem;
+  padding: 0.55rem 0.85rem 0.5rem;
+  min-width: 9.5rem;
+  background: linear-gradient(180deg, #e8c98a 0%, #c9a05a 100%);
+  border: 3px solid #6a4528;
+  border-radius: 8px;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.18);
+}
+
+.nest-scene-sign-title {
   margin: 0;
-  font-size: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #3d2614;
+}
+
+.nest-scene-sign-meta {
+  margin: 0.15rem 0 0;
+  font-size: 0.72rem;
   font-weight: 700;
-  color: var(--mm-ink-muted, var(--muted));
-  white-space: nowrap;
+  color: #6a4a28;
 }
 
-.egg-text {
-  margin: 0;
-  font-size: 0.82rem;
-  line-height: 1.4;
-  color: var(--mm-ink-muted, var(--muted));
+.nest-scene-shelf-unit {
+  position: relative;
+  z-index: 2;
+  width: min(92%, 560px);
+  margin: 1.1rem auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.75rem 0.7rem 0.85rem;
+  background: linear-gradient(180deg, #a87448 0%, #8a5a34 100%);
+  border: 3px solid #4e321c;
+  border-radius: 12px;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 220, 170, 0.25),
+    0 8px 16px rgba(0, 0, 0, 0.22);
 }
 
-.nest-shelf {
+.nest-scene-shelf-plank {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.45rem;
-  padding: 0.55rem;
-  border-radius: var(--mm-radius-sm, 12px);
-  background: rgba(47, 95, 61, 0.08);
-  border: 2px solid rgba(47, 95, 61, 0.2);
+  gap: 0.4rem;
+  padding: 0.45rem 0.35rem 0.55rem;
+  background: linear-gradient(180deg, #6f4528 0%, #5a3720 100%);
+  border-radius: 8px;
+  border: 2px solid rgba(40, 24, 12, 0.45);
+  box-shadow: inset 0 -6px 0 rgba(0, 0, 0, 0.18);
 }
 
-.nest-slot {
+.nest-scene-perch {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.4rem 0.2rem 0.35rem;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.55);
-  border: 1.5px solid rgba(47, 95, 61, 0.15);
+  gap: 0.2rem;
   min-width: 0;
 }
 
-.nest-slot.is-locked {
-  background: rgba(30, 50, 38, 0.08);
-}
-
-.nest-slot-art {
-  width: 52px;
-  height: 40px;
+.nest-scene-perch-art {
+  width: 58px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   line-height: 0;
 }
 
-.nest-slot-mochi {
-  width: 52px !important;
-  height: 36px !important;
+.nest-scene-perch-mochi {
+  width: 56px !important;
+  height: 40px !important;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.25));
 }
 
-.nest-slot-silhouette {
+.nest-scene-perch-ghost {
   display: block;
-  width: 36px;
-  height: 28px;
+  width: 34px;
+  height: 26px;
   border-radius: 40% 40% 45% 45%;
-  background: rgba(26, 61, 40, 0.28);
-  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.08);
+  background: rgba(20, 12, 8, 0.28);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.12);
 }
 
-.nest-slot-name {
-  font-size: 0.58rem;
-  font-weight: 700;
-  color: var(--mm-ink, var(--text));
+.nest-scene-perch-name {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #f6e6c8;
   text-align: center;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
 }
 
-.nest-slot.is-locked .nest-slot-name {
-  color: var(--mm-ink-muted, var(--muted));
+.nest-scene-perch.is-locked .nest-scene-perch-name {
+  color: rgba(246, 230, 200, 0.45);
 }
 
-.nest-hatch {
-  margin-top: 0.15rem;
-  padding: 0.65rem 0.7rem 0.75rem;
-  border-radius: var(--mm-radius-sm, 12px);
-  background: rgba(255, 255, 255, 0.55);
-  border: 2px solid rgba(47, 95, 61, 0.18);
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-}
-
-.nest-hatch-title {
-  margin: 0;
-  font-size: 0.85rem;
-  font-weight: 800;
-  color: var(--mm-ink, var(--text));
-}
-
-.egg-visual {
+.nest-scene-floor {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 auto;
+  min-height: 140px;
+  margin-top: auto;
+  padding: 0.75rem 1rem 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.15rem;
+  justify-content: flex-end;
+  gap: 0.55rem;
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(90, 58, 32, 0.35) 18%, transparent 18%),
+    repeating-linear-gradient(
+      90deg,
+      #6e4a2e 0px,
+      #6e4a2e 22px,
+      #5c3c24 22px,
+      #5c3c24 44px
+    );
 }
 
+.nest-scene-bed {
+  position: relative;
+  width: min(180px, 46vw);
+  height: min(110px, 28vw);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nest-scene-bed-rim {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse at 50% 40%, #c49a5a 0%, #8a6238 55%, #5a3d24 100%);
+  border: 3px solid #3d2818;
+  box-shadow:
+    0 8px 0 rgba(0, 0, 0, 0.2),
+    inset 0 4px 8px rgba(255, 220, 160, 0.2);
+}
+
+.nest-scene-bed-inner {
+  position: relative;
+  z-index: 1;
+  width: 72%;
+  height: 62%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 40%, #5a4028 0%, #3a2818 80%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.35);
+}
+
+.nest-scene-bed.is-warming .nest-scene-bed-rim {
+  animation: nest-glow 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes nest-glow {
+  from {
+    filter: brightness(1);
+  }
+  to {
+    filter: brightness(1.08);
+  }
+}
+
+.nest-scene-bed-empty {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: rgba(246, 230, 200, 0.45);
+  letter-spacing: 0.02em;
+}
+
+.nest-scene-egg-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  transform: translateY(-4px);
+}
+
+.nest-scene-egg {
+  width: 42px;
+  height: 52px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+.nest-scene-egg .egg-inner {
+  width: 30px;
+  height: 36px;
+}
+
+.nest-scene-egg .egg-face {
+  font-size: 0.72rem;
+}
+
+.nest-scene-warm-bar {
+  width: 48px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.nest-scene-warm-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #9ece6a, #7ab05a);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.nest-scene-hatchling {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  color: #f6e6c8;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.nest-scene-hatchling-mochi {
+  width: 48px !important;
+  height: 34px !important;
+}
+
+.nest-scene-caption {
+  margin: 0;
+  max-width: 22rem;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #f3e2c0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+/* Shared egg pieces (used by nest scene egg) */
 .egg-outer {
   width: 64px;
   height: 78px;
@@ -150,40 +356,28 @@
   color: #8a6a40;
 }
 
-.egg-progress {
-  position: relative;
-  width: 100%;
-  height: 10px;
-  background: rgba(47, 95, 61, 0.12);
-  border-radius: 999px;
-  overflow: hidden;
-}
+@media (max-width: 720px) {
+  .nest-scene-room {
+    margin: 0.35rem 0.4rem 0.2rem;
+  }
 
-.egg-progress-bar {
-  position: absolute;
-  inset: 0;
-  width: 0;
-  background: linear-gradient(90deg, var(--mm-accent, #9ece6a), var(--mm-accent-deep, #7ab05a));
-  border-radius: 999px;
-  transition: width 0.3s ease;
-}
+  .nest-scene-shelf-unit {
+    width: 96%;
+    margin-top: 0.85rem;
+  }
 
-.egg-progress-label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--mm-ink-muted, var(--muted));
-}
+  .nest-scene-perch-art {
+    width: 48px;
+    height: 36px;
+  }
 
-.egg-hatched {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.35rem;
-  margin-top: 0.25rem;
-}
+  .nest-scene-perch-mochi {
+    width: 46px !important;
+    height: 32px !important;
+  }
 
-.egg-hatched-name {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--mm-ink, var(--text));
+  .nest-scene-exit {
+    font-size: 0.7rem;
+    padding: 0.32rem 0.55rem;
+  }
 }

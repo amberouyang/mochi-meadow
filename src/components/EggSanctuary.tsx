@@ -10,7 +10,11 @@ type NestSlot = {
   hint: string;
 };
 
-export function EggSanctuary() {
+type EggSanctuaryProps = {
+  onBackToMeadow?: () => void;
+};
+
+export function EggSanctuary({ onBackToMeadow }: EggSanctuaryProps) {
   const eggProgress = useStore((s) => s.eggProgress);
   const eggHatched = useStore((s) => s.eggHatched);
   const incubatingEgg = useStore((s) => s.incubatingEgg);
@@ -59,77 +63,108 @@ export function EggSanctuary() {
   const isIncubating = Boolean(incubatingEgg && !eggHatched);
   const justHatched = Boolean(incubatingEgg && eggHatched);
 
+  const topRow = slots.slice(0, 4);
+  const bottomRow = slots.slice(4, 8);
+
+  let nestCaption = 'Buy an egg in the Store to warm it here.';
+  if (isIncubating && incubatingEgg) {
+    nestCaption = `${incubatingEgg.name} is incubating — ${pct}% warm. Keep studying!`;
+  } else if (justHatched && incubatingEgg) {
+    nestCaption = `${incubatingEgg.name} hatched and joined the meadow!`;
+  }
+
   return (
-    <div className="egg-sanctuary">
-      <header className="nest-header">
-        <h2 className="egg-title">{nestOwner}</h2>
-        <p className="nest-stats">
-          Pets {unlockedCount}/{slots.length}
-        </p>
-      </header>
+    <div className="nest-scene" role="region" aria-label={nestOwner}>
+      <div className="nest-scene-sky" aria-hidden />
+      <div className="nest-scene-room">
+        {onBackToMeadow && (
+          <button type="button" className="nest-scene-exit" onClick={onBackToMeadow}>
+            <span className="nest-scene-exit-icon" aria-hidden>
+              ⌂
+            </span>
+            Exit to meadow
+          </button>
+        )}
 
-      <p className="egg-text">
-        Your collection lives here. Buy eggs in the store, incubate them in the hatching nest, and
-        fill empty perches as new mochis hatch.
-      </p>
+        <div className="nest-scene-signboard" aria-label="Nest stats">
+          <p className="nest-scene-sign-title">{nestOwner}</p>
+          <p className="nest-scene-sign-meta">
+            Pets {unlockedCount}/{slots.length}
+          </p>
+        </div>
 
-      <div className="nest-shelf" role="list" aria-label="Pet collection">
-        {slots.map((slot) => (
+        <div className="nest-scene-shelf-unit" role="list" aria-label="Pet collection shelf">
+          <div className="nest-scene-shelf-plank">
+            {topRow.map((slot) => (
+              <div
+                key={slot.id}
+                className={`nest-scene-perch${slot.unlocked ? ' is-unlocked' : ' is-locked'}`}
+                role="listitem"
+                title={slot.hint}
+              >
+                <div className="nest-scene-perch-art" aria-hidden>
+                  {slot.unlocked ? (
+                    <MochiCloud className="nest-scene-perch-mochi" />
+                  ) : (
+                    <span className="nest-scene-perch-ghost" />
+                  )}
+                </div>
+                <span className="nest-scene-perch-name">{slot.unlocked ? slot.name : '· · ·'}</span>
+              </div>
+            ))}
+          </div>
+          <div className="nest-scene-shelf-plank">
+            {bottomRow.map((slot) => (
+              <div
+                key={slot.id}
+                className={`nest-scene-perch${slot.unlocked ? ' is-unlocked' : ' is-locked'}`}
+                role="listitem"
+                title={slot.hint}
+              >
+                <div className="nest-scene-perch-art" aria-hidden>
+                  {slot.unlocked ? (
+                    <MochiCloud className="nest-scene-perch-mochi" />
+                  ) : (
+                    <span className="nest-scene-perch-ghost" />
+                  )}
+                </div>
+                <span className="nest-scene-perch-name">{slot.unlocked ? slot.name : '· · ·'}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="nest-scene-floor">
           <div
-            key={slot.id}
-            className={`nest-slot${slot.unlocked ? ' is-unlocked' : ' is-locked'}`}
-            role="listitem"
-            title={slot.hint}
+            className={`nest-scene-bed${isIncubating ? ' is-warming' : ''}${justHatched ? ' is-hatched' : ''}`}
+            aria-label="Hatching nest"
           >
-            <div className="nest-slot-art" aria-hidden>
-              {slot.unlocked ? (
-                <MochiCloud className="nest-slot-mochi" />
-              ) : (
-                <span className="nest-slot-silhouette" />
+            <div className="nest-scene-bed-rim" aria-hidden />
+            <div className="nest-scene-bed-inner">
+              {!incubatingEgg && <span className="nest-scene-bed-empty">empty nest</span>}
+              {isIncubating && (
+                <div className="nest-scene-egg-wrap">
+                  <div className="egg-outer nest-scene-egg">
+                    <div className="egg-inner">
+                      <span className="egg-face">・‿・</span>
+                    </div>
+                  </div>
+                  <div className="nest-scene-warm-bar" aria-hidden>
+                    <div className="nest-scene-warm-fill" style={{ width: `${pct}%` }} />
+                  </div>
+                </div>
+              )}
+              {justHatched && incubatingEgg && (
+                <div className="nest-scene-hatchling">
+                  <MochiCloud className="nest-scene-hatchling-mochi" />
+                  <span>{incubatingEgg.name}</span>
+                </div>
               )}
             </div>
-            <span className="nest-slot-name">{slot.unlocked ? slot.name : 'Locked'}</span>
           </div>
-        ))}
+          <p className="nest-scene-caption">{nestCaption}</p>
+        </div>
       </div>
-
-      <section className="nest-hatch" aria-label="Hatching nest">
-        <h3 className="nest-hatch-title">Hatching nest</h3>
-        {!incubatingEgg ? (
-          <p className="egg-text">
-            The nest is empty. Buy an egg in the store to start incubating a new mochi pet.
-          </p>
-        ) : isIncubating ? (
-          <>
-            <p className="egg-text">
-              <strong>{incubatingEgg.name}</strong> is warming here. Study and finish tasks to hatch
-              them — your original mochi stays in the meadow.
-            </p>
-            <div className="egg-visual">
-              <div className="egg-outer">
-                <div className="egg-inner">
-                  <span className="egg-face">・‿・</span>
-                </div>
-              </div>
-              <div className="egg-progress">
-                <div className="egg-progress-bar" style={{ width: `${pct}%` }} />
-              </div>
-              <span className="egg-progress-label">{pct}% to hatch</span>
-            </div>
-          </>
-        ) : justHatched ? (
-          <>
-            <p className="egg-text">
-              <strong>{incubatingEgg.name}</strong> hatched and joined your meadow! Buy another egg
-              when you&apos;re ready.
-            </p>
-            <div className="egg-hatched">
-              <MochiCloud />
-              <span className="egg-hatched-name">{incubatingEgg.name}</span>
-            </div>
-          </>
-        ) : null}
-      </section>
     </div>
   );
 }

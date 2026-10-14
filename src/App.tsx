@@ -143,8 +143,8 @@ export default function App() {
                 the Store on eggs and care items like Meadow Mist.
               </li>
               <li>
-                <strong>Eggs &amp; Nest</strong> — Bought eggs incubate in Nest. Study to hatch them
-                into new mochi pets — your starter mochi stays.
+                <strong>Eggs &amp; Nest</strong> — Nest opens as its own room. Bought eggs incubate
+                there; study to hatch them into new mochi pets — your starter mochi stays.
               </li>
               <li>
                 <strong>The meadow</strong> — Unlock visits by finishing today&apos;s tasks{' '}
