@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 import { MainView } from './components/MainView';
 import { SidebarView } from './components/SidebarView';
 import { OverlayView } from './components/OverlayView';
@@ -16,16 +16,38 @@ function getRoute() {
   return 'main';
 }
 
+function hasSeenMeadowIntro(): boolean {
+  try {
+    return Boolean(localStorage.getItem(MEADOW_INTRO_STORAGE_KEY));
+  } catch {
+    return false;
+  }
+}
+
 export default function App() {
   const route = useMemo(() => getRoute(), [window.location.hash]);
-  const [showIntro, setShowIntro] = useState(true);
-  const [showNamePopup, setShowNamePopup] = useState(false);
-  const [showBonusPopup, setShowBonusPopup] = useState(false);
-  const [showMeadowIntro, setShowMeadowIntro] = useState(false);
   const unlockGarden = useStore((s) => s.unlockGarden);
   const claimWelcomeBonus = useStore((s) => s.claimWelcomeBonus);
   const setPlayerName = useStore((s) => s.setPlayerName);
   const playerName = useStore((s) => s.playerName);
+  const welcomeBonusClaimed = useStore((s) => s.welcomeBonusClaimed);
+
+  const hasOnboarded = Boolean(playerName.trim()) && welcomeBonusClaimed;
+
+  const [showIntro, setShowIntro] = useState(!hasOnboarded);
+  const [showNamePopup, setShowNamePopup] = useState(false);
+  const [showBonusPopup, setShowBonusPopup] = useState(false);
+  const [showMeadowIntro, setShowMeadowIntro] = useState(false);
+  const [pendingName, setPendingName] = useState('');
+
+  // Returning players: skip Play / name / welcome and open the meadow.
+  useEffect(() => {
+    if (!hasOnboarded) return;
+    unlockGarden();
+    setShowIntro(false);
+    setShowNamePopup(false);
+    setShowBonusPopup(false);
+  }, [hasOnboarded, unlockGarden]);
 
   const onIntroComplete = useCallback(() => {
     setShowIntro(false);
@@ -33,7 +55,6 @@ export default function App() {
     setShowNamePopup(true);
   }, [unlockGarden]);
 
-  const [pendingName, setPendingName] = useState('');
   const onConfirmName = useCallback(() => {
     const name = pendingName.trim();
     if (!name) return;
@@ -45,20 +66,14 @@ export default function App() {
   const onCollectBonus = useCallback(() => {
     claimWelcomeBonus();
     setShowBonusPopup(false);
-    try {
-      if (typeof localStorage !== 'undefined' && !localStorage.getItem(MEADOW_INTRO_STORAGE_KEY)) {
-        setShowMeadowIntro(true);
-      }
-    } catch {
+    if (!hasSeenMeadowIntro()) {
       setShowMeadowIntro(true);
     }
   }, [claimWelcomeBonus]);
 
   const onDismissMeadowIntro = useCallback(() => {
     try {
-      if (typeof localStorage !== 'undefined') {
-        localStorage.setItem(MEADOW_INTRO_STORAGE_KEY, '1');
-      }
+      localStorage.setItem(MEADOW_INTRO_STORAGE_KEY, '1');
     } catch {
       /* ignore */
     }

@@ -327,7 +327,7 @@ export const useStore = create<Store>((set, get) => ({
     },
   ],
   lastEggChoiceName: savedProgress.incubatingEgg?.name,
-  welcomeBonusClaimed: false,
+  welcomeBonusClaimed: savedProgress.welcomeBonusClaimed,
   claimWelcomeBonus: () => {
     const { welcomeBonusClaimed } = get();
     if (welcomeBonusClaimed) return;
@@ -394,6 +394,7 @@ useStore.subscribe((state, prev) => {
   if (
     state.points === prev.points &&
     state.playerName === prev.playerName &&
+    state.welcomeBonusClaimed === prev.welcomeBonusClaimed &&
     state.tasks === prev.tasks &&
     state.pets === prev.pets &&
     state.eggProgress === prev.eggProgress &&
@@ -405,6 +406,7 @@ useStore.subscribe((state, prev) => {
   saveProgress({
     points: state.points,
     playerName: state.playerName,
+    welcomeBonusClaimed: state.welcomeBonusClaimed,
     tasks: state.tasks,
     pets: state.pets,
     eggProgress: state.eggProgress,

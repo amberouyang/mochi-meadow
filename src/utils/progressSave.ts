@@ -7,6 +7,7 @@ export type ProgressSave = {
   v: 1;
   points: number;
   playerName: string;
+  welcomeBonusClaimed: boolean;
   tasks: Task[];
   pets: Pet[];
   eggProgress: number;
@@ -27,6 +28,7 @@ const DEFAULTS: ProgressSave = {
   v: 1,
   points: 0,
   playerName: '',
+  welcomeBonusClaimed: false,
   tasks: DEFAULT_TASKS.map((t) => ({ ...t })),
   pets: DEFAULT_PETS.map((p) => ({ ...p })),
   eggProgress: 0,
@@ -123,6 +125,11 @@ export function loadProgress(): ProgressSave {
       : 0;
     const playerName =
       typeof parsed.playerName === 'string' ? parsed.playerName.trim().slice(0, 24) : '';
+    // Legacy saves had a name but no welcome flag — treat named players as onboarded.
+    const welcomeBonusClaimed =
+      typeof parsed.welcomeBonusClaimed === 'boolean'
+        ? parsed.welcomeBonusClaimed
+        : Boolean(playerName);
     const tasks = parseTasks(parsed.tasks);
     const pets = parsePets(parsed.pets);
     const eggProgress =
@@ -132,7 +139,17 @@ export function loadProgress(): ProgressSave {
     const eggHatched = Boolean(parsed.eggHatched);
     const incubatingEgg = parseIncubatingEgg(parsed.incubatingEgg);
 
-    return { v: 1, points, playerName, tasks, pets, eggProgress, eggHatched, incubatingEgg };
+    return {
+      v: 1,
+      points,
+      playerName,
+      welcomeBonusClaimed,
+      tasks,
+      pets,
+      eggProgress,
+      eggHatched,
+      incubatingEgg,
+    };
   } catch {
     return cloneDefaults();
   }
@@ -148,6 +165,10 @@ export function saveProgress(patch: Partial<Omit<ProgressSave, 'v'>>): void {
         patch.playerName !== undefined
           ? patch.playerName.trim().slice(0, 24)
           : current.playerName,
+      welcomeBonusClaimed:
+        patch.welcomeBonusClaimed !== undefined
+          ? patch.welcomeBonusClaimed
+          : current.welcomeBonusClaimed,
       tasks: patch.tasks !== undefined ? patch.tasks.map((t) => ({ ...t })) : current.tasks,
       pets: patch.pets !== undefined ? patch.pets.map((p) => ({ ...p })) : current.pets,
       eggProgress:
