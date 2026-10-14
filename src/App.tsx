@@ -135,17 +135,21 @@ export default function App() {
             </h2>
             <ul className="meadow-intro-list">
               <li>
-                <strong>Toolbar</strong> — Use the icons above: to-do (📝), study timer (⏱), egg
-                sanctuary (🥚), and store (🛒).
+                <strong>Bottom dock</strong> — Tasks, Study, Nest, Store, and Storage live along the
+                bar at the bottom of the screen.
               </li>
               <li>
-                <strong>Points</strong> — Completing tasks and studying earns points. Spend them on
-                pets and items in the store.
+                <strong>Points</strong> — Completing tasks and studying earns points. Spend them in
+                the Store on eggs and care items like Meadow Mist.
               </li>
               <li>
-                <strong>The meadow</strong> — You earn visits by finishing today&apos;s tasks{' '}
-                <em>or</em> reaching your study goal. When the meadow is locked, use &quot;See if the
-                garden is open&quot; to check your progress.
+                <strong>Eggs &amp; Nest</strong> — Bought eggs incubate in Nest. Study to hatch them
+                into new mochi pets — your starter mochi stays.
+              </li>
+              <li>
+                <strong>The meadow</strong> — Unlock visits by finishing today&apos;s tasks{' '}
+                <em>or</em> reaching your study goal. Clear rubble on your first visit to welcome
+                your first mochi.
               </li>
             </ul>
             <button type="button" className="bonus-popup-btn meadow-intro-btn" onClick={onDismissMeadowIntro}>
