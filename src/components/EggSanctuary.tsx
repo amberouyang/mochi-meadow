@@ -82,14 +82,14 @@ export function EggSanctuary({ onBackToMeadow }: EggSanctuaryProps) {
             <span className="nest-scene-exit-icon" aria-hidden>
               ⌂
             </span>
-            Exit to meadow
+            Exit
           </button>
         )}
 
         <div className="nest-scene-signboard" aria-label="Nest stats">
           <p className="nest-scene-sign-title">{nestOwner}</p>
           <p className="nest-scene-sign-meta">
-            Pets {unlockedCount}/{slots.length}
+            Pets collected: {unlockedCount}/{slots.length}
           </p>
         </div>
 

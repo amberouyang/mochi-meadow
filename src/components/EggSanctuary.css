@@ -1,4 +1,4 @@
-/* Nest as a visit-able room scene (meadow → nest den) */
+/* Nest room — bright playful barn scene (Fantage-inspired, original layout) */
 
 .nest-scene {
   position: relative;
@@ -14,8 +14,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 40% at 50% 8%, rgba(255, 236, 190, 0.35) 0%, transparent 65%),
-    linear-gradient(180deg, #6a9a6e 0%, #4a7a52 35%, #3a5a40 100%);
+    radial-gradient(ellipse 80% 50% at 70% 12%, rgba(255, 255, 255, 0.55) 0%, transparent 55%),
+    linear-gradient(180deg, #9fd6ff 0%, #7ec0ef 42%, #b7e08a 78%, #8fca6a 100%);
   pointer-events: none;
 }
 
@@ -24,20 +24,24 @@
   z-index: 1;
   flex: 1 1 auto;
   min-height: 0;
-  margin: 0.55rem 0.65rem 0.35rem;
-  border-radius: 18px 18px 10px 10px;
-  border: 4px solid #5a3d28;
+  margin: 0.5rem 0.7rem 0.3rem;
+  border-radius: 22px 22px 14px 14px;
+  border: 5px solid #8b5a32;
   box-shadow:
-    inset 0 0 0 3px #c4a574,
-    0 10px 28px rgba(12, 28, 18, 0.28);
+    inset 0 0 0 4px #f0d7a8,
+    0 12px 28px rgba(40, 70, 40, 0.22);
   background:
-    linear-gradient(180deg, rgba(255, 248, 230, 0.2) 0%, transparent 28%),
+    /* soft wall wash */
+    linear-gradient(180deg, rgba(255, 250, 235, 0.55) 0%, transparent 32%),
+    /* horizontal barn boards */
     repeating-linear-gradient(
-      90deg,
-      #8b5e3c 0px,
-      #8b5e3c 14px,
-      #7a5134 14px,
-      #7a5134 28px
+      180deg,
+      #f3d9a8 0px,
+      #f3d9a8 18px,
+      #e8c78a 18px,
+      #e8c78a 20px,
+      #efd2a0 20px,
+      #efd2a0 38px
     );
   display: flex;
   flex-direction: column;
@@ -49,101 +53,143 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, #d8b88a 0%, #c9a572 18%, transparent 18%),
-    linear-gradient(0deg, #6b4a30 0%, #5a3d28 12%, transparent 12%);
+    linear-gradient(90deg, rgba(120, 70, 30, 0.12) 0%, transparent 8%, transparent 92%, rgba(120, 70, 30, 0.12) 100%),
+    linear-gradient(180deg, #fff1c8 0%, #f0d090 10%, transparent 10%);
   pointer-events: none;
-  opacity: 0.95;
+}
+
+.nest-scene-room::after {
+  /* cartoon window */
+  content: '';
+  position: absolute;
+  top: 1.1rem;
+  right: 1.15rem;
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  border: 4px solid #8b5a32;
+  background:
+    linear-gradient(#fff 0 0) center/4px 100% no-repeat,
+    linear-gradient(#fff 0 0) center/100% 4px no-repeat,
+    linear-gradient(180deg, #b8e7ff 0%, #7ec8f0 100%);
+  box-shadow:
+    inset 0 0 0 3px #f6e2b8,
+    0 4px 0 rgba(0, 0, 0, 0.08);
+  z-index: 2;
+  pointer-events: none;
 }
 
 .nest-scene-exit {
   position: absolute;
-  top: 0.7rem;
-  right: 0.75rem;
-  z-index: 3;
+  top: 0.75rem;
+  left: 0.8rem;
+  z-index: 4;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  border: 2px solid #4a2f1c;
-  border-radius: 10px;
-  background: linear-gradient(180deg, #f0d9a8 0%, #d4b07a 100%);
-  color: #3d2614;
-  font-size: 0.78rem;
+  border: 3px solid #8b5a32;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ffe9a8 0%, #f0c45a 55%, #e0a83a 100%);
+  color: #5a3a18;
+  font-size: 0.8rem;
   font-weight: 800;
-  padding: 0.4rem 0.7rem;
+  padding: 0.42rem 0.85rem;
   cursor: pointer;
-  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
+  box-shadow:
+    0 4px 0 #b07a28,
+    inset 0 2px 0 rgba(255, 255, 255, 0.55);
 }
 
 .nest-scene-exit:hover {
-  filter: brightness(1.05);
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.nest-scene-exit:active {
+  transform: translateY(2px);
+  box-shadow:
+    0 2px 0 #b07a28,
+    inset 0 2px 0 rgba(255, 255, 255, 0.45);
 }
 
 .nest-scene-exit-icon {
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1;
 }
 
 .nest-scene-signboard {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   align-self: flex-start;
-  margin: 1.1rem 0 0 1rem;
-  padding: 0.55rem 0.85rem 0.5rem;
-  min-width: 9.5rem;
-  background: linear-gradient(180deg, #e8c98a 0%, #c9a05a 100%);
-  border: 3px solid #6a4528;
-  border-radius: 8px;
-  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.18);
+  margin: 3.35rem 0 0 1rem;
+  padding: 0.6rem 0.95rem 0.55rem;
+  min-width: 10rem;
+  background: linear-gradient(180deg, #ffe7a0 0%, #f0c050 100%);
+  border: 4px solid #8b5a32;
+  border-radius: 12px;
+  box-shadow:
+    0 5px 0 #b07a28,
+    inset 0 2px 0 rgba(255, 255, 255, 0.5);
 }
 
 .nest-scene-sign-title {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 800;
-  color: #3d2614;
+  color: #5a3a18;
+  letter-spacing: 0.01em;
 }
 
 .nest-scene-sign-meta {
-  margin: 0.15rem 0 0;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #6a4a28;
+  margin: 0.2rem 0 0;
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: #8a5a28;
 }
 
 .nest-scene-shelf-unit {
   position: relative;
-  z-index: 2;
-  width: min(92%, 560px);
-  margin: 1.1rem auto 0;
+  z-index: 3;
+  width: min(94%, 580px);
+  margin: 1rem auto 0;
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
-  padding: 0.75rem 0.7rem 0.85rem;
-  background: linear-gradient(180deg, #a87448 0%, #8a5a34 100%);
-  border: 3px solid #4e321c;
-  border-radius: 12px;
+  gap: 0.45rem;
+  padding: 0.65rem 0.6rem 0.7rem;
+  background: linear-gradient(180deg, #d4a06a 0%, #c08a52 100%);
+  border: 4px solid #8b5a32;
+  border-radius: 16px;
   box-shadow:
-    inset 0 2px 0 rgba(255, 220, 170, 0.25),
-    0 8px 16px rgba(0, 0, 0, 0.22);
+    inset 0 3px 0 rgba(255, 230, 180, 0.45),
+    0 8px 0 rgba(100, 60, 25, 0.25);
 }
 
 .nest-scene-shelf-plank {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.4rem;
-  padding: 0.45rem 0.35rem 0.55rem;
-  background: linear-gradient(180deg, #6f4528 0%, #5a3720 100%);
-  border-radius: 8px;
-  border: 2px solid rgba(40, 24, 12, 0.45);
-  box-shadow: inset 0 -6px 0 rgba(0, 0, 0, 0.18);
+  padding: 0.35rem;
+  background: linear-gradient(180deg, #b8844e 0%, #a06e3e 100%);
+  border-radius: 12px;
+  border: 2px solid rgba(90, 50, 20, 0.35);
 }
 
 .nest-scene-perch {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.2rem;
+  gap: 0.22rem;
   min-width: 0;
+  padding: 0.35rem 0.2rem 0.3rem;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fff8e8 0%, #f3e0ba 100%);
+  border: 2px solid #c9a06a;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.7);
+}
+
+.nest-scene-perch.is-locked {
+  background: linear-gradient(180deg, #e8d8b8 0%, #d4c09a 100%);
+  opacity: 0.78;
 }
 
 .nest-scene-perch-art {
@@ -158,7 +204,7 @@
 .nest-scene-perch-mochi {
   width: 56px !important;
   height: 40px !important;
-  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.25));
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.18));
 }
 
 .nest-scene-perch-ghost {
@@ -166,53 +212,54 @@
   width: 34px;
   height: 26px;
   border-radius: 40% 40% 45% 45%;
-  background: rgba(20, 12, 8, 0.28);
-  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.12);
+  background: rgba(140, 110, 70, 0.28);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.06);
 }
 
 .nest-scene-perch-name {
-  font-size: 0.62rem;
+  font-size: 0.64rem;
   font-weight: 800;
-  color: #f6e6c8;
+  color: #5a3a18;
   text-align: center;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
 }
 
 .nest-scene-perch.is-locked .nest-scene-perch-name {
-  color: rgba(246, 230, 200, 0.45);
+  color: #9a8060;
 }
 
 .nest-scene-floor {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   flex: 1 1 auto;
-  min-height: 140px;
+  min-height: 150px;
   margin-top: auto;
-  padding: 0.75rem 1rem 1rem;
+  padding: 0.85rem 1rem 1.05rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.55rem;
+  gap: 0.5rem;
   background:
-    linear-gradient(180deg, transparent 0%, rgba(90, 58, 32, 0.35) 18%, transparent 18%),
+    linear-gradient(180deg, transparent 0%, rgba(180, 120, 60, 0.2) 10%, transparent 10%),
     repeating-linear-gradient(
       90deg,
-      #6e4a2e 0px,
-      #6e4a2e 22px,
-      #5c3c24 22px,
-      #5c3c24 44px
+      #e8c890 0px,
+      #e8c890 26px,
+      #dcb878 26px,
+      #dcb878 52px
     );
+  border-top: 4px solid #c49a5a;
+  box-shadow: inset 0 8px 16px rgba(255, 255, 255, 0.2);
 }
 
 .nest-scene-bed {
   position: relative;
-  width: min(180px, 46vw);
-  height: min(110px, 28vw);
+  width: min(200px, 48vw);
+  height: min(118px, 30vw);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -223,28 +270,30 @@
   inset: 0;
   border-radius: 50%;
   background:
-    radial-gradient(ellipse at 50% 40%, #c49a5a 0%, #8a6238 55%, #5a3d24 100%);
-  border: 3px solid #3d2818;
+    radial-gradient(ellipse at 50% 35%, #f0d090 0%, #d4a050 45%, #b07838 78%, #8a5828 100%);
+  border: 4px solid #8b5a32;
   box-shadow:
-    0 8px 0 rgba(0, 0, 0, 0.2),
-    inset 0 4px 8px rgba(255, 220, 160, 0.2);
+    0 8px 0 rgba(100, 60, 25, 0.22),
+    inset 0 5px 10px rgba(255, 240, 200, 0.35),
+    inset 0 -6px 10px rgba(80, 45, 15, 0.2);
 }
 
 .nest-scene-bed-inner {
   position: relative;
   z-index: 1;
-  width: 72%;
-  height: 62%;
+  width: 70%;
+  height: 58%;
   border-radius: 50%;
-  background: radial-gradient(ellipse at 50% 40%, #5a4028 0%, #3a2818 80%);
+  background:
+    radial-gradient(ellipse at 50% 35%, #c89048 0%, #8a5828 70%, #6a4018 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.35);
+  box-shadow: inset 0 5px 12px rgba(0, 0, 0, 0.28);
 }
 
 .nest-scene-bed.is-warming .nest-scene-bed-rim {
-  animation: nest-glow 2.4s ease-in-out infinite alternate;
+  animation: nest-glow 2.2s ease-in-out infinite alternate;
 }
 
 @keyframes nest-glow {
@@ -252,14 +301,14 @@
     filter: brightness(1);
   }
   to {
-    filter: brightness(1.08);
+    filter: brightness(1.1) saturate(1.05);
   }
 }
 
 .nest-scene-bed-empty {
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: rgba(246, 230, 200, 0.45);
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: rgba(255, 236, 200, 0.55);
   letter-spacing: 0.02em;
 }
 
@@ -267,36 +316,37 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.25rem;
-  transform: translateY(-4px);
+  gap: 0.28rem;
+  transform: translateY(-6px);
 }
 
 .nest-scene-egg {
-  width: 42px;
-  height: 52px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  width: 46px;
+  height: 56px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.22);
 }
 
 .nest-scene-egg .egg-inner {
-  width: 30px;
-  height: 36px;
+  width: 32px;
+  height: 40px;
 }
 
 .nest-scene-egg .egg-face {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
 }
 
 .nest-scene-warm-bar {
-  width: 48px;
-  height: 5px;
+  width: 54px;
+  height: 7px;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(60, 35, 15, 0.35);
+  border: 1px solid rgba(255, 230, 180, 0.35);
   overflow: hidden;
 }
 
 .nest-scene-warm-fill {
   height: 100%;
-  background: linear-gradient(90deg, #9ece6a, #7ab05a);
+  background: linear-gradient(90deg, #b5e76a, #7ecf4a);
   border-radius: 999px;
   transition: width 0.3s ease;
 }
@@ -305,36 +355,40 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.1rem;
-  color: #f6e6c8;
-  font-size: 0.68rem;
+  gap: 0.12rem;
+  color: #fff6dc;
+  font-size: 0.7rem;
   font-weight: 800;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .nest-scene-hatchling-mochi {
-  width: 48px !important;
-  height: 34px !important;
+  width: 50px !important;
+  height: 36px !important;
 }
 
 .nest-scene-caption {
   margin: 0;
-  max-width: 22rem;
+  max-width: 24rem;
   text-align: center;
-  font-size: 0.78rem;
-  font-weight: 700;
+  font-size: 0.8rem;
+  font-weight: 800;
   line-height: 1.35;
-  color: #f3e2c0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  color: #5a3a18;
+  background: rgba(255, 248, 220, 0.82);
+  border: 2px solid #c9a06a;
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+  box-shadow: 0 3px 0 rgba(140, 90, 40, 0.15);
 }
 
-/* Shared egg pieces (used by nest scene egg) */
+/* Shared egg pieces */
 .egg-outer {
   width: 64px;
   height: 78px;
   border-radius: 50% 50% 45% 45%;
-  background: linear-gradient(145deg, #fff8e8 0%, #f5e6c8 40%, #e8d4a8 100%);
-  border: 2px solid rgba(120, 90, 40, 0.25);
+  background: linear-gradient(145deg, #fffef5 0%, #ffe9b8 40%, #f0d090 100%);
+  border: 2px solid rgba(160, 110, 40, 0.35);
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
   display: flex;
   align-items: center;
@@ -345,7 +399,7 @@
   width: 46px;
   height: 56px;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 20%, #ffffff, #f7ebc8);
+  background: radial-gradient(circle at 30% 20%, #ffffff, #ffeec8);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -358,12 +412,18 @@
 
 @media (max-width: 720px) {
   .nest-scene-room {
-    margin: 0.35rem 0.4rem 0.2rem;
+    margin: 0.3rem 0.4rem 0.2rem;
+  }
+
+  .nest-scene-room::after {
+    width: 48px;
+    height: 48px;
+    top: 0.85rem;
+    right: 0.7rem;
   }
 
   .nest-scene-shelf-unit {
     width: 96%;
-    margin-top: 0.85rem;
   }
 
   .nest-scene-perch-art {
@@ -377,7 +437,7 @@
   }
 
   .nest-scene-exit {
-    font-size: 0.7rem;
-    padding: 0.32rem 0.55rem;
+    font-size: 0.72rem;
+    padding: 0.35rem 0.65rem;
   }
 }
