@@ -78,7 +78,13 @@ export function StorePanel() {
             className={`store-egg ${egg.id === active?.id ? 'active' : ''}`}
             onClick={() => setSelectedId(egg.id)}
           >
-            <div className="store-egg-icon">🥚</div>
+            <div className="store-egg-icon" aria-hidden>
+              {egg.artSrc ? (
+                <img className="store-egg-art" src={egg.artSrc} alt="" />
+              ) : (
+                '🥚'
+              )}
+            </div>
             <div className="store-egg-info">
               <span className="store-egg-name">{egg.name}</span>
               <span className="store-egg-desc">{egg.description}</span>

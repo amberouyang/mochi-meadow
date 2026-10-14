@@ -46,10 +46,13 @@ export type StorePurchase = {
   cost: number;
   description: string;
   type: 'egg' | 'mist';
+  /** Optional egg / item art (imported asset URL). */
+  artSrc?: string;
 };
 
 /** Egg currently warming in the nest (bought from the store). */
 export type IncubatingEgg = {
   catalogId: string;
   name: string;
+  artSrc?: string;
 };

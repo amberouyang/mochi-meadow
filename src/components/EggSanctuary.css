@@ -326,6 +326,26 @@
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.22);
 }
 
+.nest-scene-egg-art {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.28));
+  animation: nest-egg-warm 2.4s ease-in-out infinite;
+}
+
+@keyframes nest-egg-warm {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
 .nest-scene-egg .egg-inner {
   width: 32px;
   height: 40px;

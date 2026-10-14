@@ -142,13 +142,21 @@ export function EggSanctuary({ onBackToMeadow }: EggSanctuaryProps) {
             <div className="nest-scene-bed-rim" aria-hidden />
             <div className="nest-scene-bed-inner">
               {!incubatingEgg && <span className="nest-scene-bed-empty">empty nest</span>}
-              {isIncubating && (
+              {isIncubating && incubatingEgg && (
                 <div className="nest-scene-egg-wrap">
-                  <div className="egg-outer nest-scene-egg">
-                    <div className="egg-inner">
-                      <span className="egg-face">・‿・</span>
+                  {incubatingEgg.artSrc ? (
+                    <img
+                      className="nest-scene-egg-art"
+                      src={incubatingEgg.artSrc}
+                      alt={incubatingEgg.name}
+                    />
+                  ) : (
+                    <div className="egg-outer nest-scene-egg">
+                      <div className="egg-inner">
+                        <span className="egg-face">・‿・</span>
+                      </div>
                     </div>
-                  </div>
+                  )}
                   <div className="nest-scene-warm-bar" aria-hidden>
                     <div className="nest-scene-warm-fill" style={{ width: `${pct}%` }} />
                   </div>

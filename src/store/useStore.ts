@@ -22,8 +22,18 @@ import {
   loadProgress,
   saveProgress,
 } from '../utils/progressSave';
+import sesameMochiEggArt from '../assets/eggs/sesame-mochi-egg.png';
 
 type StudyState = 'idle' | 'studying';
+
+const EGG_ART_BY_ID: Record<string, string> = {
+  egg4: sesameMochiEggArt,
+};
+
+function withEggArt(egg: IncubatingEgg | null): IncubatingEgg | null {
+  if (!egg) return null;
+  return { ...egg, artSrc: egg.artSrc ?? EGG_ART_BY_ID[egg.catalogId] };
+}
 
 const streakSave = loadStudyStreak();
 const savedStudyGoal = loadStudyGoalDefault();
@@ -285,7 +295,7 @@ export const useStore = create<Store>((set, get) => ({
   // Egg sanctuary / hatching
   eggProgress: savedProgress.eggProgress,
   eggHatched: savedProgress.eggHatched,
-  incubatingEgg: savedProgress.incubatingEgg,
+  incubatingEgg: withEggArt(savedProgress.incubatingEgg),
   incrementEggProgress: (delta) => set((s) => ({ ...advanceIncubation(s, delta) })),
   buyEgg: (catalogId) => {
     const egg = get().storeEggOptions.find((e) => e.id === catalogId && e.type === 'egg');
@@ -303,7 +313,11 @@ export const useStore = create<Store>((set, get) => ({
     }
 
     set({
-      incubatingEgg: { catalogId: egg.id, name: egg.name },
+      incubatingEgg: withEggArt({
+        catalogId: egg.id,
+        name: egg.name,
+        artSrc: egg.artSrc ?? EGG_ART_BY_ID[egg.id],
+      }),
       eggProgress: 0,
       eggHatched: false,
       lastEggChoiceName: egg.name,
@@ -316,6 +330,14 @@ export const useStore = create<Store>((set, get) => ({
     { id: 'egg1', name: 'Sakura Mochi', cost: 50, description: 'A soft pink mochi who loves spring.', type: 'egg' },
     { id: 'egg2', name: 'Matcha Mochi', cost: 50, description: 'A calm green mochi who loves tea.', type: 'egg' },
     { id: 'egg3', name: 'Yuzu Mochi', cost: 50, description: 'A bright citrus mochi full of energy.', type: 'egg' },
+    {
+      id: 'egg4',
+      name: 'Sesame Mochi',
+      cost: 55,
+      description: 'A toasted sesame mochi with marbled charcoal shell.',
+      type: 'egg',
+      artSrc: EGG_ART_BY_ID.egg4,
+    },
   ],
   storeCareItems: [
     {

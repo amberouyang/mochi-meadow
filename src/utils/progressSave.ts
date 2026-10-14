@@ -99,10 +99,16 @@ function parseIncubatingEgg(value: unknown): IncubatingEgg | null {
   if (!isRecord(value)) return null;
   if (typeof value.catalogId !== 'string' || !value.catalogId) return null;
   if (typeof value.name !== 'string' || !value.name.trim()) return null;
+  // artSrc is runtime-only (Vite asset URLs); rehydrate from the store catalog.
   return {
     catalogId: value.catalogId,
     name: value.name.trim().slice(0, 24),
   };
+}
+
+function serializeIncubatingEgg(egg: IncubatingEgg | null): IncubatingEgg | null {
+  if (!egg) return null;
+  return { catalogId: egg.catalogId, name: egg.name };
 }
 
 function cloneDefaults(): ProgressSave {
@@ -176,8 +182,9 @@ export function saveProgress(patch: Partial<Omit<ProgressSave, 'v'>>): void {
           ? Math.min(1000, Math.max(0, Math.floor(patch.eggProgress)))
           : current.eggProgress,
       eggHatched: patch.eggHatched !== undefined ? patch.eggHatched : current.eggHatched,
-      incubatingEgg:
+      incubatingEgg: serializeIncubatingEgg(
         patch.incubatingEgg !== undefined ? patch.incubatingEgg : current.incubatingEgg,
+      ),
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   } catch {

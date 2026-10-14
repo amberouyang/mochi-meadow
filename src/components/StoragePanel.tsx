@@ -9,7 +9,13 @@ export function StoragePanel() {
   const eggHatched = useStore((s) => s.eggHatched);
   const eggProgress = useStore((s) => s.eggProgress);
 
-  const items = [
+  const items: Array<{
+    id: string;
+    icon: string;
+    artSrc?: string;
+    name: string;
+    detail: string;
+  }> = [
     {
       id: 'points',
       icon: '✦',
@@ -21,6 +27,7 @@ export function StoragePanel() {
           {
             id: 'incubating',
             icon: '🥚',
+            artSrc: incubatingEgg.artSrc,
             name: incubatingEgg.name,
             detail: `Incubating in nest — ${Math.round((eggProgress / 1000) * 100)}%`,
           },
@@ -43,7 +50,11 @@ export function StoragePanel() {
         {items.map((item) => (
           <li key={item.id} className="storage-item">
             <span className="storage-item-icon" aria-hidden>
-              {item.icon}
+              {item.artSrc ? (
+                <img className="storage-item-art" src={item.artSrc} alt="" />
+              ) : (
+                item.icon
+              )}
             </span>
             <div className="storage-item-info">
               <span className="storage-item-name">{item.name}</span>
