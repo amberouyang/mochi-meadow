@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useStore } from '../store/useStore';
 import { MochiCloud } from './MochiCloud';
+import strawNestArt from '../assets/nest/straw-nest.svg';
 import './EggSanctuary.css';
 
 type NestSlot = {
@@ -139,7 +140,7 @@ export function EggSanctuary({ onBackToMeadow }: EggSanctuaryProps) {
             className={`nest-scene-bed${isIncubating ? ' is-warming' : ''}${justHatched ? ' is-hatched' : ''}`}
             aria-label="Hatching nest"
           >
-            <div className="nest-scene-bed-rim" aria-hidden />
+            <img className="nest-scene-bed-art" src={strawNestArt} alt="" aria-hidden />
             <div className="nest-scene-bed-inner">
               {!incubatingEgg && <span className="nest-scene-bed-empty">empty nest</span>}
               {isIncubating && incubatingEgg && (
