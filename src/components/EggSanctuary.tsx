@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useStore } from '../store/useStore';
 import { MochiCloud } from './MochiCloud';
-import strawNestArt from '../assets/nest/straw-nest.svg';
+import strawNestArt from '../assets/nest/straw-nest.png';
 import './EggSanctuary.css';
 
 type NestSlot = {

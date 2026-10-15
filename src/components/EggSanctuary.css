@@ -258,8 +258,8 @@
 
 .nest-scene-bed {
   position: relative;
-  width: min(420px, 92vw);
-  height: min(320px, 72vw);
+  width: min(580px, 98vw);
+  height: min(300px, 64vw);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -272,20 +272,28 @@
   height: 100%;
   object-fit: contain;
   pointer-events: none;
-  filter: drop-shadow(0 8px 0 rgba(90, 50, 20, 0.2));
+  filter: drop-shadow(0 8px 10px rgba(90, 50, 20, 0.22));
 }
 
 .nest-scene-bed-inner {
-  position: relative;
+  position: absolute;
+  left: 50%;
+  top: 46%;
   z-index: 1;
-  width: 34%;
-  height: 30%;
-  margin-top: 4%;
+  width: 42%;
+  height: 52%;
+  margin: 0;
   border-radius: 50%;
   background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.nest-scene-bed-inner > * {
+  pointer-events: auto;
 }
 
 .nest-scene-bed.is-warming .nest-scene-bed-art {
@@ -310,11 +318,13 @@
 }
 
 .nest-scene-egg-wrap {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.22rem;
-  transform: translateY(-14px);
+  justify-content: center;
+  gap: 0;
+  transform: none;
 }
 
 .nest-scene-egg {
@@ -324,8 +334,8 @@
 }
 
 .nest-scene-egg-art {
-  width: 78px;
-  height: 78px;
+  width: 92px;
+  height: 92px;
   object-fit: contain;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
@@ -353,6 +363,10 @@
 }
 
 .nest-scene-warm-bar {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 6px);
+  transform: translateX(-50%);
   width: 54px;
   height: 7px;
   border-radius: 999px;
