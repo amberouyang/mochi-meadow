@@ -266,11 +266,12 @@ export const useStore = create<Store>((set, get) => ({
   introStartedAt: Date.now(),
   debris: [
     // Five separate rocks (one per sprite) so they clear one-by-one.
-    { id: 'd1', kind: 'rock', cleared: false, assetIndex: 0, leftPct: 18, bottomPct: 20 },
-    { id: 'd2', kind: 'rock', cleared: false, assetIndex: 1, leftPct: 34, bottomPct: 16 },
-    { id: 'd3', kind: 'rock', cleared: false, assetIndex: 2, leftPct: 50, bottomPct: 22 },
-    { id: 'd4', kind: 'rock', cleared: false, assetIndex: 3, leftPct: 66, bottomPct: 15 },
-    { id: 'd5', kind: 'rock', cleared: false, assetIndex: 4, leftPct: 70, bottomPct: 28 },
+    // d1/d5 sit higher and more inward; d2–d4 form a lower row.
+    { id: 'd1', kind: 'rock', cleared: false, assetIndex: 0, leftPct: 18, bottomPct: 56 },
+    { id: 'd2', kind: 'rock', cleared: false, assetIndex: 1, leftPct: 28, bottomPct: 26 },
+    { id: 'd3', kind: 'rock', cleared: false, assetIndex: 2, leftPct: 48, bottomPct: 22 },
+    { id: 'd4', kind: 'rock', cleared: false, assetIndex: 3, leftPct: 68, bottomPct: 26 },
+    { id: 'd5', kind: 'rock', cleared: false, assetIndex: 4, leftPct: 82, bottomPct: 48 },
   ],
   clearDebris: (id) =>
     set((s) => ({
@@ -384,11 +385,11 @@ export const useStore = create<Store>((set, get) => ({
       tutorialStage: 'introMeadow',
       introStartedAt: Date.now(),
       debris: [
-        { id: 'd1', kind: 'rock', cleared: false, assetIndex: 0, leftPct: 18, bottomPct: 20 },
-        { id: 'd2', kind: 'rock', cleared: false, assetIndex: 1, leftPct: 34, bottomPct: 16 },
-        { id: 'd3', kind: 'rock', cleared: false, assetIndex: 2, leftPct: 50, bottomPct: 22 },
-        { id: 'd4', kind: 'rock', cleared: false, assetIndex: 3, leftPct: 66, bottomPct: 15 },
-        { id: 'd5', kind: 'rock', cleared: false, assetIndex: 4, leftPct: 70, bottomPct: 28 },
+        { id: 'd1', kind: 'rock', cleared: false, assetIndex: 0, leftPct: 18, bottomPct: 56 },
+        { id: 'd2', kind: 'rock', cleared: false, assetIndex: 1, leftPct: 28, bottomPct: 26 },
+        { id: 'd3', kind: 'rock', cleared: false, assetIndex: 2, leftPct: 48, bottomPct: 22 },
+        { id: 'd4', kind: 'rock', cleared: false, assetIndex: 3, leftPct: 68, bottomPct: 26 },
+        { id: 'd5', kind: 'rock', cleared: false, assetIndex: 4, leftPct: 82, bottomPct: 48 },
       ],
       eggProgress: 0,
       eggHatched: false,
