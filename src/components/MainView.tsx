@@ -4,6 +4,7 @@ import { getCalendarSeason } from '../utils/calendarSeason';
 import { formatStudyMinutes } from '../utils/formatStudyTime';
 import { TodoList } from './TodoList';
 import { StudyBar } from './StudyBar';
+import { StudyTicker } from './StudyTicker';
 import { Garden } from './Garden';
 import { EggSanctuary } from './EggSanctuary';
 import { StorePanel } from './StorePanel';
@@ -38,6 +39,8 @@ export function MainView() {
   const studyMinutesToday = useStore((s) => s.studyMinutesToday);
   const studyMinutesGoal = useStore((s) => s.studyMinutesGoal);
   const studyState = useStore((s) => s.studyState);
+  const studyGoalOverlay = useStore((s) => s.studyGoalOverlay);
+  const clearStudyGoalOverlay = useStore((s) => s.clearStudyGoalOverlay);
   const playerName = useStore((s) => s.playerName);
   const evaluateBrainRot = useStore((s) => s.evaluateBrainRot);
 
@@ -93,6 +96,7 @@ export function MainView() {
 
   return (
     <div className="main-view" data-season={season}>
+      <StudyTicker />
       <section className={`main-garden-area${screen === 'nest' ? ' is-nest-page' : ''}`}>
         <div className="main-top-chip" aria-label={`Points: ${points}`}>
           <span className="main-points-label">Points</span>
@@ -119,6 +123,31 @@ export function MainView() {
       {soonToast && (
         <div className="main-soon-toast" role="status">
           {soonToast}
+        </div>
+      )}
+
+      {studyGoalOverlay && (
+        <div
+          className="main-study-goal-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="study-goal-title"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) clearStudyGoalOverlay();
+          }}
+        >
+          <div className="main-study-goal-card">
+            <p id="study-goal-title" className="main-study-goal-title">
+              Study goal reached!
+            </p>
+            <p className="main-study-goal-text">
+              Nice work! You&apos;ve finished today&apos;s study time. Your garden and pets are proud of
+              you.
+            </p>
+            <button type="button" className="main-study-goal-btn" onClick={clearStudyGoalOverlay}>
+              Close
+            </button>
+          </div>
         </div>
       )}
 

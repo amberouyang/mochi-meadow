@@ -82,13 +82,20 @@ type Store = {
   // Study
   studyMinutesGoal: number;
   studyMinutesToday: number;
+  /** Seconds into the current study minute (survives leaving the Study panel). */
+  studySessionSeconds: number;
   studyState: StudyState;
+  /** Show “goal reached” overlay when the timer hits the daily goal. */
+  studyGoalOverlay: boolean;
   lastStudyDate: string | null;
   brainRotActive: boolean;
   setStudyMinutesGoal: (n: number) => void;
   setStudyMinutesToday: (n: number) => void;
   addStudyMinute: () => void;
+  /** Advance the live timer by 1s while studying (safe to call from a global ticker). */
+  tickStudySecond: () => void;
   setStudyState: (s: StudyState) => void;
+  clearStudyGoalOverlay: () => void;
   recordStudyDay: () => void;
   evaluateBrainRot: () => void;
   buyMist: () => boolean;
@@ -156,7 +163,9 @@ type Store = {
 export const useStore = create<Store>((set, get) => ({
   studyMinutesGoal: savedStudyGoal,
   studyMinutesToday: 0,
+  studySessionSeconds: 0,
   studyState: 'idle',
+  studyGoalOverlay: false,
   lastStudyDate: streakSave.lastStudyDate,
   brainRotActive: streakSave.brainRotActive,
   setStudyMinutesGoal: (n) => {
@@ -172,10 +181,27 @@ export const useStore = create<Store>((set, get) => ({
       ...advanceIncubation(s, 5),
     }));
   },
+  tickStudySecond: () => {
+    const { studyState, studySessionSeconds, studyMinutesGoal } = get();
+    if (studyState !== 'studying') return;
+    const nextSeconds = studySessionSeconds + 1;
+    if (nextSeconds < 60) {
+      set({ studySessionSeconds: nextSeconds });
+      return;
+    }
+    set({ studySessionSeconds: 0 });
+    get().addStudyMinute();
+    get().addPoints(5);
+    get().checkGardenAccess();
+    if (get().studyMinutesToday >= studyMinutesGoal) {
+      set({ studyState: 'idle', studyGoalOverlay: true });
+    }
+  },
   setStudyState: (s) => {
     if (s === 'studying') get().recordStudyDay();
     set({ studyState: s });
   },
+  clearStudyGoalOverlay: () => set({ studyGoalOverlay: false }),
   recordStudyDay: () => {
     const today = todayKey();
     const { lastStudyDate, brainRotActive } = get();
@@ -375,7 +401,9 @@ export const useStore = create<Store>((set, get) => ({
     set({
       studyMinutesGoal: goal,
       studyMinutesToday: 0,
+      studySessionSeconds: 0,
       studyState: 'idle',
+      studyGoalOverlay: false,
       lastStudyDate: null,
       brainRotActive: false,
       tasks: DEFAULT_TASKS.map((t) => ({ ...t })),

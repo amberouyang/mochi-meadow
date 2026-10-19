@@ -22,15 +22,10 @@ function formatRemaining(totalSeconds: number) {
 export function StudyBar() {
   const studyMinutesGoal = useStore((s) => s.studyMinutesGoal);
   const studyMinutesToday = useStore((s) => s.studyMinutesToday);
+  const studySessionSeconds = useStore((s) => s.studySessionSeconds);
   const studyState = useStore((s) => s.studyState);
   const setStudyMinutesGoal = useStore((s) => s.setStudyMinutesGoal);
-  const addStudyMinute = useStore((s) => s.addStudyMinute);
   const setStudyState = useStore((s) => s.setStudyState);
-  const addPoints = useStore((s) => s.addPoints);
-  const checkGardenAccess = useStore((s) => s.checkGardenAccess);
-
-  const [secondsThisSession, setSecondsThisSession] = useState(0);
-  const [showGoalOverlay, setShowGoalOverlay] = useState(false);
 
   const parts = goalParts(studyMinutesGoal);
   const [hoursDraft, setHoursDraft] = useState(String(parts.hours));
@@ -65,45 +60,15 @@ export function StudyBar() {
     setMinsDraft(String(saved.minutes));
   };
 
-  useEffect(() => {
-    if (studyState !== 'studying') return;
-    const interval = setInterval(() => {
-      setSecondsThisSession((s) => {
-        const next = s + 1;
-        if (next >= 60) {
-          const updatedMinutes = studyMinutesToday + 1;
-          addStudyMinute();
-          addPoints(5);
-          checkGardenAccess();
-          if (updatedMinutes >= studyMinutesGoal) {
-            setStudyState('idle');
-            setShowGoalOverlay(true);
-          }
-          return 0;
-        }
-        return next;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [
-    studyState,
-    studyMinutesToday,
-    studyMinutesGoal,
-    addStudyMinute,
-    addPoints,
-    checkGardenAccess,
-    setStudyState,
-  ]);
-
   const totalSecondsGoal = studyMinutesGoal * 60;
-  const totalSeconds = studyMinutesToday * 60 + secondsThisSession;
+  const totalSeconds = studyMinutesToday * 60 + studySessionSeconds;
   const progress =
     totalSecondsGoal > 0 ? Math.min(100, (totalSeconds / totalSecondsGoal) * 100) : 0;
 
   const remainingSeconds = Math.max(0, totalSecondsGoal - totalSeconds);
 
   const reachedGoal = studyMinutesToday >= studyMinutesGoal;
-  const hasProgress = studyMinutesToday > 0 || secondsThisSession > 0;
+  const hasProgress = studyMinutesToday > 0 || studySessionSeconds > 0;
 
   const buttonLabel =
     studyState === 'studying'
@@ -118,7 +83,7 @@ export function StudyBar() {
     <div className="study-bar">
       <p className="study-hint">
         Start the timer when you study. Meet your goal to unlock the garden and give your pets
-        energy.
+        energy. Leaving this panel keeps the timer running.
       </p>
       <div className="study-goal">
         <span className="study-goal-label">Daily goal</span>
@@ -160,8 +125,8 @@ export function StudyBar() {
           <span className="study-sep"> left</span>
         </div>
         <div className="study-session">
-          This session:{' '}
-          {studyState === 'studying' || hasProgress ? `${secondsThisSession}s` : '—'}
+          This minute:{' '}
+          {studyState === 'studying' || hasProgress ? `${studySessionSeconds}s` : '—'}
         </div>
         <button
           className={`study-toggle ${studyState === 'studying' ? 'studying' : ''}`}
@@ -175,27 +140,6 @@ export function StudyBar() {
         <div className="study-progress-bar" style={{ width: `${progress}%` }} />
         <span className="study-progress-label">{Math.round(progress)}%</span>
       </div>
-      {showGoalOverlay && (
-        <div
-          className="study-overlay"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setShowGoalOverlay(false);
-            }
-          }}
-        >
-          <div className="study-overlay-card">
-            <p className="study-overlay-title">Study goal reached!</p>
-            <p className="study-overlay-text">
-              Nice work! You&apos;ve finished today&apos;s study time. Your garden and pets are proud of
-              you.
-            </p>
-            <button className="study-overlay-btn" onClick={() => setShowGoalOverlay(false)}>
-              Close
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
