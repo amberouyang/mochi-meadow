@@ -73,9 +73,9 @@ export function EggSanctuary({ onBackToMeadow }: EggSanctuaryProps) {
   const topRow = slots.slice(0, 4);
   const bottomRow = slots.slice(4, 8);
 
-  let nestCaption = 'Buy an egg in the Store to warm it here.';
+  let nestCaption = 'Buy an egg in the Store, then study here to keep it warm.';
   if (isIncubating && incubatingEgg) {
-    nestCaption = `${incubatingEgg.name} is incubating — ${pct}% warm. Keep studying!`;
+    nestCaption = `${incubatingEgg.name} is ${pct}% warm. Study or finish tasks to hatch it. About 100 study minutes should do it.`;
   } else if (justHatched && incubatingEgg) {
     nestCaption = `${incubatingEgg.name} hatched and joined the meadow!`;
   }
@@ -164,8 +164,11 @@ export function EggSanctuary({ onBackToMeadow }: EggSanctuaryProps) {
                       </div>
                     </div>
                   )}
-                  <div className="nest-scene-warm-bar" aria-hidden>
-                    <div className="nest-scene-warm-fill" style={{ width: `${pct}%` }} />
+                  <div className="nest-scene-warm" aria-label={`Warmth ${pct} percent`}>
+                    <span className="nest-scene-warm-label">Warmth {pct}%</span>
+                    <div className="nest-scene-warm-bar">
+                      <div className="nest-scene-warm-fill" style={{ width: `${pct}%` }} />
+                    </div>
                   </div>
                 </div>
               )}

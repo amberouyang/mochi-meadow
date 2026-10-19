@@ -83,7 +83,7 @@ export function StudyBar() {
     <div className="study-bar">
       <p className="study-hint">
         Start the timer when you study. Meet your goal to unlock the garden and give your pets
-        energy. Leaving this panel keeps the timer running.
+        energy. You can leave this panel and the timer will keep running.
       </p>
       <div className="study-goal">
         <span className="study-goal-label">Daily goal</span>

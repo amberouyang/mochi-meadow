@@ -46,8 +46,8 @@ export function StorePanel() {
     <div className="store-panel">
       <h2 className="store-title">Mochi store</h2>
       <p className="store-text">
-        Buy eggs to incubate in your nest — they hatch into new mochi pets. Miss a full day of
-        studying and brain-rot fog rolls in; Meadow Mist clears it.
+        Buy an egg for your Nest, then study to fill its warmth bar. Hatching usually takes about
+        100 study minutes. Meadow Mist clears brain rot fog after a missed study day.
       </p>
 
       <h3 className="store-section-title">Care</h3>
