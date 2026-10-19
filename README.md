@@ -1,22 +1,26 @@
 # Mochi Meadow
 
-Desktop study companion that rewards focused work with a small virtual meadow. Completing study time and tasks earns points, unlocks the garden, and lets a cloud mochi settle in and grow with you.
+Desktop study companion that turns focus time into a cozy virtual meadow of mochi pets.
 
-Built with Electron, React, TypeScript, and Vite.
+Built with Electron, React, TypeScript, Vite, and Zustand.
 
 ## Features
 
 | Area | Description |
 |------|-------------|
-| Study timer | Set a daily hours + minutes goal, start/stop sessions, earn points per minute |
+| Study timer | Daily hours + minutes goal, start/stop sessions, earn points per minute |
 | Tasks | Create, complete, and remove to-dos; completions award points |
 | Points | Shared currency for the store and pet care (feeding) |
 | Meadow | Unlocks when the daily study goal is met or all tasks are done |
-| Brain-rot fog | Miss a full calendar day of studying and dark fog blocks pet care until you buy Meadow Mist |
-| Onboarding | Clear debris on first visit; the first mochi appears once the meadow is clean |
+| Onboarding | Name + welcome points; clear rocks on first visit to welcome your first mochi |
 | Pets | Idle bounce, blink, and wander; click to view energy and feed |
-| Meadow Nest | Collection shelf for unlocked pets, locked perches, and a hatching nest |
-| Controls | Bottom dock for Tasks, Study, Nest, Store, plus placeholders for Friends, Board, and Rooms |
+| Store | Buy mochi eggs (Sakura, Matcha, Yuzu, Sesame) and Meadow Mist |
+| Nest | Barn scene with pet collection shelf and a straw hatching bed |
+| Egg incubation | Bought eggs warm in the nest as you study/earn points, then hatch into new pets |
+| Brain-rot fog | Miss a full calendar day of studying; buy Meadow Mist to clear it |
+| Settings | Player name, study goal default, mute, and full progress reset |
+| Progress save | Points, pets, tasks, nest eggs, and tutorial progress persist in localStorage |
+| Controls | Bottom dock: Tasks, Study, Nest, Store, Storage, Settings (+ Friends/Board/Rooms soon) |
 
 ## Tech stack
 
@@ -56,11 +60,12 @@ npm run dev
 Mochi-Meadow/
 ├── electron/              # Electron main process and windows
 ├── src/
-│   ├── components/        # Meadow, pets, dock, study/task panels
-│   ├── store/             # Zustand store (study, tasks, points, pets, tutorial)
+│   ├── components/        # Meadow, nest, pets, dock, panels
+│   ├── store/             # Zustand store
+│   ├── utils/             # Progress save, study streak, settings
 │   ├── assets/            # Art and audio
 │   ├── types.ts
-│   └── App.tsx            # Routing for main / sidebar / overlay views
+│   └── App.tsx
 ├── index.html
 ├── package.json
 └── README.md
@@ -70,14 +75,14 @@ Mochi-Meadow/
 
 1. Study with the timer and/or complete tasks to earn points.
 2. Meeting the daily study goal **or** finishing all tasks unlocks the meadow.
-3. First time in the meadow: clear rocks, then the first mochi moves in.
-4. Keep studying to fill the hatching nest; spend points in the store and on feeding.
+3. First time: clear rocks, then the first mochi moves in.
+4. Buy an egg in the Store; it incubates in Nest as you keep studying.
+5. Progress (points, pets, eggs, tutorial) saves locally between sessions.
 
 ## Roadmap
 
-- Persist progress between sessions
-- Enable always on top pet reminder overlays
-- Friends list and presence
-- Study scoreboard
-- Shared online study rooms
+- **Mochi Meadow Online** — accounts, cloud save, API (Auth0 + Postgres)
+- Friends can visit each other’s meadows
+- Study rooms / presence
+- Always-on-top pet reminder overlays
 - Meadow upgrades and richer pet care

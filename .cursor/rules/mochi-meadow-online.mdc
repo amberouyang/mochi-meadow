@@ -1,0 +1,31 @@
+---
+description: Planned Mochi Meadow Online roadmap (accounts, backend, cloud save)
+alwaysApply: true
+---
+
+# Mochi Meadow Online (planned)
+
+Future goal: add accounts + a backend so the meadow saves to the cloud. Optional: leaderboard or friends visiting meadows. Teaches login, database, and API.
+
+Do **one step at a time**. Do not start this work unless the user asks.
+
+## Stack (Step 1)
+
+- Backend: Node + Express (TypeScript)
+- Database: Postgres (Supabase or Neon)
+- Login: Auth0
+
+## Plan
+
+1. **Choose stack** — confirm Express + Postgres + Auth0
+2. **Design data** — users, mochi pets, focus sessions, meadow items (simple table diagram)
+3. **Build API** — e.g. `POST /sessions`, `GET /meadow`, `POST /mochi`
+4. **Add login** — Auth0; users only see their own meadow; protect routes
+5. **Connect app** — call API instead of local-only save; keep local backup for offline
+6. **Tests + CI** — API tests; GitHub Actions on push
+7. **Deploy** — Render or Railway; live link in README
+8. **Polish** — demo GIF, architecture diagram, setup steps
+
+**Optional:** friends visit each other’s meadows / leaderboard.
+
+When the user is ready, start with Step 1 (stack) or Step 2 (database design) as they prefer.

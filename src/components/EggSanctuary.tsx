@@ -19,10 +19,16 @@ export function EggSanctuary({ onBackToMeadow }: EggSanctuaryProps) {
   const eggProgress = useStore((s) => s.eggProgress);
   const eggHatched = useStore((s) => s.eggHatched);
   const incubatingEgg = useStore((s) => s.incubatingEgg);
+  const dismissHatchedEgg = useStore((s) => s.dismissHatchedEgg);
   const pets = useStore((s) => s.pets);
   const storeEggOptions = useStore((s) => s.storeEggOptions);
   const tutorialStage = useStore((s) => s.tutorialStage);
   const playerName = useStore((s) => s.playerName);
+
+  const handleBack = () => {
+    if (incubatingEgg && eggHatched) dismissHatchedEgg();
+    onBackToMeadow?.();
+  };
 
   const pct = Math.round((eggProgress / 1000) * 100);
   const mochiMovedIn =
@@ -79,7 +85,7 @@ export function EggSanctuary({ onBackToMeadow }: EggSanctuaryProps) {
       <div className="nest-scene-sky" aria-hidden />
       <div className="nest-scene-room">
         {onBackToMeadow && (
-          <button type="button" className="nest-scene-exit" onClick={onBackToMeadow}>
+          <button type="button" className="nest-scene-exit" onClick={handleBack}>
             <span className="nest-scene-exit-icon" aria-hidden>
               ⌂
             </span>

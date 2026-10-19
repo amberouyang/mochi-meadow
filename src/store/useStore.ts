@@ -22,6 +22,7 @@ import {
   loadProgress,
   saveProgress,
 } from '../utils/progressSave';
+import { DEFAULT_DEBRIS } from '../utils/defaultDebris';
 import sesameMochiEggArt from '../assets/eggs/sesame-mochi-egg.png';
 
 type StudyState = 'idle' | 'studying';
@@ -130,6 +131,8 @@ type Store = {
   incrementEggProgress: (delta: number) => void;
   /** Buy a store egg into the nest. Returns an error message, or null on success. */
   buyEgg: (catalogId: string) => string | null;
+  /** Clear nest after a hatch celebration so it can hold the next egg. */
+  dismissHatchedEgg: () => void;
 
   // Store
   storeEggOptions: StorePurchase[];
@@ -261,18 +264,10 @@ export const useStore = create<Store>((set, get) => ({
     set({ gardenUnlocked: allDone || studyDone });
   },
 
-  // Onboarding / tutorial
-  tutorialStage: 'introMeadow',
+  // Onboarding / tutorial (persisted so returning players skip rock clearing)
+  tutorialStage: savedProgress.tutorialStage,
   introStartedAt: Date.now(),
-  debris: [
-    // Five separate rocks (one per sprite) so they clear one-by-one.
-    // d1/d5 sit higher and more inward; d2–d4 form a lower row.
-    { id: 'd1', kind: 'rock', cleared: false, assetIndex: 0, leftPct: 18, bottomPct: 56 },
-    { id: 'd2', kind: 'rock', cleared: false, assetIndex: 1, leftPct: 28, bottomPct: 26 },
-    { id: 'd3', kind: 'rock', cleared: false, assetIndex: 2, leftPct: 48, bottomPct: 22 },
-    { id: 'd4', kind: 'rock', cleared: false, assetIndex: 3, leftPct: 68, bottomPct: 26 },
-    { id: 'd5', kind: 'rock', cleared: false, assetIndex: 4, leftPct: 82, bottomPct: 48 },
-  ],
+  debris: savedProgress.debris.map((d) => ({ ...d })),
   clearDebris: (id) =>
     set((s) => ({
       debris: s.debris.map((d) => (d.id === id ? { ...d, cleared: true } : d)),
@@ -324,6 +319,11 @@ export const useStore = create<Store>((set, get) => ({
       lastEggChoiceName: egg.name,
     });
     return null;
+  },
+  dismissHatchedEgg: () => {
+    const { incubatingEgg, eggHatched } = get();
+    if (!incubatingEgg || !eggHatched) return;
+    set({ incubatingEgg: null, eggHatched: false, eggProgress: 0 });
   },
 
   // Store
@@ -384,13 +384,7 @@ export const useStore = create<Store>((set, get) => ({
       gardenUnlocked: false,
       tutorialStage: 'introMeadow',
       introStartedAt: Date.now(),
-      debris: [
-        { id: 'd1', kind: 'rock', cleared: false, assetIndex: 0, leftPct: 18, bottomPct: 56 },
-        { id: 'd2', kind: 'rock', cleared: false, assetIndex: 1, leftPct: 28, bottomPct: 26 },
-        { id: 'd3', kind: 'rock', cleared: false, assetIndex: 2, leftPct: 48, bottomPct: 22 },
-        { id: 'd4', kind: 'rock', cleared: false, assetIndex: 3, leftPct: 68, bottomPct: 26 },
-        { id: 'd5', kind: 'rock', cleared: false, assetIndex: 4, leftPct: 82, bottomPct: 48 },
-      ],
+      debris: DEFAULT_DEBRIS.map((d) => ({ ...d })),
       eggProgress: 0,
       eggHatched: false,
       incubatingEgg: null,
@@ -422,7 +416,9 @@ useStore.subscribe((state, prev) => {
     state.pets === prev.pets &&
     state.eggProgress === prev.eggProgress &&
     state.eggHatched === prev.eggHatched &&
-    state.incubatingEgg === prev.incubatingEgg
+    state.incubatingEgg === prev.incubatingEgg &&
+    state.tutorialStage === prev.tutorialStage &&
+    state.debris === prev.debris
   ) {
     return;
   }
@@ -435,6 +431,8 @@ useStore.subscribe((state, prev) => {
     eggProgress: state.eggProgress,
     eggHatched: state.eggHatched,
     incubatingEgg: state.incubatingEgg,
+    tutorialStage: state.tutorialStage,
+    debris: state.debris,
   });
 });
 

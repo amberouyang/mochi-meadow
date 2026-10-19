@@ -1,6 +1,15 @@
-import type { IncubatingEgg, Pet, Task } from '../types';
+import type { GardenDebris, IncubatingEgg, Pet, Task, TutorialStage } from '../types';
+import { clearedDebris, DEFAULT_DEBRIS } from './defaultDebris';
 
 const STORAGE_KEY = 'mochiMeadow.progress.v1';
+
+const TUTORIAL_STAGES: TutorialStage[] = [
+  'introMeadow',
+  'clearDebris',
+  'mochiReveal',
+  'showSanctuaryArrow',
+  'done',
+];
 
 /** Shape grows in later steps; always merge when saving. */
 export type ProgressSave = {
@@ -13,6 +22,8 @@ export type ProgressSave = {
   eggProgress: number;
   eggHatched: boolean;
   incubatingEgg: IncubatingEgg | null;
+  tutorialStage: TutorialStage;
+  debris: GardenDebris[];
 };
 
 export const DEFAULT_TASKS: Task[] = [
@@ -34,6 +45,8 @@ const DEFAULTS: ProgressSave = {
   eggProgress: 0,
   eggHatched: false,
   incubatingEgg: null,
+  tutorialStage: 'introMeadow',
+  debris: DEFAULT_DEBRIS.map((d) => ({ ...d })),
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -111,11 +124,48 @@ function serializeIncubatingEgg(egg: IncubatingEgg | null): IncubatingEgg | null
   return { catalogId: egg.catalogId, name: egg.name };
 }
 
+function parseTutorialStage(value: unknown, welcomeBonusClaimed: boolean): TutorialStage {
+  if (typeof value === 'string' && (TUTORIAL_STAGES as string[]).includes(value)) {
+    return value as TutorialStage;
+  }
+  // Legacy saves: onboarded players should not replay rock clearing.
+  return welcomeBonusClaimed ? 'done' : 'introMeadow';
+}
+
+function parseDebris(value: unknown, tutorialStage: TutorialStage): GardenDebris[] {
+  if (!Array.isArray(value)) {
+    return tutorialStage === 'done' || tutorialStage === 'mochiReveal' || tutorialStage === 'showSanctuaryArrow'
+      ? clearedDebris()
+      : DEFAULT_DEBRIS.map((d) => ({ ...d }));
+  }
+
+  const byId = new Map<string, GardenDebris>();
+  for (const item of value) {
+    if (!isRecord(item)) continue;
+    if (typeof item.id !== 'string' || !item.id) continue;
+    const base = DEFAULT_DEBRIS.find((d) => d.id === item.id);
+    if (!base) continue;
+    byId.set(item.id, {
+      ...base,
+      cleared: Boolean(item.cleared),
+    });
+  }
+
+  if (byId.size === 0) {
+    return tutorialStage === 'done' || tutorialStage === 'mochiReveal' || tutorialStage === 'showSanctuaryArrow'
+      ? clearedDebris()
+      : DEFAULT_DEBRIS.map((d) => ({ ...d }));
+  }
+
+  return DEFAULT_DEBRIS.map((d) => byId.get(d.id) ?? { ...d });
+}
+
 function cloneDefaults(): ProgressSave {
   return {
     ...DEFAULTS,
     tasks: DEFAULT_TASKS.map((t) => ({ ...t })),
     pets: DEFAULT_PETS.map((p) => ({ ...p })),
+    debris: DEFAULT_DEBRIS.map((d) => ({ ...d })),
   };
 }
 
@@ -144,6 +194,8 @@ export function loadProgress(): ProgressSave {
         : 0;
     const eggHatched = Boolean(parsed.eggHatched);
     const incubatingEgg = parseIncubatingEgg(parsed.incubatingEgg);
+    const tutorialStage = parseTutorialStage(parsed.tutorialStage, welcomeBonusClaimed);
+    const debris = parseDebris(parsed.debris, tutorialStage);
 
     return {
       v: 1,
@@ -155,6 +207,8 @@ export function loadProgress(): ProgressSave {
       eggProgress,
       eggHatched,
       incubatingEgg,
+      tutorialStage,
+      debris,
     };
   } catch {
     return cloneDefaults();
@@ -185,6 +239,12 @@ export function saveProgress(patch: Partial<Omit<ProgressSave, 'v'>>): void {
       incubatingEgg: serializeIncubatingEgg(
         patch.incubatingEgg !== undefined ? patch.incubatingEgg : current.incubatingEgg,
       ),
+      tutorialStage:
+        patch.tutorialStage !== undefined ? patch.tutorialStage : current.tutorialStage,
+      debris:
+        patch.debris !== undefined
+          ? patch.debris.map((d) => ({ ...d }))
+          : current.debris.map((d) => ({ ...d })),
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   } catch {
