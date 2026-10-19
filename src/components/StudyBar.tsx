@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useStore } from '../store/useStore';
+import { InfoTip } from './InfoTip';
 import './StudyBar.css';
 
 function goalParts(totalMinutes: number) {
@@ -81,10 +82,14 @@ export function StudyBar() {
 
   return (
     <div className="study-bar">
-      <p className="study-hint">
-        Start the timer when you study. Meet your goal to unlock the garden and give your pets
-        energy. You can leave this panel and the timer will keep running.
-      </p>
+      <div className="panel-heading">
+        <h2 className="panel-heading-title">Study</h2>
+        <InfoTip label="About studying">
+          Meet your daily goal to unlock the meadow. Leaving this panel keeps the timer running.
+          Studying also warms any egg in your nest.
+        </InfoTip>
+      </div>
+
       <div className="study-goal">
         <span className="study-goal-label">Daily goal</span>
         <div className="study-goal-fields">

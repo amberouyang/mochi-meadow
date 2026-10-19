@@ -132,12 +132,31 @@
     inset 0 2px 0 rgba(255, 255, 255, 0.5);
 }
 
+.nest-scene-sign-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem;
+}
+
 .nest-scene-sign-title {
   margin: 0;
   font-size: 1rem;
   font-weight: 800;
   color: #5a3a18;
   letter-spacing: 0.01em;
+}
+
+.nest-scene-signboard .info-tip-btn {
+  border-color: rgba(90, 58, 24, 0.45);
+  color: #5a3a18;
+  background: rgba(255, 248, 220, 0.9);
+}
+
+.nest-scene-signboard .info-tip-bubble {
+  right: auto;
+  left: 0;
+  width: min(200px, 55vw);
 }
 
 .nest-scene-sign-meta {

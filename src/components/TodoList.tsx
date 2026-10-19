@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useStore } from '../store/useStore';
+import { InfoTip } from './InfoTip';
 import './TodoList.css';
 
 export function TodoList() {
@@ -31,7 +32,12 @@ export function TodoList() {
 
   return (
     <div className="todo-list">
-      <p className="todo-hint">Complete tasks to earn points and unlock the garden.</p>
+      <div className="panel-heading">
+        <h2 className="panel-heading-title">Tasks</h2>
+        <InfoTip label="About tasks">
+          Finish tasks to earn points and help unlock the meadow.
+        </InfoTip>
+      </div>
       <div className="todo-add">
         <input
           type="text"

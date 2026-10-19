@@ -4,12 +4,6 @@
   gap: 1rem;
 }
 
-.study-hint {
-  color: var(--muted);
-  font-size: 0.9rem;
-  margin: 0;
-}
-
 .study-goal {
   display: flex;
   flex-direction: column;

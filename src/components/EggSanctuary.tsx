@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useStore } from '../store/useStore';
 import { MochiCloud } from './MochiCloud';
+import { InfoTip } from './InfoTip';
 import strawNestArt from '../assets/nest/straw-nest.png';
 import './EggSanctuary.css';
 
@@ -73,11 +74,11 @@ export function EggSanctuary({ onBackToMeadow }: EggSanctuaryProps) {
   const topRow = slots.slice(0, 4);
   const bottomRow = slots.slice(4, 8);
 
-  let nestCaption = 'Buy an egg in the Store, then study here to keep it warm.';
+  let nestCaption = 'Empty nest';
   if (isIncubating && incubatingEgg) {
-    nestCaption = `${incubatingEgg.name} is ${pct}% warm. Study or finish tasks to hatch it. About 100 study minutes should do it.`;
+    nestCaption = incubatingEgg.name;
   } else if (justHatched && incubatingEgg) {
-    nestCaption = `${incubatingEgg.name} hatched and joined the meadow!`;
+    nestCaption = `${incubatingEgg.name} hatched!`;
   }
 
   return (
@@ -94,9 +95,15 @@ export function EggSanctuary({ onBackToMeadow }: EggSanctuaryProps) {
         )}
 
         <div className="nest-scene-signboard" aria-label="Nest stats">
-          <p className="nest-scene-sign-title">{nestOwner}</p>
+          <div className="nest-scene-sign-top">
+            <p className="nest-scene-sign-title">{nestOwner}</p>
+            <InfoTip label="About the nest">
+              Buy an egg in the Store. Study or finish tasks to warm it. Hatching usually takes about
+              100 study minutes. Watch the warmth bar under the egg.
+            </InfoTip>
+          </div>
           <p className="nest-scene-sign-meta">
-            Pets collected: {unlockedCount}/{slots.length}
+            Pets {unlockedCount}/{slots.length}
           </p>
         </div>
 
@@ -148,7 +155,6 @@ export function EggSanctuary({ onBackToMeadow }: EggSanctuaryProps) {
           >
             <img className="nest-scene-bed-art" src={strawNestArt} alt="" aria-hidden />
             <div className="nest-scene-bed-inner">
-              {!incubatingEgg && <span className="nest-scene-bed-empty">empty nest</span>}
               {isIncubating && incubatingEgg && (
                 <div className="nest-scene-egg-wrap">
                   {incubatingEgg.artSrc ? (

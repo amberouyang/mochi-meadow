@@ -1,4 +1,5 @@
 import { useStore } from '../store/useStore';
+import { InfoTip } from './InfoTip';
 import './StoragePanel.css';
 
 export function StoragePanel() {
@@ -29,7 +30,7 @@ export function StoragePanel() {
             icon: '🥚',
             artSrc: incubatingEgg.artSrc,
             name: incubatingEgg.name,
-            detail: `Incubating in nest — ${Math.round((eggProgress / 1000) * 100)}%`,
+            detail: `Nest warmth ${Math.round((eggProgress / 1000) * 100)}%`,
           },
         ]
       : []),
@@ -37,14 +38,18 @@ export function StoragePanel() {
       id: pet.id,
       icon: '☁',
       name: pet.name,
-      detail: brainRotActive ? 'Feeling sick — needs Meadow Mist' : `Energy ${pet.energy}%`,
+      detail: brainRotActive ? 'Needs Meadow Mist' : `Energy ${pet.energy}%`,
     })),
   ];
 
   return (
     <div className="storage-panel">
-      <h2 className="storage-title">Storage</h2>
-      <p className="storage-text">Things you&apos;re carrying in the meadow.</p>
+      <div className="panel-heading">
+        <h2 className="panel-heading-title">Storage</h2>
+        <InfoTip label="About storage">
+          Your points, incubating egg, and mochi pets appear here.
+        </InfoTip>
+      </div>
 
       <ul className="storage-list">
         {items.map((item) => (
@@ -63,8 +68,6 @@ export function StoragePanel() {
           </li>
         ))}
       </ul>
-
-      <p className="storage-hint">Care items from the store will show up here too.</p>
     </div>
   );
 }

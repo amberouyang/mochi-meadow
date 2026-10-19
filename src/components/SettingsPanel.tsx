@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useStore } from '../store/useStore';
 import { formatStudyMinutes } from '../utils/formatStudyTime';
+import { InfoTip } from './InfoTip';
 import './SettingsPanel.css';
 
 function goalParts(totalMinutes: number) {
@@ -74,8 +75,12 @@ export function SettingsPanel() {
 
   return (
     <div className="settings-panel">
-      <h2 className="settings-title">Settings</h2>
-      <p className="settings-text">Tune your meadow study companion.</p>
+      <div className="panel-heading">
+        <h2 className="panel-heading-title">Settings</h2>
+        <InfoTip label="About settings">
+          Change your name, daily study goal, sound, or reset the whole meadow.
+        </InfoTip>
+      </div>
 
       <section className="settings-section" aria-labelledby="settings-name-heading">
         <h3 id="settings-name-heading" className="settings-section-title">
@@ -107,7 +112,6 @@ export function SettingsPanel() {
         <h3 id="settings-goal-heading" className="settings-section-title">
           Study goal
         </h3>
-        <p className="settings-hint">Default daily goal. Saved for next time you open the app.</p>
         <div className="settings-goal-row">
           <label className="settings-goal-field">
             <input

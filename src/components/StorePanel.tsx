@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useStore } from '../store/useStore';
+import { InfoTip } from './InfoTip';
 import './StorePanel.css';
 
 export function StorePanel() {
@@ -26,36 +27,37 @@ export function StorePanel() {
       setMessage(error);
       return;
     }
-    setMessage(`${active.name} is in your nest! Study to incubate and hatch them.`);
+    setMessage(`${active.name} is in your nest. Study to warm it.`);
   };
 
   const handleBuyMist = () => {
     if (!mist) return;
     if (!brainRotActive) {
-      setMessage('Your meadow is clear. Mist is only needed after a missed study day.');
+      setMessage('Your meadow is clear right now.');
       return;
     }
     if (!buyMist()) {
       setMessage('Not enough points for Meadow Mist.');
       return;
     }
-    setMessage('Mist settles over the meadow. Your mochi pets feel better!');
+    setMessage('Mist cleared the fog. Your mochi feel better!');
   };
 
   return (
     <div className="store-panel">
-      <h2 className="store-title">Mochi store</h2>
-      <p className="store-text">
-        Buy an egg for your Nest, then study to fill its warmth bar. Hatching usually takes about
-        100 study minutes. Meadow Mist clears brain rot fog after a missed study day.
-      </p>
+      <div className="panel-heading">
+        <h2 className="panel-heading-title">Store</h2>
+        <InfoTip label="About the store">
+          Buy an egg for your nest, then study to fill its warmth bar. Hatching usually takes about
+          100 study minutes. Meadow Mist clears fog after a missed study day.
+        </InfoTip>
+      </div>
 
       <h3 className="store-section-title">Care</h3>
       {mist && (
         <div className={`store-care${brainRotActive ? ' is-urgent' : ''}`}>
           <div className="store-care-info">
             <span className="store-egg-name">{mist.name}</span>
-            <span className="store-egg-desc">{mist.description}</span>
             <span className="store-egg-cost">{mist.cost} pts</span>
           </div>
           <button type="button" className="store-adopt-btn store-mist-btn" onClick={handleBuyMist}>
@@ -66,9 +68,7 @@ export function StorePanel() {
 
       <h3 className="store-section-title">Eggs</h3>
       {nestBusy && (
-        <p className="store-message">
-          Nest busy: {incubatingEgg?.name} is incubating. Hatch it before buying another.
-        </p>
+        <p className="store-message">Nest busy with {incubatingEgg?.name}. Hatch it first.</p>
       )}
       <div className="store-options">
         {eggOptions.map((egg) => (
@@ -77,6 +77,7 @@ export function StorePanel() {
             type="button"
             className={`store-egg ${egg.id === active?.id ? 'active' : ''}`}
             onClick={() => setSelectedId(egg.id)}
+            title={egg.description}
           >
             <div className="store-egg-icon" aria-hidden>
               {egg.artSrc ? (
@@ -87,7 +88,6 @@ export function StorePanel() {
             </div>
             <div className="store-egg-info">
               <span className="store-egg-name">{egg.name}</span>
-              <span className="store-egg-desc">{egg.description}</span>
               <span className="store-egg-cost">{egg.cost} pts</span>
             </div>
           </button>
@@ -101,7 +101,7 @@ export function StorePanel() {
       >
         Buy egg for nest
       </button>
-      <p className="store-points">You have {points} points.</p>
+      <p className="store-points">{points} points</p>
       {message && <p className="store-message">{message}</p>}
     </div>
   );

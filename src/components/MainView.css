@@ -309,12 +309,12 @@
   bottom: 5.75rem;
   left: 50%;
   transform: translateX(-50%);
-  width: min(360px, calc(100vw - 1.5rem));
+  width: min(340px, calc(100vw - 1.5rem));
   max-height: calc(100vh - 8rem);
   background: linear-gradient(180deg, var(--mm-cream) 0%, var(--mm-cream-deep) 100%);
   border: 3px solid var(--mm-leaf);
   border-radius: var(--mm-radius);
-  padding: 1rem;
+  padding: 0.9rem 1rem 1rem;
   box-shadow: var(--mm-shadow);
   color: var(--mm-ink);
   overflow: auto;
@@ -327,6 +327,21 @@
   --accent: var(--mm-leaf-mid);
   --pink: var(--mm-leaf);
   --yellow: #9a6b20;
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0 0 0.15rem;
+}
+
+.panel-heading-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--mm-ink);
 }
 
 .main-study-goal-overlay {
