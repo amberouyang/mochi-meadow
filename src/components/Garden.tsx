@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ROCK_ASSETS } from '../meadowRocks';
 import { useStore } from '../store/useStore';
-import { MeadowPanBackground } from './MeadowPanBackground';
+import { MeadowBackdrop, PlayableMeadow } from './PlayableMeadow';
 import { MeadowPet } from './MeadowPet';
 import { formatStudyMinutes } from '../utils/formatStudyTime';
 import './Garden.css';
@@ -64,7 +64,9 @@ export function Garden({ locked, onUnlockHint }: GardenProps) {
     return (
       <div className="garden garden-locked">
         <div className="garden-meadow-bg" aria-hidden>
-          <MeadowPanBackground />
+          <div className="meadow-game-scene is-static">
+            <MeadowBackdrop />
+          </div>
         </div>
         <div className="garden-lock-message">
           <span className="garden-lock-emojis">🌿 🌸 ✨ 🌿</span>
@@ -114,51 +116,56 @@ export function Garden({ locked, onUnlockHint }: GardenProps) {
   return (
     <div className={`garden garden-unlocked${brainRotActive ? ' has-brain-rot' : ''}`}>
       <div className="garden-meadow-bg">
-        <MeadowPanBackground>
-          {isClearingTutorial &&
-            debris
-              .filter((d) => !d.cleared)
-              .map((d) => (
-                <button
-                  key={d.id}
-                  type="button"
-                  className={`garden-debris garden-debris-${d.kind}`}
-                  style={{
-                    left: `${d.leftPct ?? 0}%`,
-                    bottom: `${d.bottomPct ?? 0}%`,
-                  }}
-                  onClick={() => {
-                    clearDebris(d.id);
-                    awardIntroPointsIfNeeded();
-                  }}
-                >
-                  <span className="garden-debris-arrow" aria-hidden>
-                    ⬇︎
-                  </span>
-                  <img
-                    src={debrisRockSrc(d.kind, d.assetIndex)}
-                    alt=""
-                    className="garden-debris-img"
-                    draggable={false}
-                  />
-                </button>
-              ))}
+        <PlayableMeadow>
+          {(playerPos) => (
+            <>
+              {isClearingTutorial &&
+                debris
+                  .filter((d) => !d.cleared)
+                  .map((d) => (
+                    <button
+                      key={d.id}
+                      type="button"
+                      className={`garden-debris garden-debris-${d.kind}`}
+                      style={{
+                        left: `${d.leftPct ?? 0}%`,
+                        bottom: `${d.bottomPct ?? 0}%`,
+                      }}
+                      onClick={() => {
+                        clearDebris(d.id);
+                        awardIntroPointsIfNeeded();
+                      }}
+                    >
+                      <span className="garden-debris-arrow" aria-hidden>
+                        ⬇︎
+                      </span>
+                      <img
+                        src={debrisRockSrc(d.kind, d.assetIndex)}
+                        alt=""
+                        className="garden-debris-img"
+                        draggable={false}
+                      />
+                    </button>
+                  ))}
 
-          {showPets &&
-            pets.map((p, i) => (
-              <MeadowPet
-                key={p.id}
-                pet={p}
-                points={points}
-                canWander={!isMochiReveal && !brainRotActive}
-                sick={brainRotActive}
-                animOffset={i}
-                onFeed={() => {
-                  if (spendPoints(5)) feedPet(p.id);
-                }}
-              />
-            ))}
-        </MeadowPanBackground>
+              {showPets &&
+                pets.map((p, i) => (
+                  <MeadowPet
+                    key={p.id}
+                    pet={p}
+                    points={points}
+                    canWander={!isMochiReveal && !brainRotActive}
+                    followTarget={{ x: playerPos.x, y: 100 - playerPos.y }}
+                    sick={brainRotActive}
+                    animOffset={i}
+                    onFeed={() => {
+                      if (spendPoints(5)) feedPet(p.id);
+                    }}
+                  />
+                ))}
+            </>
+          )}
+        </PlayableMeadow>
         {brainRotActive && (
           <div className="garden-brain-rot" aria-live="polite">
             <div className="garden-brain-rot-fog" aria-hidden />

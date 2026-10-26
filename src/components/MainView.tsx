@@ -112,11 +112,13 @@ export function MainView() {
 
       {panel !== 'none' && screen === 'meadow' && (
         <div className="main-panel">
-          {panel === 'todo' && <TodoList />}
-          {panel === 'study' && <StudyBar />}
-          {panel === 'store' && <StorePanel />}
-          {panel === 'storage' && <StoragePanel />}
-          {panel === 'settings' && <SettingsPanel />}
+          <div className="main-panel-scroll">
+            {panel === 'todo' && <TodoList />}
+            {panel === 'study' && <StudyBar />}
+            {panel === 'store' && <StorePanel />}
+            {panel === 'storage' && <StoragePanel />}
+            {panel === 'settings' && <SettingsPanel />}
+          </div>
         </div>
       )}
 

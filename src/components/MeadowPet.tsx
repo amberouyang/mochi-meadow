@@ -6,6 +6,8 @@ type MeadowPetProps = {
   pet: Pet;
   points: number;
   canWander: boolean;
+  /** Player position in left/bottom %; pets trail behind while exploring. */
+  followTarget?: Pos;
   /** Stagger bob/blink so pets don’t move in sync */
   animOffset: number;
   sick?: boolean;
@@ -34,10 +36,19 @@ function randomPos(avoid?: Pos): Pos {
   return next;
 }
 
+const FOLLOW_OFFSETS: Pos[] = [
+  { x: -8, y: -5 },
+  { x: 8, y: -6 },
+  { x: -11, y: 2 },
+  { x: 11, y: 1 },
+  { x: 0, y: -10 },
+];
+
 export function MeadowPet({
   pet,
   points,
   canWander,
+  followTarget,
   animOffset,
   sick = false,
   onFeed,
@@ -52,6 +63,26 @@ export function MeadowPet({
 
   useEffect(() => {
     if (!canWander || sick) return;
+
+    if (followTarget) {
+      const offset = FOLLOW_OFFSETS[animOffset % FOLLOW_OFFSETS.length];
+      const target = {
+        x: Math.min(92, Math.max(8, followTarget.x + offset.x)),
+        y: Math.min(52, Math.max(7, followTarget.y + offset.y)),
+      };
+      const current = posRef.current;
+      const dx = target.x - current.x;
+      const dy = target.y - current.y;
+      if (Math.hypot(dx, dy) < 1.4) return;
+      const id = window.setTimeout(() => {
+        setFacing(dx < 0 ? 'left' : 'right');
+        setPos({
+          x: current.x + dx * 0.42,
+          y: current.y + dy * 0.42,
+        });
+      }, 90 + animOffset * 70);
+      return () => window.clearTimeout(id);
+    }
 
     let cancelled = false;
     let timeoutId = 0;
@@ -73,7 +104,7 @@ export function MeadowPet({
       cancelled = true;
       window.clearTimeout(timeoutId);
     };
-  }, [canWander, sick, animOffset]);
+  }, [canWander, sick, animOffset, followTarget]);
 
   useEffect(() => {
     return () => {

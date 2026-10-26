@@ -12,6 +12,7 @@ Built with Electron, React, TypeScript, Vite, and Zustand.
 | Tasks | Create, complete, and remove to-dos; completions award points |
 | Points | Shared currency for the store and pet care (feeding) |
 | Meadow | Unlocks when the daily study goal is met or all tasks are done |
+| Playable meadow | Original farm meadow with side farm plots. Walk with WASD or arrow keys, or click to move. Mochi pets follow you |
 | Onboarding | Name + welcome points; clear rocks on first visit to welcome your first mochi |
 | Pets | Idle bounce, blink, and wander; click to view energy and feed |
 | Store | Buy mochi eggs (Sakura, Matcha, Yuzu, Sesame) and Meadow Mist |
@@ -76,8 +77,9 @@ Mochi-Meadow/
 1. Study with the timer and/or complete tasks to earn points.
 2. Meeting the daily study goal **or** finishing all tasks unlocks the meadow.
 3. First time: clear rocks, then the first mochi moves in.
-4. Buy an egg in the Store; it incubates in Nest as you keep studying.
-5. Progress (points, pets, eggs, tutorial) saves locally between sessions.
+4. Explore the meadow with WASD, arrow keys, or click to walk. Your mochi pets follow.
+5. Buy an egg in the Store; it incubates in Nest as you keep studying.
+6. Progress (points, pets, eggs, tutorial) saves locally between sessions.
 
 ## Roadmap
 

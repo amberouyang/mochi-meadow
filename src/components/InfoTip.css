@@ -34,7 +34,7 @@
   position: absolute;
   top: calc(100% + 0.35rem);
   right: 0;
-  z-index: 20;
+  z-index: 40;
   width: min(220px, 70vw);
   padding: 0.55rem 0.65rem;
   border-radius: 10px;

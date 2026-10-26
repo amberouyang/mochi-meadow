@@ -23,6 +23,178 @@
   pointer-events: auto;
 }
 
+/* Playable sakura meadow: a little top-down game map inside the study app */
+.meadow-game-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #a9dc9b;
+  cursor: pointer;
+  isolation: isolate;
+}
+
+.meadow-game-scene.is-static {
+  cursor: default;
+}
+
+.meadow-original-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center 68%;
+  image-rendering: pixelated;
+  pointer-events: none;
+  user-select: none;
+}
+
+.meadow-game-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;
+  pointer-events: none;
+  user-select: none;
+}
+
+.meadow-game-sign {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.8rem;
+  z-index: 6;
+  max-width: min(220px, 50vw);
+  padding: 0.32rem 0.55rem;
+  border: 3px solid #6f472b;
+  border-radius: 5px;
+  background: linear-gradient(180deg, #c98d4e 0%, #a96f35 100%);
+  box-shadow: 0 3px 0 rgba(80, 48, 20, 0.4);
+  color: #fff3cf;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 0 rgba(80, 48, 20, 0.55);
+}
+
+.meadow-move-hint {
+  position: absolute;
+  top: 0.85rem;
+  left: 50%;
+  z-index: 6;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0;
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+  text-shadow:
+    -1px 0 0 #5db9c9,
+    1px 0 0 #5db9c9,
+    0 -1px 0 #5db9c9,
+    0 2px 0 rgba(38, 83, 50, 0.55),
+    0 3px 6px rgba(38, 83, 50, 0.35);
+}
+
+.meadow-move-hint span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.16rem;
+  white-space: nowrap;
+}
+
+.meadow-move-hint kbd {
+  min-width: 1rem;
+  height: 1rem;
+  padding: 0 0.14rem;
+  border-radius: 3px;
+  border: 1px solid rgba(38, 83, 50, 0.5);
+  border-bottom-width: 2px;
+  background: rgba(255, 254, 242, 0.92);
+  color: #2f5f3d;
+  font: 800 0.6rem/1rem var(--font);
+  text-align: center;
+  text-shadow: none;
+}
+
+.meadow-player-anchor {
+  position: absolute;
+  z-index: 5;
+  transform: translate(-50%, -88%);
+  pointer-events: none;
+  filter: drop-shadow(0 4px 5px rgba(56, 82, 35, 0.28));
+}
+
+.meadow-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.08rem;
+}
+
+.meadow-player-svg {
+  width: clamp(38px, 5.2vw, 52px);
+  height: auto;
+  display: block;
+  overflow: visible;
+  image-rendering: pixelated;
+}
+
+.meadow-player[data-facing='left'] .meadow-player-svg {
+  transform: scaleX(-1);
+}
+
+.meadow-player.is-walking .meadow-player-body {
+  animation: meadow-player-walk 0.34s ease-in-out infinite;
+  transform-origin: 42px 88px;
+}
+
+@keyframes meadow-player-walk {
+  0%, 100% { transform: translateY(0) rotate(-1.2deg); }
+  50% { transform: translateY(-4px) rotate(1.2deg); }
+}
+
+.meadow-player-name {
+  max-width: 92px;
+  padding: 0;
+  color: #ffffff;
+  font-size: 0.62rem;
+  font-weight: 900;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow:
+    -1px 0 0 rgba(47, 95, 61, 0.8),
+    1px 0 0 rgba(47, 95, 61, 0.8),
+    0 1px 0 rgba(47, 95, 61, 0.8),
+    0 2px 4px rgba(47, 95, 61, 0.45);
+}
+
+@media (max-width: 680px) {
+  .meadow-game-sign {
+    display: none;
+  }
+
+  .meadow-move-hint {
+    top: auto;
+    bottom: 0.65rem;
+    font-size: 0.64rem;
+  }
+}
+
 .meadow-pan {
   position: absolute;
   inset: 0;
@@ -426,8 +598,8 @@
 
 .meadow-pet-mochi {
   position: relative;
-  width: 96px;
-  height: 66px;
+  width: 76px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -436,6 +608,8 @@
 
 .meadow-pet-mochi .mochi-cloud {
   display: block;
+  width: 76px;
+  height: auto;
   overflow: visible;
   filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.12));
 }

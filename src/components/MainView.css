@@ -314,11 +314,13 @@
   background: linear-gradient(180deg, var(--mm-cream) 0%, var(--mm-cream-deep) 100%);
   border: 3px solid var(--mm-leaf);
   border-radius: var(--mm-radius);
-  padding: 0.9rem 1rem 1rem;
+  padding: 0;
   box-shadow: var(--mm-shadow);
   color: var(--mm-ink);
-  overflow: auto;
+  overflow: hidden;
   z-index: 60;
+  display: flex;
+  flex-direction: column;
   /* Remap legacy dark-panel tokens so nested panels match meadow cards */
   --text: var(--mm-ink);
   --muted: var(--mm-ink-muted);
@@ -329,12 +331,50 @@
   --yellow: #9a6b20;
 }
 
+.main-panel-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 0.9rem 0.85rem 1rem 1rem;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(47, 95, 61, 0.35) transparent;
+}
+
+.main-panel-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.main-panel-scroll::-webkit-scrollbar-track {
+  margin: 0.45rem 0;
+  background: transparent;
+}
+
+.main-panel-scroll::-webkit-scrollbar-thumb {
+  background: rgba(47, 95, 61, 0.32);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.main-panel-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(47, 95, 61, 0.48);
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
 .panel-heading {
+  position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
   margin: 0 0 0.15rem;
+}
+
+.panel-heading .info-tip.is-open {
+  z-index: 5;
 }
 
 .panel-heading-title {
