@@ -233,7 +233,7 @@ export function MainView() {
 
       <nav className="main-dock" aria-label="Mochi Meadow controls">
         <div className="main-dock-inner">
-          <div className="main-dock-group" aria-label="Locations and Notebook">
+          <div className="main-dock-group" aria-label="Locations">
             <button
               type="button"
               className={`main-dock-btn ${screen === 'meadow' && panel === 'none' ? 'is-active' : ''}`}
@@ -305,17 +305,6 @@ export function MainView() {
                 </div>
               )}
             </div>
-            <button
-              type="button"
-              className={`main-dock-btn ${panel === 'notebook' ? 'is-active' : ''}`}
-              onClick={() => openNotebook('timer')}
-              title="Open Study Notebook"
-            >
-              <span className="main-dock-icon">
-                <SkyIconNotebook />
-              </span>
-              <span className="main-dock-label">Notebook</span>
-            </button>
           </div>
 
           <div
@@ -341,7 +330,18 @@ export function MainView() {
             </span>
           </div>
 
-          <div className="main-dock-group" aria-label="Inventory and settings">
+          <div className="main-dock-group" aria-label="Notebook, shop, and settings">
+            <button
+              type="button"
+              className={`main-dock-btn ${panel === 'notebook' ? 'is-active' : ''}`}
+              onClick={() => openNotebook('timer')}
+              title="Open Study Notebook"
+            >
+              <span className="main-dock-icon">
+                <SkyIconNotebook />
+              </span>
+              <span className="main-dock-label">Notebook</span>
+            </button>
             <button
               type="button"
               className={`main-dock-btn ${panel === 'store' ? 'is-active' : ''}`}
