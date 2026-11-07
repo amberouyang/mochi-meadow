@@ -14,7 +14,6 @@ import { MILESTONES } from '../utils/gamification';
 import { getSystemTimeOfDay, type TimeOfDay } from './MeadowLighting';
 import { CaretakerAvatar } from './CaretakerAvatar';
 import { StorePanel } from './StorePanel';
-import { StoragePanel } from './StoragePanel';
 import { SettingsPanel } from './SettingsPanel';
 import {
   SkyIconCafe,
@@ -23,12 +22,11 @@ import {
   SkyIconMeadow,
   SkyIconNotebook,
   SkyIconRoom,
-  SkyIconStorage,
   SkyIconStore,
 } from './SkyHudPixelIcons';
 import './MainView.css';
 
-type Panel = 'none' | 'notebook' | 'store' | 'storage' | 'settings';
+type Panel = 'none' | 'notebook' | 'store' | 'settings';
 type Screen = 'meadow' | 'cafe' | 'room' | 'nest';
 
 export function MainView() {
@@ -185,7 +183,6 @@ export function MainView() {
             ) : (
               <div className="main-panel-scroll">
                 {panel === 'store' && <StorePanel />}
-                {panel === 'storage' && <StoragePanel />}
               </div>
             )}
           </div>
@@ -355,17 +352,6 @@ export function MainView() {
                 <SkyIconStore />
               </span>
               <span className="main-dock-label">Store</span>
-            </button>
-            <button
-              type="button"
-              className={`main-dock-btn ${panel === 'storage' ? 'is-active' : ''}`}
-              onClick={() => openPanel('storage')}
-              title="Open storage"
-            >
-              <span className="main-dock-icon">
-                <SkyIconStorage />
-              </span>
-              <span className="main-dock-label">Storage</span>
             </button>
             <button
               type="button"

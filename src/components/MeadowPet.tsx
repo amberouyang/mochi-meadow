@@ -154,12 +154,15 @@ export function MeadowPet({
         ['--pet-breathe-dur' as string]: breatheDuration,
         ['--pet-breathe-delay' as string]: breatheDelay,
       }}
+      onMouseEnter={() => !sick && setSelected(true)}
+      onMouseLeave={() => setSelected(false)}
     >
       <button
         type="button"
         className="meadow-pet-hit"
         aria-label={sick ? `${pet.name} says I'm sick` : `${pet.name}. Click for options.`}
         onClick={() => setSelected((s) => !s)}
+        onFocus={() => !sick && setSelected(true)}
       >
         <div className="meadow-pet-bob">
           <div className="meadow-pet-mochi">
