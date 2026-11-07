@@ -290,9 +290,10 @@
   border: 1px solid rgba(45, 70, 50, 0.22);
   background: var(--dock-btn);
   color: var(--dock-ink);
-  width: 48px;
+  min-width: 52px;
+  width: auto;
   min-height: 48px;
-  padding: 0.28rem 0.2rem 0.2rem;
+  padding: 0.28rem 0.4rem 0.22rem;
   border-radius: 10px;
   flex-shrink: 0;
   display: inline-flex;
@@ -342,13 +343,14 @@
 }
 
 .main-dock-label {
-  font-size: 0.58rem;
+  font-size: 0.54rem;
   font-weight: 800;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   line-height: 1;
   color: var(--dock-muted);
   text-transform: uppercase;
   text-shadow: 0 1px 0 rgba(255, 252, 245, 0.35);
+  white-space: nowrap;
 }
 
 .main-dock-btn.is-active .main-dock-label {
@@ -658,11 +660,12 @@
   }
 
   .main-dock-btn {
-    width: 46px;
+    min-width: 48px;
     min-height: 48px;
+    padding: 0.26rem 0.32rem 0.2rem;
   }
 
   .main-dock-label {
-    font-size: 0.5rem;
+    font-size: 0.48rem;
   }
 }
