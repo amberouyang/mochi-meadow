@@ -35,6 +35,20 @@
   display: block;
 }
 
+.meadow-building-art {
+  display: block;
+  width: clamp(118px, 16vw, 168px);
+  height: auto;
+  image-rendering: pixelated;
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(0 4px 6px rgba(45, 75, 40, 0.22));
+}
+
+.cafe-building-art {
+  width: clamp(132px, 18vw, 188px);
+}
+
 .room-spot .meadow-building-svg {
   width: 144px;
   height: 134px;
@@ -70,6 +84,12 @@
   .meadow-building-svg {
     width: 100px;
     height: 90px;
+  }
+  .meadow-building-art {
+    width: clamp(100px, 28vw, 140px);
+  }
+  .cafe-building-art {
+    width: clamp(112px, 32vw, 152px);
   }
   .room-spot .meadow-building-svg {
     width: 110px;

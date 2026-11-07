@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import cafeArtUrl from '../assets/buildings/cafe.png';
 import type { MeadowPlayerPos } from './PlayableMeadow';
 import './MeadowBuildings.css';
 
@@ -89,67 +90,12 @@ export function MeadowBuildings({ playerPos, onEnterBuilding }: MeadowBuildingsP
           }
         }}
       >
-        <svg
-          viewBox="0 0 140 130"
-          className="meadow-building-svg"
-          shapeRendering="crispEdges"
-          aria-hidden
-        >
-          {/* Ground shadow */}
-          <ellipse cx="70" cy="120" rx="60" ry="8" fill="#426b3b" opacity="0.32" />
-
-          {/* Main Building Wall (Soft Cream / Pastel Peach) */}
-          <rect x="22" y="44" width="96" height="74" fill="#fff6ee" />
-          <rect x="22" y="44" width="96" height="4" fill="#fbdcd0" />
-          <rect x="22" y="114" width="96" height="4" fill="#eed5c5" />
-          <rect x="22" y="44" width="4" height="74" fill="#eed5c5" />
-          <rect x="114" y="44" width="4" height="74" fill="#eed5c5" />
-
-          {/* Roof Gable */}
-          <polygon points="12,46 70,12 128,46" fill="#f7b7a3" />
-          <polygon points="18,44 70,16 122,44" fill="#ffd5c7" />
-
-          {/* Striped Pastel Awning (Pastel Mint & Soft Coral) */}
-          <polygon points="16,56 124,56 128,68 12,68" fill="#a8e6cf" />
-          <polygon points="26,56 36,56 38,68 24,68" fill="#ffd3b6" />
-          <polygon points="48,56 58,56 60,68 46,68" fill="#ffd3b6" />
-          <polygon points="70,56 80,56 82,68 68,68" fill="#ffd3b6" />
-          <polygon points="92,56 102,56 104,68 90,68" fill="#ffd3b6" />
-          <polygon points="114,56 122,56 124,68 112,68" fill="#ffd3b6" />
-          {/* Scalloped edge */}
-          <rect x="12" y="68" width="116" height="3" fill="#88d8b0" />
-
-          {/* Café Sign */}
-          <rect x="42" y="24" width="56" height="15" fill="#ffffff" rx="2" />
-          <rect x="44" y="26" width="52" height="11" fill="#fff2e2" />
-          <rect x="47" y="30" width="46" height="3" fill="#d97d54" />
-
-          {/* Display Window (Warm Glow) */}
-          <rect x="29" y="74" width="30" height="28" fill="#4a5568" />
-          <rect x="31" y="76" width="26" height="24" fill="#fff6c8" />
-          <rect x="43" y="76" width="2" height="24" fill="#ffffff" />
-          <rect x="31" y="87" width="26" height="2" fill="#ffffff" />
-          {/* Coffee cup on sill */}
-          <rect x="36" y="89" width="6" height="6" fill="#f7a072" />
-          <rect x="38" y="87" width="2" height="2" fill="#ffffff" opacity="0.8" />
-
-          {/* Café Doorway */}
-          <rect x="74" y="72" width="32" height="46" fill="#75523c" />
-          <rect x="76" y="74" width="28" height="44" fill="#9c7a5f" />
-          {/* Door glass pane */}
-          <rect x="80" y="78" width="20" height="18" fill="#e8f4f8" />
-          <rect x="82" y="80" width="16" height="14" fill="#bae8e8" />
-          {/* Brass handle */}
-          <rect x="99" y="99" width="3" height="5" fill="#fbd38d" />
-
-          {/* Welcome mat */}
-          <rect x="72" y="117" width="36" height="4" fill="#c49769" />
-
-          {/* Outdoor bistro table with drinks */}
-          <rect x="110" y="100" width="16" height="2" fill="#ffffff" />
-          <rect x="117" y="102" width="2" height="14" fill="#ffffff" />
-          <rect x="112" y="96" width="4" height="4" fill="#a8e6cf" />
-        </svg>
+        <img
+          src={cafeArtUrl}
+          alt=""
+          className="meadow-building-art cafe-building-art"
+          draggable={false}
+        />
 
         <div className="meadow-building-label">
           <span className="meadow-b-title">Study Café</span>
