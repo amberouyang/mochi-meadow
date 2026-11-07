@@ -96,10 +96,6 @@ export function MeadowBuildings({ playerPos, onEnterBuilding }: MeadowBuildingsP
           className="meadow-building-art cafe-building-art"
           draggable={false}
         />
-
-        <div className="meadow-building-label">
-          <span className="meadow-b-title">Study Café</span>
-        </div>
       </div>
 
       {/* 2. YOUR COZY ROOM (Center - Fantage inspired) */}
