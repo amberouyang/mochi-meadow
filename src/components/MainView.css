@@ -6,66 +6,61 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: var(--bg);
+  background: #fdfbf7;
 
-  --dock-bg: var(--mm-dock);
-  --dock-edge: var(--mm-dock-edge);
-  --dock-btn: var(--mm-dock-btn);
-  --dock-btn-active: var(--mm-dock-btn-active);
-  --dock-ink: #f4fff6;
-  --dock-muted: rgba(232, 255, 236, 0.72);
+  --dock-bg: rgba(255, 255, 255, 0.94);
+  --dock-edge: #bce4ce;
+  --dock-btn: linear-gradient(180deg, #ffffff 0%, #f6fbf8 100%);
+  --dock-btn-active: linear-gradient(180deg, #e8f7ee 0%, #d1f2e0 100%);
+  --dock-ink: #20432f;
+  --dock-muted: #57806a;
 }
 
 .main-view[data-season='summer'] {
-  --dock-edge: rgba(140, 230, 200, 0.5);
+  --dock-edge: #a8e6cf;
 }
 
 .main-view[data-season='autumn'] {
-  --dock-bg: rgba(48, 40, 32, 0.92);
-  --dock-edge: rgba(220, 180, 120, 0.45);
-  --dock-btn: linear-gradient(165deg, #6b5640 0%, #4a3c2c 55%, #32281e 100%);
-  --dock-btn-active: linear-gradient(165deg, #8a6e48 0%, #6a5238 100%);
-  --dock-ink: #fff8ee;
-  --dock-muted: rgba(255, 244, 230, 0.72);
+  --dock-bg: rgba(255, 255, 255, 0.94);
+  --dock-edge: #ffd3b6;
+  --dock-btn: linear-gradient(180deg, #ffffff 0%, #fff9f5 100%);
+  --dock-btn-active: linear-gradient(180deg, #ffe8d6 0%, #ffd8be 100%);
+  --dock-ink: #4a2818;
+  --dock-muted: #8c5d45;
 }
 
-/* Points chip — top right, stays out of the meadow */
+/* Points chip — top right, light pastel styling */
 .main-top-chip {
   position: absolute;
   top: 0.65rem;
   right: 0.75rem;
   z-index: 50;
-  min-height: 40px;
-  padding: 0 0.75rem;
+  min-height: 38px;
+  padding: 0 0.85rem;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  background: linear-gradient(155deg, #fff6d4 0%, #f0c860 45%, #c99830 100%);
-  border: 3px solid rgba(120, 80, 20, 0.42);
-  box-shadow:
-    0 3px 0 rgba(0, 0, 0, 0.1),
-    0 6px 12px rgba(80, 55, 15, 0.12),
-    inset 0 2px 0 rgba(255, 255, 255, 0.55);
+  gap: 0.45rem;
+  background: #ffffff;
+  border: 2px solid #fed7aa;
+  box-shadow: 0 3px 8px rgba(180, 110, 40, 0.08);
   font-variant-numeric: tabular-nums;
   pointer-events: none;
 }
 
 .main-points-label {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 800;
-  color: #3d2a10;
-  letter-spacing: 0.02em;
+  color: #c26127;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .main-points-value {
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: 800;
   line-height: 1;
-  color: #140a04;
-  text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.55),
-    0 0 1px rgba(255, 255, 255, 0.35);
+  color: #2d3748;
 }
 
 .main-sky-pixel-icon {
@@ -120,32 +115,32 @@
 
 .main-dock-btn {
   appearance: none;
-  border: 2px solid rgba(255, 255, 255, 0.14);
+  border: 1.5px solid #d4e8dd;
   background: var(--dock-btn);
   color: var(--dock-ink);
   width: 48px;
   min-height: 48px;
   padding: 0.28rem 0.2rem 0.2rem;
-  border-radius: var(--mm-radius-sm);
+  border-radius: 10px;
   flex-shrink: 0;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.12rem;
+  gap: 0.15rem;
   cursor: pointer;
-  box-shadow:
-    0 2px 0 rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  box-shadow: 0 2px 4px rgba(40, 75, 55, 0.06);
   transition:
     transform 0.12s ease,
     filter 0.12s ease,
+    border-color 0.12s ease,
     box-shadow 0.12s ease;
 }
 
 .main-dock-btn:hover {
   transform: translateY(-2px);
-  filter: brightness(1.08);
+  border-color: #88cfae;
+  box-shadow: 0 4px 8px rgba(40, 75, 55, 0.1);
 }
 
 .main-dock-btn:active {
@@ -153,17 +148,16 @@
 }
 
 .main-dock-btn:focus-visible {
-  outline: 2px solid #fff;
+  outline: 2px solid #88cfae;
   outline-offset: 2px;
 }
 
 .main-dock-btn.is-active {
   background: var(--dock-btn-active);
-  border-color: rgba(255, 255, 255, 0.45);
+  border-color: #68b88a;
   box-shadow:
-    0 0 0 2px rgba(180, 240, 190, 0.55),
-    0 2px 0 rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    0 0 0 2px rgba(136, 207, 174, 0.35),
+    0 2px 5px rgba(35, 75, 50, 0.12);
 }
 
 .main-dock-btn--soon {
@@ -177,7 +171,7 @@
 
 .main-dock-label {
   font-size: 0.58rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.02em;
   line-height: 1;
   color: var(--dock-muted);
@@ -193,18 +187,27 @@
   min-width: 0;
   max-width: 280px;
   margin: 0 0.25rem;
-  padding: 0.35rem 0.75rem;
+  padding: 0.4rem 0.85rem;
   border-radius: 999px;
-  border: 1.5px solid rgba(200, 240, 210, 0.28);
-  background: rgba(8, 20, 14, 0.45);
+  border: 1.5px solid #bce4ce;
+  background: #f4faf6;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.55rem;
-  color: var(--dock-ink);
-  font-size: 0.72rem;
+  color: #1e3d29;
+  font-size: 0.74rem;
   white-space: nowrap;
   overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(40, 80, 55, 0.06);
+  transition: background 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
+}
+
+.main-dock-center:hover {
+  background: #ffffff;
+  border-color: #72bf94;
+  transform: translateY(-1px);
 }
 
 .main-dock-focus-name {
@@ -212,17 +215,18 @@
   max-width: 5.5rem;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: #1f3f2b;
 }
 
 .main-dock-focus-status {
-  color: var(--dock-muted);
+  color: #557d66;
   font-weight: 600;
 }
 
 .main-dock-focus-time {
   font-variant-numeric: tabular-nums;
-  font-weight: 700;
-  color: #d4f5c8;
+  font-weight: 800;
+  color: #166534;
 }
 
 .main-soon-toast {

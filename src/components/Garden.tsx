@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ROCK_ASSETS } from '../meadowRocks';
 import { useStore } from '../store/useStore';
 import { MeadowBackdrop, PlayableMeadow } from './PlayableMeadow';
+import { MeadowBuildings, type MeadowBuildingId } from './MeadowBuildings';
 import { MeadowPet } from './MeadowPet';
 import { formatStudyMinutes } from '../utils/formatStudyTime';
 import './Garden.css';
@@ -12,9 +13,13 @@ function debrisRockSrc(kind: 'rock' | 'tree' | 'rubble', assetIndex?: number) {
   return ROCK_ASSETS[3];
 }
 
-type GardenProps = { locked: boolean; onUnlockHint: () => void };
+type GardenProps = {
+  locked: boolean;
+  onUnlockHint: () => void;
+  onEnterBuilding?: (id: MeadowBuildingId) => void;
+};
 
-export function Garden({ locked, onUnlockHint }: GardenProps) {
+export function Garden({ locked, onUnlockHint, onEnterBuilding }: GardenProps) {
   const pets = useStore((s) => s.pets);
   const feedPet = useStore((s) => s.feedPet);
   const points = useStore((s) => s.points);
@@ -119,6 +124,11 @@ export function Garden({ locked, onUnlockHint }: GardenProps) {
         <PlayableMeadow>
           {(playerPos) => (
             <>
+              <MeadowBuildings
+                playerPos={playerPos}
+                onEnterBuilding={onEnterBuilding ?? (() => {})}
+              />
+
               {isClearingTutorial &&
                 debris
                   .filter((d) => !d.cleared)

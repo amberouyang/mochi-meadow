@@ -60,6 +60,58 @@ export function SkyIconNotebook() {
   );
 }
 
+export function SkyIconCafe() {
+  return (
+    <PixelIcon>
+      {/* Cup rim & body */}
+      <rect x="3" y="6" width="9" height="7" fill="currentColor" opacity="0.85" />
+      <rect x="4" y="13" width="7" height="1" fill="currentColor" opacity="0.85" />
+      <rect x="4" y="7" width="7" height="5" fill="#fdfbf7" opacity="0.25" />
+      {/* Handle */}
+      <rect x="12" y="7" width="2" height="4" fill="currentColor" opacity="0.85" />
+      <rect x="12" y="8" width="1" height="2" fill="#fdfbf7" opacity="0.4" />
+      {/* Steam puffs */}
+      <rect x="5" y="3" width="1" height="2" fill="currentColor" opacity="0.45" />
+      <rect x="8" y="2" width="1" height="2" fill="currentColor" opacity="0.45" />
+    </PixelIcon>
+  );
+}
+
+export function SkyIconRoom() {
+  return (
+    <PixelIcon>
+      {/* Roof peak */}
+      <rect x="7" y="2" width="2" height="1" fill="currentColor" opacity="0.9" />
+      <rect x="5" y="3" width="6" height="1" fill="currentColor" opacity="0.9" />
+      <rect x="3" y="4" width="10" height="2" fill="currentColor" opacity="0.9" />
+      {/* House walls */}
+      <rect x="4" y="6" width="8" height="8" fill="currentColor" opacity="0.2" />
+      <rect x="4" y="6" width="8" height="1" fill="currentColor" opacity="0.9" />
+      <rect x="4" y="13" width="8" height="1" fill="currentColor" opacity="0.9" />
+      <rect x="4" y="6" width="1" height="8" fill="currentColor" opacity="0.9" />
+      <rect x="11" y="6" width="1" height="8" fill="currentColor" opacity="0.9" />
+      {/* Door */}
+      <rect x="7" y="9" width="2" height="5" fill="currentColor" opacity="0.75" />
+    </PixelIcon>
+  );
+}
+
+export function SkyIconMeadow() {
+  return (
+    <PixelIcon>
+      {/* Little sprout */}
+      <rect x="7" y="8" width="2" height="6" fill="currentColor" opacity="0.9" />
+      <rect x="5" y="13" width="6" height="1" fill="currentColor" opacity="0.7" />
+      {/* Left leaf */}
+      <rect x="4" y="6" width="3" height="3" fill="currentColor" opacity="0.8" />
+      <rect x="3" y="7" width="2" height="2" fill="currentColor" opacity="0.6" />
+      {/* Right leaf */}
+      <rect x="9" y="5" width="4" height="3" fill="currentColor" opacity="0.8" />
+      <rect x="11" y="6" width="2" height="2" fill="currentColor" opacity="0.6" />
+    </PixelIcon>
+  );
+}
+
 export function SkyIconStudy() {
   return (
     <PixelIcon>

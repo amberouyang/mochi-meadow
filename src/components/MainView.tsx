@@ -5,24 +5,27 @@ import { formatStudyMinutes } from '../utils/formatStudyTime';
 import { StudyTicker } from './StudyTicker';
 import { Garden } from './Garden';
 import { EggSanctuary } from './EggSanctuary';
+import { StudyCafe } from './StudyCafe';
+import { CozyRoom } from './CozyRoom';
 import { NotebookModal } from './NotebookModal';
+import { type MeadowBuildingId } from './MeadowBuildings';
 import { StorePanel } from './StorePanel';
 import { StoragePanel } from './StoragePanel';
 import { SettingsPanel } from './SettingsPanel';
 import {
-  SkyIconBoard,
+  SkyIconCafe,
   SkyIconEgg,
-  SkyIconFriends,
   SkyIconGear,
+  SkyIconMeadow,
   SkyIconNotebook,
-  SkyIconRooms,
+  SkyIconRoom,
   SkyIconStorage,
   SkyIconStore,
 } from './SkyHudPixelIcons';
 import './MainView.css';
 
 type Panel = 'none' | 'notebook' | 'store' | 'storage' | 'settings';
-type Screen = 'meadow' | 'nest';
+type Screen = 'meadow' | 'cafe' | 'room' | 'nest';
 
 export function MainView() {
   const [screen, setScreen] = useState<Screen>('meadow');
@@ -52,7 +55,6 @@ export function MainView() {
 
   const openNotebook = (tab: 'timer' | 'tasks' | 'log' = 'timer') => {
     setSoonToast(null);
-    setScreen('meadow');
     if (panel === 'notebook' && notebookTab === tab) {
       setPanel('none');
     } else {
@@ -63,17 +65,20 @@ export function MainView() {
 
   const openPanel = (next: Panel) => {
     setSoonToast(null);
-    setScreen('meadow');
     setPanel((current) => (current === next ? 'none' : next));
   };
 
-  const openNest = () => {
-    if (tutorialStage === 'showSanctuaryArrow') {
-      setTutorialStage('done');
-    }
+  const handleEnterBuilding = (id: MeadowBuildingId) => {
     setSoonToast(null);
     setPanel('none');
-    setScreen((current) => (current === 'nest' ? 'meadow' : 'nest'));
+    if (id === 'cafe') setScreen('cafe');
+    else if (id === 'room') setScreen('room');
+    else if (id === 'nest') {
+      if (tutorialStage === 'showSanctuaryArrow') {
+        setTutorialStage('done');
+      }
+      setScreen('nest');
+    }
   };
 
   useEffect(() => {
@@ -83,18 +88,6 @@ export function MainView() {
       }
     };
   }, []);
-
-  const showComingSoon = (label: string) => {
-    setPanel('none');
-    setSoonToast(`${label} — coming soon!`);
-    if (soonTimeoutRef.current != null) {
-      window.clearTimeout(soonTimeoutRef.current);
-    }
-    soonTimeoutRef.current = window.setTimeout(() => {
-      soonTimeoutRef.current = null;
-      setSoonToast(null);
-    }, 2200);
-  };
 
   const showSanctuaryArrow = tutorialStage === 'showSanctuaryArrow';
 
@@ -108,24 +101,41 @@ export function MainView() {
   return (
     <div className="main-view" data-season={season}>
       <StudyTicker />
-      <section className={`main-garden-area${screen === 'nest' ? ' is-nest-page' : ''}`}>
+      <section className={`main-garden-area${screen !== 'meadow' ? ' is-indoor-page' : ''}`}>
         <div className="main-top-chip" aria-label={`Points: ${points}`}>
           <span className="main-points-label">Points</span>
           <span className="main-points-value">{points}</span>
         </div>
 
-        {screen === 'nest' ? (
+        {screen === 'cafe' && (
+          <StudyCafe
+            onBackToMeadow={() => setScreen('meadow')}
+            onOpenNotebook={() => openNotebook('timer')}
+          />
+        )}
+        {screen === 'room' && (
+          <CozyRoom
+            onBackToMeadow={() => setScreen('meadow')}
+            onOpenNotebook={() => openNotebook('timer')}
+          />
+        )}
+        {screen === 'nest' && (
           <EggSanctuary onBackToMeadow={() => setScreen('meadow')} />
-        ) : (
-          <Garden locked={!gardenUnlocked && tutorialStage === 'done'} onUnlockHint={checkGardenAccess} />
+        )}
+        {screen === 'meadow' && (
+          <Garden
+            locked={!gardenUnlocked && tutorialStage === 'done'}
+            onUnlockHint={checkGardenAccess}
+            onEnterBuilding={handleEnterBuilding}
+          />
         )}
       </section>
 
-      {panel === 'notebook' && screen === 'meadow' && (
+      {panel === 'notebook' && (
         <NotebookModal onClose={() => setPanel('none')} initialTab={notebookTab} />
       )}
 
-      {panel !== 'none' && panel !== 'notebook' && screen === 'meadow' && (
+      {panel !== 'none' && panel !== 'notebook' && (
         <>
           {panel === 'settings' && (
             <div
@@ -180,7 +190,74 @@ export function MainView() {
 
       <nav className="main-dock" aria-label="Mochi Meadow controls">
         <div className="main-dock-inner">
-          <div className="main-dock-group" aria-label="Study tools">
+          <div className="main-dock-group" aria-label="Locations and Notebook">
+            <button
+              type="button"
+              className={`main-dock-btn ${screen === 'meadow' && panel === 'none' ? 'is-active' : ''}`}
+              onClick={() => {
+                setPanel('none');
+                setScreen('meadow');
+              }}
+              title="Return to Meadow"
+            >
+              <span className="main-dock-icon">
+                <SkyIconMeadow />
+              </span>
+              <span className="main-dock-label">Meadow</span>
+            </button>
+            <button
+              type="button"
+              className={`main-dock-btn ${screen === 'cafe' ? 'is-active' : ''}`}
+              onClick={() => {
+                setPanel('none');
+                setScreen('cafe');
+              }}
+              title="Enter Study Café"
+            >
+              <span className="main-dock-icon">
+                <SkyIconCafe />
+              </span>
+              <span className="main-dock-label">Café</span>
+            </button>
+            <button
+              type="button"
+              className={`main-dock-btn ${screen === 'room' ? 'is-active' : ''}`}
+              onClick={() => {
+                setPanel('none');
+                setScreen('room');
+              }}
+              title="Enter Your Cozy Room"
+            >
+              <span className="main-dock-icon">
+                <SkyIconRoom />
+              </span>
+              <span className="main-dock-label">Room</span>
+            </button>
+            <div className="main-dock-btn-wrap">
+              <button
+                type="button"
+                className={`main-dock-btn ${screen === 'nest' ? 'is-active' : ''}`}
+                onClick={() => {
+                  setPanel('none');
+                  if (tutorialStage === 'showSanctuaryArrow') {
+                    setTutorialStage('done');
+                  }
+                  setScreen('nest');
+                }}
+                title="Enter The Barn"
+              >
+                <span className="main-dock-icon">
+                  <SkyIconEgg />
+                </span>
+                <span className="main-dock-label">Barn</span>
+              </button>
+              {showSanctuaryArrow && (
+                <div className="egg-hint egg-hint--dock" aria-hidden>
+                  <span className="egg-hint-text">Open barn</span>
+                  <span className="egg-hint-arrow">⬇︎</span>
+                </div>
+              )}
+            </div>
             <button
               type="button"
               className={`main-dock-btn ${panel === 'notebook' ? 'is-active' : ''}`}
@@ -191,45 +268,6 @@ export function MainView() {
                 <SkyIconNotebook />
               </span>
               <span className="main-dock-label">Notebook</span>
-            </button>
-            <div className="main-dock-btn-wrap">
-              <button
-                type="button"
-                className={`main-dock-btn ${screen === 'nest' ? 'is-active' : ''}`}
-                onClick={openNest}
-              >
-                <span className="main-dock-icon">
-                  <SkyIconEgg />
-                </span>
-                <span className="main-dock-label">Nest</span>
-              </button>
-              {showSanctuaryArrow && (
-                <div className="egg-hint egg-hint--dock" aria-hidden>
-                  <span className="egg-hint-text">Open your nest</span>
-                  <span className="egg-hint-arrow">⬇︎</span>
-                </div>
-              )}
-            </div>
-            <button
-              type="button"
-              className={`main-dock-btn ${panel === 'store' ? 'is-active' : ''}`}
-              onClick={() => openPanel('store')}
-            >
-              <span className="main-dock-icon">
-                <SkyIconStore />
-              </span>
-              <span className="main-dock-label">Store</span>
-            </button>
-            <button
-              type="button"
-              className={`main-dock-btn ${panel === 'storage' ? 'is-active' : ''}`}
-              onClick={() => openPanel('storage')}
-              title="Open storage"
-            >
-              <span className="main-dock-icon">
-                <SkyIconStorage />
-              </span>
-              <span className="main-dock-label">Storage</span>
             </button>
           </div>
 
@@ -254,39 +292,28 @@ export function MainView() {
             </span>
           </div>
 
-          <div className="main-dock-group" aria-label="Social and settings">
+          <div className="main-dock-group" aria-label="Inventory and settings">
             <button
               type="button"
-              className="main-dock-btn main-dock-btn--soon"
-              onClick={() => showComingSoon('Friends')}
-              title="Connect with friends online (coming soon)"
+              className={`main-dock-btn ${panel === 'store' ? 'is-active' : ''}`}
+              onClick={() => openPanel('store')}
+              title="Meadow Shop"
             >
               <span className="main-dock-icon">
-                <SkyIconFriends />
+                <SkyIconStore />
               </span>
-              <span className="main-dock-label">Friends</span>
+              <span className="main-dock-label">Store</span>
             </button>
             <button
               type="button"
-              className="main-dock-btn main-dock-btn--soon"
-              onClick={() => showComingSoon('Scoreboard')}
-              title="See who studied the most (coming soon)"
+              className={`main-dock-btn ${panel === 'storage' ? 'is-active' : ''}`}
+              onClick={() => openPanel('storage')}
+              title="Open storage"
             >
               <span className="main-dock-icon">
-                <SkyIconBoard />
+                <SkyIconStorage />
               </span>
-              <span className="main-dock-label">Board</span>
-            </button>
-            <button
-              type="button"
-              className="main-dock-btn main-dock-btn--soon"
-              onClick={() => showComingSoon('Study rooms')}
-              title="Study together online (coming soon)"
-            >
-              <span className="main-dock-icon">
-                <SkyIconRooms />
-              </span>
-              <span className="main-dock-label">Rooms</span>
+              <span className="main-dock-label">Storage</span>
             </button>
             <button
               type="button"

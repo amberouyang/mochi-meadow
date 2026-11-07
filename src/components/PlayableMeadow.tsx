@@ -79,34 +79,6 @@ function PixelBush({ x, y, scale = 1 }: { x: number; y: number; scale?: number }
   );
 }
 
-function FarmPlot({ x, y, scale = 1, flip = false }: { x: number; y: number; scale?: number; flip?: boolean }) {
-  const rows = [0, 1, 2, 3];
-  return (
-    <g transform={`translate(${x} ${y}) scale(${flip ? -scale : scale} ${scale})`} shapeRendering="crispEdges">
-      {/* fence */}
-      <rect x="-104" y="-30" width="208" height="7" fill="#b98256" />
-      <rect x="-104" y="-16" width="208" height="6" fill="#a06a42" />
-      {[-96, -48, 0, 48, 96].map((fx) => (
-        <rect key={fx} x={fx - 4} y="-38" width="8" height="34" fill="#8b5a32" />
-      ))}
-      {/* soil bed */}
-      <rect x="-96" y="0" width="192" height="104" fill="#9b6b43" />
-      <rect x="-96" y="0" width="192" height="10" fill="#b98256" />
-      {rows.map((row) => (
-        <g key={row}>
-          <rect x="-84" y={18 + row * 22} width="168" height="7" fill="#6f472b" />
-          {[-68, -34, 0, 34, 68].map((cx) => (
-            <g key={cx}>
-              <rect x={cx - 2} y={10 + row * 22} width="4" height="12" fill="#4f9b57" />
-              <rect x={cx - 7} y={13 + row * 22} width="14" height="4" fill="#67bd6d" />
-            </g>
-          ))}
-        </g>
-      ))}
-    </g>
-  );
-}
-
 function FlowerPatch({ x, y, flip = false }: { x: number; y: number; flip?: boolean }) {
   const flowers = [
     [0, 0, '#ff8fb5'],
@@ -133,27 +105,51 @@ export function MeadowBackdrop() {
     <>
       <img src={meadowUrl} alt="" className="meadow-original-bg" draggable={false} />
       <svg className="meadow-game-backdrop" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid slice" aria-hidden>
-        {/* Farm plots tucked into both sides, echoing the original meadow art */}
-        <FarmPlot x={148} y={302} scale={0.62} />
-        <FarmPlot x={852} y={302} scale={0.62} flip />
+        {/* Stepping stone paths leading to the 3 buildings */}
+        <g fill="#e3dbcb" opacity="0.75" shapeRendering="crispEdges">
+          {/* Path to Study Café */}
+          <rect x="160" y="310" width="16" height="8" rx="2" />
+          <rect x="180" y="330" width="20" height="9" rx="2" />
+          <rect x="210" y="355" width="22" height="10" rx="2" />
+          <rect x="250" y="380" width="24" height="10" rx="2" />
+          <rect x="300" y="410" width="26" height="11" rx="2" />
 
-        <PixelBush x={92} y={206} scale={0.85} />
-        <PixelBush x={914} y={206} scale={0.88} />
-        <PixelBush x={330} y={548} scale={0.78} />
-        <PixelBush x={676} y={548} scale={0.8} />
+          {/* Path to Your Room (Center) */}
+          <rect x="490" y="270" width="20" height="9" rx="2" />
+          <rect x="485" y="300" width="24" height="10" rx="2" />
+          <rect x="495" y="335" width="22" height="10" rx="2" />
+          <rect x="488" y="370" width="26" height="11" rx="2" />
+          <rect x="492" y="410" width="26" height="11" rx="2" />
 
-        <FlowerPatch x={104} y={238} />
-        <FlowerPatch x={852} y={238} flip />
-        <FlowerPatch x={282} y={462} />
-        <FlowerPatch x={676} y={462} flip />
+          {/* Path to The Barn (Right) */}
+          <rect x="820" y="310" width="18" height="8" rx="2" />
+          <rect x="800" y="330" width="20" height="9" rx="2" />
+          <rect x="770" y="355" width="22" height="10" rx="2" />
+          <rect x="730" y="380" width="24" height="10" rx="2" />
+          <rect x="680" y="410" width="26" height="11" rx="2" />
 
-        {/* scattered petals on grass */}
-        <g fill="#ffc7da" opacity="0.8" shapeRendering="crispEdges">
-          <rect x="238" y="224" width="11" height="6" />
-          <rect x="692" y="260" width="10" height="5" />
-          <rect x="348" y="420" width="10" height="5" />
-          <rect x="646" y="430" width="11" height="6" />
-          <rect x="486" y="198" width="8" height="5" />
+          {/* Center plaza crossroads */}
+          <rect x="460" y="435" width="80" height="14" rx="3" />
+        </g>
+
+        {/* Flanking decorative bushes & flowers */}
+        <PixelBush x={82} y={320} scale={0.75} />
+        <PixelBush x={924} y={320} scale={0.75} />
+        <PixelBush x={350} y={530} scale={0.78} />
+        <PixelBush x={650} y={530} scale={0.8} />
+
+        <FlowerPatch x={70} y={345} />
+        <FlowerPatch x={880} y={345} flip />
+        <FlowerPatch x={280} y={480} />
+        <FlowerPatch x={680} y={480} flip />
+
+        {/* Scattered soft pastel petals on grass */}
+        <g fill="#ffd1dc" opacity="0.75" shapeRendering="crispEdges">
+          <rect x="238" y="240" width="9" height="5" />
+          <rect x="692" y="250" width="10" height="5" />
+          <rect x="348" y="430" width="9" height="5" />
+          <rect x="646" y="440" width="10" height="5" />
+          <rect x="486" y="210" width="8" height="4" />
         </g>
       </svg>
     </>

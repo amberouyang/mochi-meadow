@@ -1,11 +1,11 @@
-/* Stardew Valley & Fantage-inspired Study Notebook Modal */
+/* Light & Pastel Study Notebook Modal */
 
 .notebook-backdrop {
   position: fixed;
   inset: 0;
   z-index: 120;
-  background: rgba(18, 12, 8, 0.65);
-  backdrop-filter: blur(3px);
+  background: rgba(30, 41, 59, 0.45);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,13 +43,13 @@
   }
 }
 
-/* Stardew Valley Hanging Top Tabs */
+/* Light Pastel Bookmark Tabs */
 .notebook-tabs-bar {
   display: flex;
   align-items: flex-end;
-  gap: 0.35rem;
+  gap: 0.4rem;
   padding: 0 1.25rem;
-  margin-bottom: -4px;
+  margin-bottom: -3px;
   z-index: 2;
   position: relative;
 }
@@ -57,32 +57,32 @@
 .notebook-tab {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.55rem 1.1rem 0.65rem;
-  background: #c98a4a;
-  border: 3px solid #4a270f;
+  gap: 0.45rem;
+  padding: 0.55rem 1.15rem 0.65rem;
+  background: #eef7f2;
+  border: 2px solid #b7d9c4;
   border-bottom: none;
-  border-radius: 6px 6px 0 0;
-  color: #3b1d09;
+  border-radius: 8px 8px 0 0;
+  color: #3b5c47;
   font-family: inherit;
   font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: inset 0 2px 0 rgba(255, 235, 195, 0.55), inset 0 -2px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.7);
   transition: transform 0.1s ease, background 0.1s ease;
   user-select: none;
 }
 
 .notebook-tab:hover {
-  background: #db9d5e;
+  background: #ffffff;
   transform: translateY(-2px);
 }
 
 .notebook-tab.is-active {
-  background: #faefd8;
-  color: #381e0b;
-  border-color: #4a270f;
-  box-shadow: inset 0 2px 0 #ffffff, 0 4px 0 #faefd8;
+  background: #ffffff;
+  color: #1f3b28;
+  border-color: #8fc7a5;
+  box-shadow: inset 0 2px 0 #ffffff, 0 4px 0 #ffffff;
   padding-bottom: 0.85rem;
   transform: translateY(0);
 }
@@ -90,17 +90,17 @@
 .notebook-tab-stitch {
   width: 6px;
   height: 6px;
-  background: #4a270f;
-  border-radius: 1px;
-  opacity: 0.45;
+  background: #8fc7a5;
+  border-radius: 2px;
+  opacity: 0.7;
 }
 
 .notebook-tab.is-active .notebook-tab-stitch {
-  background: #96531f;
-  opacity: 0.8;
+  background: #4e9b6e;
+  opacity: 1;
 }
 
-/* Stardew Red Close Button */
+/* Soft Pastel Close Button */
 .notebook-close-btn {
   margin-left: auto;
   width: 32px;
@@ -108,21 +108,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #c53829;
-  border: 3px solid #4a150e;
-  border-radius: 4px;
-  color: #fff;
+  background: #f87171;
+  border: 2px solid #ef4444;
+  border-radius: 8px;
+  color: #ffffff;
   font-size: 1.35rem;
-  font-weight: 900;
+  font-weight: 700;
   line-height: 1;
   cursor: pointer;
-  box-shadow: inset 0 2px 0 #ef7b6b, inset 0 -2px 0 #731c12, 0 3px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25);
   transition: transform 0.1s ease, filter 0.1s ease;
   margin-bottom: 4px;
 }
 
 .notebook-close-btn:hover {
-  filter: brightness(1.1);
+  filter: brightness(1.08);
   transform: scale(1.05);
 }
 
@@ -130,18 +130,17 @@
   transform: scale(0.95);
 }
 
-/* Parchment Page Interior */
+/* Light Parchment Inner Page */
 .notebook-parchment {
   position: relative;
-  background: #faefd8;
-  border: 4px solid #4a270f;
-  border-radius: 6px;
-  padding: 1.5rem 1.75rem;
+  background: #ffffff;
+  border: 3px solid #8fc7a5;
+  border-radius: 12px;
+  padding: 1.65rem 1.85rem;
   box-shadow:
-    inset 0 0 0 3px #dfb175,
-    inset 0 0 20px rgba(138, 77, 27, 0.12),
-    0 12px 30px rgba(0, 0, 0, 0.45);
-  color: #3d2311;
+    inset 0 0 0 2px #f0fdf4,
+    0 12px 30px rgba(40, 70, 50, 0.12);
+  color: #334155;
   overflow-y: auto;
   max-height: calc(100vh - 7rem);
 }
@@ -153,22 +152,22 @@
   justify-content: space-between;
   gap: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 2px dashed #d5a973;
+  border-bottom: 2px dashed #e2e8f0;
   margin-bottom: 1.25rem;
 }
 
 .notebook-heading {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 800;
-  color: #4a270f;
+  color: #1e293b;
   letter-spacing: -0.01em;
 }
 
 .notebook-subheading {
   margin: 0.25rem 0 0;
   font-size: 0.8rem;
-  color: #7b4f2c;
+  color: #64748b;
   line-height: 1.4;
 }
 
@@ -176,25 +175,25 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  background: #eed5b0;
-  border: 2px solid #996232;
-  border-radius: 4px;
-  padding: 0.35rem 0.65rem;
+  background: #fdf6ec;
+  border: 1.5px solid #fed7aa;
+  border-radius: 8px;
+  padding: 0.35rem 0.75rem;
   min-width: 90px;
 }
 
 .notebook-points-label {
-  font-size: 0.68rem;
+  font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #704422;
-  font-weight: 700;
+  color: #c26127;
+  font-weight: 800;
 }
 
 .notebook-points-val {
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   font-weight: 800;
-  color: #3d2311;
+  color: #1e293b;
   font-variant-numeric: tabular-nums;
 }
 
@@ -207,16 +206,15 @@
 
 /* Timer Hero */
 .notebook-timer-hero {
-  background: #f4e3c3;
-  border: 2px solid #b87c42;
-  border-radius: 6px;
-  padding: 1.25rem;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.35rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.85rem;
   text-align: center;
-  box-shadow: inset 0 2px 4px rgba(74, 39, 15, 0.08);
 }
 
 .notebook-digits-block {
@@ -230,10 +228,9 @@
   font-size: 3.25rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
-  color: #381c09;
+  color: #1e293b;
   line-height: 1;
   letter-spacing: -0.02em;
-  text-shadow: 1px 1px 0 #fff;
 }
 
 .notebook-digits-unit {
@@ -241,7 +238,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #8c572b;
+  color: #64748b;
 }
 
 .notebook-timer-status {
@@ -252,39 +249,39 @@
 }
 
 .notebook-status-tag {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 700;
   padding: 0.25rem 0.75rem;
-  border-radius: 4px;
+  border-radius: 999px;
 }
 
 .notebook-status-tag.is-studying {
-  background: #c3e2bb;
-  color: #1f4a18;
-  border: 1px solid #7da874;
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
 }
 
 .notebook-status-tag.is-complete {
-  background: #d6e8b7;
-  color: #2e4d0e;
-  border: 1px solid #94b568;
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #7dd3fc;
 }
 
 .notebook-status-tag.is-paused {
-  background: #fde6aa;
-  color: #5f3e06;
-  border: 1px solid #d49f3e;
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
 }
 
 .notebook-status-tag.is-ready {
-  background: #eed8ba;
-  color: #633919;
-  border: 1px solid #b38555;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
 }
 
 .notebook-timer-sub {
   font-size: 0.75rem;
-  color: #83552f;
+  color: #64748b;
 }
 
 .notebook-main-cta {
@@ -293,20 +290,20 @@
   justify-content: center;
   min-width: 180px;
   padding: 0.65rem 1.4rem;
-  background: #5b8c3d;
+  background: #88cfae;
   color: #ffffff;
-  border: 2px solid #284417;
-  border-radius: 4px;
+  border: 2px solid #5fa685;
+  border-radius: 8px;
   font-family: inherit;
   font-size: 0.95rem;
   font-weight: 800;
   cursor: pointer;
-  box-shadow: inset 0 2px 0 #8dc56b, inset 0 -2px 0 #2e501a, 0 3px 6px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 3px 6px rgba(50, 120, 80, 0.15);
   transition: transform 0.1s ease, filter 0.1s ease;
 }
 
 .notebook-main-cta:hover:not(:disabled) {
-  filter: brightness(1.08);
+  filter: brightness(1.06);
   transform: translateY(-1px);
 }
 
@@ -315,9 +312,9 @@
 }
 
 .notebook-main-cta.is-stop {
-  background: #ba4737;
-  border-color: #55160d;
-  box-shadow: inset 0 2px 0 #e27364, inset 0 -2px 0 #6e1f13, 0 3px 6px rgba(0, 0, 0, 0.18);
+  background: #f87171;
+  border-color: #dc2626;
+  box-shadow: 0 3px 6px rgba(220, 38, 38, 0.15);
 }
 
 .notebook-main-cta:disabled {
@@ -338,23 +335,21 @@
   justify-content: space-between;
   font-size: 0.8rem;
   font-weight: 700;
-  color: #6d4220;
+  color: #475569;
 }
 
 .notebook-progress-track {
   width: 100%;
-  height: 14px;
-  background: #dfc49e;
-  border: 2px solid #6c3b16;
-  border-radius: 3px;
+  height: 12px;
+  background: #e2e8f0;
+  border-radius: 999px;
   overflow: hidden;
-  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.2);
 }
 
 .notebook-progress-fill {
   height: 100%;
-  background: linear-gradient(180deg, #8dc56b 0%, #5b8c3d 100%);
-  border-right: 1px solid #36591f;
+  background: linear-gradient(90deg, #a7f3d0 0%, #6ee7b7 50%, #34d399 100%);
+  border-radius: 999px;
   transition: width 0.3s ease;
 }
 
@@ -363,17 +358,17 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.25rem;
-  background: #f7e8ce;
-  border: 2px dashed #cba06c;
-  border-radius: 6px;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
   padding: 1rem;
 }
 
 .notebook-field-title {
   display: block;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 800;
-  color: #5c3517;
+  color: #475569;
   margin-bottom: 0.45rem;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -390,26 +385,26 @@
   gap: 0.2rem;
   font-size: 0.75rem;
   font-weight: 700;
-  color: #7b4e2b;
+  color: #64748b;
 }
 
 .notebook-num-input input {
   width: 72px;
-  padding: 0.35rem 0.5rem;
-  background: #fffdf8;
-  border: 2px solid #996232;
-  border-radius: 4px;
+  padding: 0.4rem 0.5rem;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 6px;
   font-family: inherit;
   font-size: 0.95rem;
   font-weight: 700;
-  color: #381c09;
+  color: #1e293b;
   text-align: center;
 }
 
 .notebook-num-input input:focus {
   outline: none;
-  border-color: #5b8c3d;
-  box-shadow: 0 0 0 2px rgba(91, 140, 61, 0.3);
+  border-color: #88cfae;
+  box-shadow: 0 0 0 2px rgba(136, 207, 174, 0.3);
 }
 
 .notebook-presets {
@@ -420,29 +415,30 @@
 
 .notebook-preset-btn {
   padding: 0.35rem 0.65rem;
-  background: #faefd8;
-  border: 2px solid #ab7542;
-  border-radius: 4px;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 6px;
   font-family: inherit;
   font-size: 0.75rem;
   font-weight: 700;
-  color: #4f2c12;
+  color: #334155;
   cursor: pointer;
-  transition: background 0.1s ease, transform 0.1s ease;
+  transition: all 0.1s ease;
 }
 
 .notebook-preset-btn:hover {
-  background: #ffffff;
+  background: #f0fdf4;
+  border-color: #88cfae;
   transform: translateY(-1px);
 }
 
 .notebook-cozy-note {
-  background: #eef4e2;
-  border: 2px solid #97ba74;
-  border-radius: 4px;
-  padding: 0.65rem 0.9rem;
+  background: #f0fdf4;
+  border: 1.5px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 0.65rem 0.95rem;
   font-size: 0.8rem;
-  color: #274716;
+  color: #166534;
   line-height: 1.4;
   display: flex;
   align-items: baseline;
@@ -461,47 +457,46 @@
 
 .notebook-task-input {
   flex: 1;
-  padding: 0.55rem 0.85rem;
-  background: #fffdf8;
-  border: 2px solid #8e582b;
-  border-radius: 4px;
+  padding: 0.6rem 0.95rem;
+  background: #ffffff;
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
   font-family: inherit;
   font-size: 0.9rem;
-  color: #381c09;
+  color: #1e293b;
 }
 
 .notebook-task-input:focus {
   outline: none;
-  border-color: #5b8c3d;
-  box-shadow: 0 0 0 2px rgba(91, 140, 61, 0.25);
+  border-color: #88cfae;
+  box-shadow: 0 0 0 2px rgba(136, 207, 174, 0.25);
 }
 
 .notebook-task-add-btn {
-  padding: 0.55rem 1.15rem;
-  background: #c98a4a;
-  border: 2px solid #4a270f;
-  border-radius: 4px;
+  padding: 0.6rem 1.25rem;
+  background: #88cfae;
+  border: 2px solid #5fa685;
+  border-radius: 8px;
   font-family: inherit;
   font-size: 0.85rem;
   font-weight: 800;
-  color: #381c09;
+  color: #ffffff;
   cursor: pointer;
-  box-shadow: inset 0 2px 0 #f4caa1, inset 0 -2px 0 #7b4317;
   transition: filter 0.1s ease, transform 0.1s ease;
   white-space: nowrap;
 }
 
 .notebook-task-add-btn:hover {
-  filter: brightness(1.08);
+  filter: brightness(1.06);
   transform: translateY(-1px);
 }
 
 .notebook-tasks-scroll {
   max-height: 280px;
   overflow-y: auto;
-  border: 2px solid #d5a973;
-  border-radius: 4px;
-  background: #fbf5e6;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
   padding: 0.4rem;
 }
 
@@ -519,20 +514,20 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.5rem 0.65rem;
-  background: #faefd8;
-  border: 1px solid #dfc19c;
-  border-radius: 3px;
+  padding: 0.55rem 0.75rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
   transition: background 0.1s ease;
 }
 
 .notebook-task-row:hover {
-  background: #fdf7ec;
+  background: #fdfdfd;
 }
 
 .notebook-task-row.is-done {
-  opacity: 0.65;
-  background: #eedfc7;
+  opacity: 0.6;
+  background: #f1f5f9;
 }
 
 .notebook-task-label {
@@ -546,30 +541,30 @@
 .notebook-checkbox {
   width: 18px;
   height: 18px;
-  accent-color: #5b8c3d;
+  accent-color: #88cfae;
   cursor: pointer;
 }
 
 .notebook-task-text {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #3d2311;
+  color: #1e293b;
   word-break: break-word;
 }
 
 .notebook-task-row.is-done .notebook-task-text {
   text-decoration: line-through;
-  color: #7d593d;
+  color: #64748b;
 }
 
 .notebook-task-pts {
   font-size: 0.72rem;
   font-weight: 800;
-  color: #5b8c3d;
-  background: #eef6e4;
-  padding: 0.15rem 0.4rem;
-  border-radius: 3px;
-  border: 1px solid #bed69c;
+  color: #059669;
+  background: #ecfdf5;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  border: 1px solid #a7f3d0;
   margin-left: auto;
   white-space: nowrap;
 }
@@ -582,22 +577,22 @@
   justify-content: center;
   background: transparent;
   border: 1px solid transparent;
-  border-radius: 3px;
-  color: #9c6742;
+  border-radius: 4px;
+  color: #94a3b8;
   font-size: 1.1rem;
   font-weight: 700;
   cursor: pointer;
-  transition: color 0.1s ease, background 0.1s ease;
+  transition: all 0.1s ease;
 }
 
 .notebook-task-del-btn:hover {
-  color: #c53829;
-  background: #fae1dd;
-  border-color: #e59d95;
+  color: #ef4444;
+  background: #fee2e2;
+  border-color: #fca5a5;
 }
 
 .notebook-empty-tasks {
-  padding: 2rem 1rem;
+  padding: 2.2rem 1rem;
   text-align: center;
 }
 
@@ -605,18 +600,18 @@
   margin: 0;
   font-size: 1rem;
   font-weight: 800;
-  color: #532d13;
+  color: #1e293b;
 }
 
 .notebook-empty-sub {
   margin: 0.25rem 0 0;
   font-size: 0.8rem;
-  color: #8c5d39;
+  color: #64748b;
 }
 
 .notebook-tasks-footer {
   font-size: 0.75rem;
-  color: #83552f;
+  color: #64748b;
   text-align: right;
 }
 
@@ -628,9 +623,9 @@
 }
 
 .notebook-stat-card {
-  background: #f4e3c3;
-  border: 2px solid #b87c42;
-  border-radius: 5px;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
   padding: 0.85rem 1rem;
   display: flex;
   flex-direction: column;
@@ -642,25 +637,25 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #7b4f2c;
+  color: #64748b;
 }
 
 .notebook-stat-value {
   font-size: 1.35rem;
   font-weight: 800;
-  color: #381c09;
+  color: #1e293b;
   font-variant-numeric: tabular-nums;
 }
 
 .notebook-stat-sub {
   font-size: 0.75rem;
-  color: #885c37;
+  color: #64748b;
 }
 
 .notebook-lore-box {
-  background: #fbf5e6;
-  border: 2px dashed #c99b64;
-  border-radius: 6px;
+  background: #f0fdf4;
+  border: 1.5px dashed #86efac;
+  border-radius: 8px;
   padding: 1rem 1.15rem;
 }
 
@@ -668,14 +663,14 @@
   margin: 0 0 0.4rem;
   font-size: 0.88rem;
   font-weight: 800;
-  color: #4a270f;
+  color: #166534;
 }
 
 .notebook-lore-text {
   margin: 0;
   font-size: 0.82rem;
   line-height: 1.5;
-  color: #633f24;
+  color: #276749;
 }
 
 @media (max-width: 600px) {

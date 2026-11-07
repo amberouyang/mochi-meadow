@@ -1,0 +1,154 @@
+/* Walkable Meadow Buildings & Doorway Interactions */
+
+.meadow-buildings-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.meadow-building-spot {
+  position: absolute;
+  transform: translate(-50%, -75%);
+  cursor: pointer;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.2s ease;
+  user-select: none;
+}
+
+.meadow-building-spot:hover {
+  transform: translate(-50%, -78%) scale(1.02);
+  filter: drop-shadow(0 8px 16px rgba(45, 75, 40, 0.28));
+}
+
+.meadow-building-spot.is-active {
+  filter: drop-shadow(0 0 14px rgba(255, 235, 175, 0.85))
+    drop-shadow(0 8px 16px rgba(45, 75, 40, 0.3));
+}
+
+.meadow-building-svg {
+  width: 130px;
+  height: 120px;
+  display: block;
+}
+
+.room-spot .meadow-building-svg {
+  width: 144px;
+  height: 134px;
+}
+
+/* Building Wooden / Pastel Label Plate */
+.meadow-building-label {
+  margin-top: -6px;
+  background: #ffffff;
+  border: 2px solid #8fb79c;
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+  box-shadow: 0 3px 6px rgba(35, 55, 30, 0.15);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.meadow-building-spot:hover .meadow-building-label {
+  background: #fdfbf7;
+  border-color: #62a377;
+}
+
+.meadow-b-title {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #2d4533;
+  letter-spacing: -0.01em;
+}
+
+/* Floating Proximity Prompt Speech Bubble */
+.meadow-door-prompt {
+  position: absolute;
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+  cursor: pointer;
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: prompt-bounce 1.4s ease-in-out infinite;
+}
+
+@keyframes prompt-bounce {
+  0%, 100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, -6px);
+  }
+}
+
+.meadow-prompt-bubble {
+  background: #ffffff;
+  border: 2px solid #7cb594;
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  box-shadow: 0 4px 12px rgba(30, 50, 25, 0.22);
+  white-space: nowrap;
+}
+
+.meadow-prompt-name {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #274732;
+}
+
+.meadow-prompt-sep {
+  color: #9cbda7;
+  font-size: 0.75rem;
+}
+
+.meadow-prompt-action {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #4b6653;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.meadow-prompt-action kbd {
+  display: inline-block;
+  padding: 0.1rem 0.35rem;
+  background: #edf7f0;
+  border: 1px solid #95c7a7;
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #235031;
+}
+
+.meadow-prompt-pointer {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #7cb594;
+  margin-top: -1px;
+}
+
+@media (max-width: 768px) {
+  .meadow-building-svg {
+    width: 100px;
+    height: 90px;
+  }
+  .room-spot .meadow-building-svg {
+    width: 110px;
+    height: 100px;
+  }
+}
