@@ -135,6 +135,8 @@ export function MeadowPet({
 
   const bobDuration = `${1.25 + animOffset * 0.22}s`;
   const blinkDuration = `${3.6 + animOffset * 0.7}s`;
+  const breatheDuration = `${2.4 + (animOffset % 3) * 0.35}s`;
+  const breatheDelay = `${(animOffset * 0.45) % 1.6}s`;
   const moodClass = sick ? 'pet-sad' : `pet-${pet.mood}`;
 
   return (
@@ -147,6 +149,8 @@ export function MeadowPet({
         ['--pet-bob-dur' as string]: bobDuration,
         ['--pet-blink-dur' as string]: blinkDuration,
         ['--pet-blink-delay' as string]: `${animOffset * 0.35}s`,
+        ['--pet-breathe-dur' as string]: breatheDuration,
+        ['--pet-breathe-delay' as string]: breatheDelay,
       }}
     >
       <button

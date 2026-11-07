@@ -1,7 +1,54 @@
 import type { ReactNode } from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useStore } from '../store/useStore';
 import meadowUrl from '../assets/meadow-background.png';
+
+type DustPuffData = {
+  id: number;
+  x: number;
+  y: number;
+  scale: number;
+  flip: boolean;
+};
+
+function DustPuff({
+  x,
+  y,
+  scale = 1,
+  flip = false,
+  onEnd,
+}: {
+  x: number;
+  y: number;
+  scale?: number;
+  flip?: boolean;
+  onEnd: () => void;
+}) {
+  return (
+    <div
+      className="meadow-dust-puff"
+      style={{
+        left: `${x}%`,
+        top: `${y}%`,
+        ['--dust-flip' as string]: flip ? '-1' : '1',
+        ['--dust-scale' as string]: `${scale}`,
+      }}
+      onAnimationEnd={onEnd}
+      aria-hidden
+    >
+      <svg viewBox="0 0 16 12" className="meadow-dust-svg" shapeRendering="crispEdges">
+        <rect x="2" y="9" width="10" height="2" fill="#8c754d" opacity="0.4" />
+        <rect x="1" y="6" width="3" height="3" fill="#cfbd94" />
+        <rect x="4" y="5" width="8" height="5" fill="#e8dac0" />
+        <rect x="12" y="7" width="3" height="3" fill="#cfbd94" />
+        <rect x="5" y="2" width="5" height="4" fill="#f7f0e0" />
+        <rect x="6" y="3" width="2" height="2" fill="#ffffff" />
+        <rect x="10" y="4" width="3" height="3" fill="#f7f0e0" />
+        <rect x="3" y="4" width="2" height="2" fill="#f7f0e0" />
+      </svg>
+    </div>
+  );
+}
 
 export type MeadowPlayerPos = { x: number; y: number };
 
@@ -154,10 +201,17 @@ export function PlayableMeadow({ children }: PlayableMeadowProps) {
   const [playerPos, setPlayerPos] = useState<MeadowPlayerPos>(START_POS);
   const [facing, setFacing] = useState<'left' | 'right'>('right');
   const [walking, setWalking] = useState(false);
+  const [dustPuffs, setDustPuffs] = useState<DustPuffData[]>([]);
   const keysRef = useRef<Set<string>>(new Set());
   const targetRef = useRef<MeadowPlayerPos | null>(null);
   const posRef = useRef(playerPos);
+  const lastPuffTimeRef = useRef(0);
+  const puffIdRef = useRef(0);
   posRef.current = playerPos;
+
+  const handleRemovePuff = useCallback((id: number) => {
+    setDustPuffs((prev) => prev.filter((p) => p.id !== id));
+  }, []);
 
   useEffect(() => {
     const isTypingTarget = (target: EventTarget | null) => {
@@ -215,6 +269,20 @@ export function PlayableMeadow({ children }: PlayableMeadowProps) {
         });
         if (dx !== 0) setFacing(dx < 0 ? 'left' : 'right');
         setWalking(true);
+
+        if (now - lastPuffTimeRef.current > 155) {
+          lastPuffTimeRef.current = now;
+          puffIdRef.current += 1;
+          const puffOffsetX = dx !== 0 ? (dx > 0 ? -1.5 : 1.5) : (facing === 'right' ? -1.5 : 1.5);
+          const newPuff: DustPuffData = {
+            id: puffIdRef.current,
+            x: next.x + puffOffsetX + (Math.random() * 0.4 - 0.2),
+            y: next.y - 0.2 + (Math.random() * 0.3 - 0.15),
+            scale: 0.85 + Math.random() * 0.3,
+            flip: Math.random() > 0.5,
+          };
+          setDustPuffs((prev) => [...prev.slice(-14), newPuff]);
+        }
       } else if (targetRef.current) {
         const target = targetRef.current;
         const tx = target.x - current.x;
@@ -229,6 +297,20 @@ export function PlayableMeadow({ children }: PlayableMeadowProps) {
           next = clampPos({ x: current.x + stepX, y: current.y + stepY });
           if (Math.abs(tx) > 0.4) setFacing(tx < 0 ? 'left' : 'right');
           setWalking(true);
+
+          if (now - lastPuffTimeRef.current > 155) {
+            lastPuffTimeRef.current = now;
+            puffIdRef.current += 1;
+            const puffOffsetX = tx > 0 ? -1.5 : 1.5;
+            const newPuff: DustPuffData = {
+              id: puffIdRef.current,
+              x: next.x + puffOffsetX + (Math.random() * 0.4 - 0.2),
+              y: next.y - 0.2 + (Math.random() * 0.3 - 0.15),
+              scale: 0.85 + Math.random() * 0.3,
+              flip: Math.random() > 0.5,
+            };
+            setDustPuffs((prev) => [...prev.slice(-14), newPuff]);
+          }
         }
       } else {
         setWalking(false);
@@ -265,6 +347,18 @@ export function PlayableMeadow({ children }: PlayableMeadowProps) {
         <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span>
         <span>to move</span>
       </div>
+
+      {/* Walking dust puffs */}
+      {dustPuffs.map((puff) => (
+        <DustPuff
+          key={puff.id}
+          x={puff.x}
+          y={puff.y}
+          scale={puff.scale}
+          flip={puff.flip}
+          onEnd={() => handleRemovePuff(puff.id)}
+        />
+      ))}
 
       {children(playerPos)}
 

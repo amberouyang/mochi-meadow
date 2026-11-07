@@ -2,6 +2,8 @@ const { app, BrowserWindow, screen } = require('electron');
 const path = require('path');
 
 const isDev = process.env.NODE_ENV !== 'production' || !app.isPackaged;
+const DEV_PORT = process.env.PORT || 3000;
+const DEV_URL = `http://localhost:${DEV_PORT}`;
 
 let mainWindow;
 let sidebarWindow;
@@ -17,7 +19,7 @@ function createMainWindow() {
     webPreferences: { nodeIntegration: false, contextIsolation: true },
     title: 'Mochi Meadow',
   });
-  mainWindow.loadURL(isDev ? 'http://localhost:5173/' : `file://${path.join(__dirname, '../dist/index.html')}`);
+  mainWindow.loadURL(isDev ? `${DEV_URL}/` : `file://${path.join(__dirname, '../dist/index.html')}`);
   if (isDev) mainWindow.webContents.openDevTools({ mode: 'detach' });
   mainWindow.on('closed', () => { mainWindow = null; });
 }
@@ -38,7 +40,7 @@ function createSidebarWindow() {
   });
   // Hash must match App.tsx getRoute() (e.g. #sidebar — not #/sidebar, or route falls through to main in a 48px strip)
   sidebarWindow.loadURL(
-    isDev ? 'http://localhost:5173/#sidebar' : `file://${path.join(__dirname, '../dist/index.html')}#sidebar`,
+    isDev ? `${DEV_URL}/#sidebar` : `file://${path.join(__dirname, '../dist/index.html')}#sidebar`,
   );
   sidebarWindow.setAlwaysOnTop(true, 'floating');
   sidebarWindow.on('closed', () => { sidebarWindow = null; });
@@ -56,7 +58,7 @@ function createOverlayWindow() {
     webPreferences: { nodeIntegration: false, contextIsolation: true },
   });
   overlayWindow.loadURL(
-    isDev ? 'http://localhost:5173/#overlay' : `file://${path.join(__dirname, '../dist/index.html')}#overlay`,
+    isDev ? `${DEV_URL}/#overlay` : `file://${path.join(__dirname, '../dist/index.html')}#overlay`,
   );
   overlayWindow.on('closed', () => { overlayWindow = null; });
 }
