@@ -83,6 +83,7 @@
 .main-view[data-lighting='night'] .main-passport-chip:hover { background: #314d4e; border-color: #a0c9a9; }
 .main-view[data-lighting='night'] .passport-chip-name { color: #edf2dc; }
 .main-view[data-lighting='night'] .passport-chip-lvl { background: #385a4a; border-color: #64987c; color: #e0f6d7; }
+.main-view[data-lighting='night'] .caretaker-avatar { border-color: rgba(202, 230, 207, .34); }
 
 /* Keep alerts calm after dark too: blue-grey parchment rather than bright white cards. */
 .main-view[data-lighting='night'] .garden-tutorial-overlay {
@@ -148,6 +149,8 @@
   border-color: #86efac;
   transform: translateY(-1px);
 }
+
+.caretaker-avatar { width: 27px; height: 27px; flex: 0 0 27px; border: 1.5px solid rgba(66, 102, 79, .35); border-radius: 9px; image-rendering: pixelated; overflow: hidden; }
 
 .passport-chip-name {
   font-family: var(--font-display, 'Fredoka', cursive);

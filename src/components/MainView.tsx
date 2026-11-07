@@ -12,6 +12,7 @@ import { type MeadowBuildingId } from './MeadowBuildings';
 import { getCaretakerRank } from '../utils/playerProfileSave';
 import { MILESTONES } from '../utils/gamification';
 import { getSystemTimeOfDay, type TimeOfDay } from './MeadowLighting';
+import { CaretakerAvatar } from './CaretakerAvatar';
 import { StorePanel } from './StorePanel';
 import { StoragePanel } from './StoragePanel';
 import { SettingsPanel } from './SettingsPanel';
@@ -21,7 +22,6 @@ import {
   SkyIconGear,
   SkyIconMeadow,
   SkyIconNotebook,
-  SkyIconProfile,
   SkyIconRoom,
   SkyIconStorage,
   SkyIconStore,
@@ -136,7 +136,7 @@ export function MainView() {
             title="Open Caretaker Passport & Stats"
             aria-label="Open Caretaker Passport"
           >
-            <SkyIconProfile />
+            <CaretakerAvatar profile={playerProfile} />
             <span className="passport-chip-name">{playerProfile.name || 'Passport'}</span>
             <span className="passport-chip-lvl">Lv. {rank.level}</span>
           </button>
