@@ -110,6 +110,17 @@
 .main-view[data-lighting='night'] .main-milestone-toast { background: linear-gradient(135deg, #34364d, #273542); border-color: #85789d; color: #f0ebdd; box-shadow: 0 6px 0 rgba(8, 9, 20, .35), 0 8px 20px rgba(2, 8, 15, .4); }
 .main-view[data-lighting='night'] .main-milestone-toast button { color: #d8cae4; }
 
+/* Pets sit above the atmospheric tint so their soft moonlit outline stays discoverable. */
+.main-view[data-lighting='night'] .meadow-pet {
+  z-index: 7;
+  filter: brightness(1.16) saturate(1.08) drop-shadow(0 0 5px rgba(194, 222, 255, .44));
+}
+
+.main-view[data-lighting='night'] .meadow-pet-name {
+  color: #f3f2df;
+  text-shadow: 0 1px 3px #0a1723, 0 0 5px rgba(185, 214, 240, .35);
+}
+
 /* Top HUD chips cluster — top right, light pastel styling */
 .main-top-chips-cluster {
   position: absolute;
