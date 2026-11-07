@@ -26,11 +26,11 @@ const BUILDINGS: BuildingDef[] = [
     id: 'cafe',
     name: 'Study Café',
     subtitle: 'Tea, lo-fi & focus',
-    x: 17,
-    y: 38,
-    doorX: 17,
-    doorY: 48,
-    radius: 11,
+    x: 34,
+    y: 46,
+    doorX: 34,
+    doorY: 56,
+    radius: 12,
   },
   {
     id: 'room',
@@ -78,7 +78,7 @@ export function MeadowBuildings({ playerPos, onEnterBuilding }: MeadowBuildingsP
       {/* 1. STUDY CAFE (Left) */}
       <div
         className="meadow-building-spot cafe-spot"
-        style={{ left: '17%', top: '38%' }}
+        style={{ left: '34%', top: '46%' }}
         onClick={() => onEnterBuilding('cafe')}
         role="button"
         tabIndex={0}
