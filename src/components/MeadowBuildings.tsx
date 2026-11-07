@@ -97,7 +97,15 @@ export function MeadowBuildings({ playerPos, onEnterBuilding }: MeadowBuildingsP
             className="meadow-building-art cafe-building-art"
             draggable={false}
           />
-          {/* Night-only: soft wall wash + floor pool from the right lamp */}
+          {/* Night: shade clipped to cafe pixels only, then lamp wash + floor pool */}
+          <span
+            className="cafe-night-shade"
+            style={{
+              WebkitMaskImage: `url(${cafeArtUrl})`,
+              maskImage: `url(${cafeArtUrl})`,
+            }}
+            aria-hidden
+          />
           <span className="cafe-lamp-beam" aria-hidden />
           <span className="cafe-lamp-pool" aria-hidden />
         </div>

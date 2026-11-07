@@ -76,6 +76,18 @@
   z-index: 7;
 }
 
+/* Other buildings stay dusk-dim; café gets its own top→bottom shade */
+.main-view[data-lighting='night'] .room-spot,
+.main-view[data-lighting='night'] .nest-spot {
+  filter: brightness(0.68);
+}
+
+.main-view[data-lighting='night'] .room-spot:hover,
+.main-view[data-lighting='night'] .nest-spot:hover {
+  filter: brightness(0.72) drop-shadow(0 8px 16px rgba(10, 20, 30, 0.35));
+}
+
+.cafe-night-shade,
 .cafe-lamp-beam,
 .cafe-lamp-pool {
   position: absolute;
@@ -85,36 +97,60 @@
 }
 
 /*
+ * Conceptual 4 rows top→bottom (roof dim → patio bright), but one continuous
+ * gradient with feathered stops so it never reads as chunky bands.
+ */
+.cafe-night-shade {
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to bottom,
+    rgba(6, 14, 28, 0.78) 0%,
+    rgba(8, 16, 30, 0.68) 12%,
+    rgba(10, 18, 32, 0.55) 28%,
+    rgba(12, 22, 36, 0.4) 45%,
+    rgba(14, 26, 38, 0.26) 62%,
+    rgba(18, 30, 42, 0.12) 80%,
+    rgba(20, 34, 44, 0.03) 100%
+  );
+  mix-blend-mode: multiply;
+  /* Clip to cafe art alpha so transparent PNG padding doesn't cast a dark box */
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-source-type: alpha;
+  mask-mode: alpha;
+}
+
+/*
  * Point-source falloff from the right wall lamp:
- * soft sphere of light around the fixture + a downward cone,
- * then a flat elliptical pool where it hits the ground.
+ * soft sphere around the fixture + downward cone + ground ellipse.
  */
 .cafe-lamp-beam {
   right: -18%;
   top: 8%;
   width: 78%;
   height: 92%;
-  /* Origin near the lamp head (upper-right) */
   background:
-    /* ambient bloom around the fixture — soft sphere, not a box */
     radial-gradient(
       circle 18% at 82% 18%,
-      rgba(255, 236, 175, 0.35) 0%,
-      rgba(255, 210, 120, 0.12) 45%,
+      rgba(255, 236, 175, 0.28) 0%,
+      rgba(255, 210, 120, 0.1) 45%,
       transparent 70%
     ),
-    /* downward cone washing wall + door */
     radial-gradient(
       ellipse 55% 85% at 78% 22%,
-      rgba(255, 228, 150, 0.42) 0%,
-      rgba(255, 200, 100, 0.22) 22%,
-      rgba(255, 175, 70, 0.08) 48%,
+      rgba(255, 228, 150, 0.38) 0%,
+      rgba(255, 200, 100, 0.18) 22%,
+      rgba(255, 175, 70, 0.06) 48%,
       transparent 68%
     );
   mix-blend-mode: screen;
   filter: blur(1.5px);
   z-index: 2;
-  /* taper the cone a bit so edges feather like real light */
   -webkit-mask-image: radial-gradient(
     ellipse 70% 95% at 78% 20%,
     #000 0%,
@@ -129,7 +165,6 @@
   );
 }
 
-/* Ground bounce — wide flat ellipse under the lamp / door */
 .cafe-lamp-pool {
   right: -16%;
   bottom: 2%;
@@ -145,11 +180,12 @@
   );
   mix-blend-mode: screen;
   filter: blur(3px);
-  z-index: 1;
+  z-index: 3;
   transform: perspective(120px) rotateX(28deg);
   transform-origin: center top;
 }
 
+.main-view[data-lighting='night'] .cafe-night-shade,
 .main-view[data-lighting='night'] .cafe-lamp-beam,
 .main-view[data-lighting='night'] .cafe-lamp-pool {
   opacity: 1;
