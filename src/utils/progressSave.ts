@@ -81,10 +81,17 @@ function parseMood(value: unknown): Pet['mood'] {
   return 'neutral';
 }
 
+function inferPetKind(name: string, rawKind: unknown): Pet['kind'] {
+  if (rawKind === 'bunny' || rawKind === 'cloud') return rawKind;
+  if (/bunny/i.test(name)) return 'bunny';
+  return 'cloud';
+}
+
 function parsePet(value: unknown): Pet | null {
   if (!isRecord(value)) return null;
   if (typeof value.id !== 'string' || !value.id) return null;
   if (typeof value.name !== 'string' || !value.name.trim()) return null;
+  const name = value.name.trim().slice(0, 24);
   const energy =
     typeof value.energy === 'number' && Number.isFinite(value.energy)
       ? Math.min(100, Math.max(0, Math.floor(value.energy)))
@@ -99,11 +106,12 @@ function parsePet(value: unknown): Pet | null {
       : 0;
   return {
     id: value.id,
-    name: value.name.trim().slice(0, 24),
+    name,
     mood: parseMood(value.mood),
     energy,
     level,
     experience,
+    kind: inferPetKind(name, value.kind),
   };
 }
 

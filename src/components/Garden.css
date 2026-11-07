@@ -664,7 +664,8 @@
   }
 }
 
-.meadow-pet-mochi .mochi-cloud {
+.meadow-pet-mochi .mochi-cloud,
+.meadow-pet-mochi .mochi-bunny {
   display: block;
   width: 76px;
   height: auto;
@@ -672,20 +673,31 @@
   filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.12));
 }
 
-.meadow-pet.pet-sad .meadow-pet-mochi .mochi-cloud-body {
-  fill: #9bb8cc;
+.meadow-pet.is-bunny .meadow-pet-mochi .mochi-bunny {
+  width: 82px;
+}
+
+.meadow-pet.pet-sad .meadow-pet-mochi .mochi-cloud-body,
+.meadow-pet.pet-sad .meadow-pet-mochi .mochi-bunny-body,
+.meadow-pet.pet-sad .meadow-pet-mochi .mochi-bunny-ear,
+.meadow-pet.pet-sad .meadow-pet-mochi .mochi-bunny-tail {
+  fill: #d4b8c4;
 }
 
 .meadow-pet.pet-sad .meadow-pet-mochi {
   opacity: 0.92;
 }
 
-.meadow-pet.is-sick .meadow-pet-mochi .mochi-cloud-body {
+.meadow-pet.is-sick .meadow-pet-mochi .mochi-cloud-body,
+.meadow-pet.is-sick .meadow-pet-mochi .mochi-bunny-body,
+.meadow-pet.is-sick .meadow-pet-mochi .mochi-bunny-ear,
+.meadow-pet.is-sick .meadow-pet-mochi .mochi-bunny-tail {
   fill: #6a7080;
   stroke: #4a5060;
 }
 
-.meadow-pet.is-sick .meadow-pet-mochi .mochi-cloud {
+.meadow-pet.is-sick .meadow-pet-mochi .mochi-cloud,
+.meadow-pet.is-sick .meadow-pet-mochi .mochi-bunny {
   filter: grayscale(0.75) saturate(0.4) brightness(0.85);
 }
 
@@ -746,15 +758,59 @@
   filter: drop-shadow(0 0 10px rgba(158, 206, 106, 0.45));
 }
 
-.meadow-pet .mochi-cloud-eye {
+.meadow-pet.pet-happy.is-bunny .meadow-pet-mochi .mochi-bunny {
+  filter: drop-shadow(0 0 10px rgba(244, 170, 196, 0.5));
+}
+
+.meadow-pet .mochi-cloud-eye,
+.meadow-pet .mochi-bunny-eye {
   transform-origin: center;
   transform-box: fill-box;
   animation: meadow-pet-blink var(--pet-blink-dur, 4s) ease-in-out infinite;
   animation-delay: var(--pet-blink-delay, 0s);
 }
 
-.meadow-pet .mochi-cloud-eye--right {
+.meadow-pet .mochi-cloud-eye--right,
+.meadow-pet .mochi-bunny-eye--right {
   animation-delay: calc(var(--pet-blink-delay, 0s) + 0.04s);
+}
+
+.meadow-pet.is-bunny.is-hop .meadow-pet-bob {
+  animation: meadow-pet-bunny-hop 0.52s ease-out;
+}
+
+.meadow-pet.is-bunny.is-hop[data-facing='left'] .meadow-pet-bob {
+  animation: meadow-pet-bunny-hop-flip 0.52s ease-out;
+}
+
+@keyframes meadow-pet-bunny-hop {
+  0% {
+    transform: translateY(0) scale(1, 1);
+  }
+  35% {
+    transform: translateY(-18px) scale(0.94, 1.08);
+  }
+  70% {
+    transform: translateY(-2px) scale(1.06, 0.92);
+  }
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+}
+
+@keyframes meadow-pet-bunny-hop-flip {
+  0% {
+    transform: translateY(0) scale(-1, 1);
+  }
+  35% {
+    transform: translateY(-18px) scale(-0.94, 1.08);
+  }
+  70% {
+    transform: translateY(-2px) scale(-1.06, 0.92);
+  }
+  100% {
+    transform: translateY(0) scale(-1, 1);
+  }
 }
 
 @keyframes meadow-pet-blink {

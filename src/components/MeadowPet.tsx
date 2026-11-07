@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Pet } from '../types';
+import { MochiBunny } from './MochiBunny';
 import { MochiCloud } from './MochiCloud';
 import { petLevelProgress } from '../utils/gamification';
+
+function isBunnyPet(pet: Pet) {
+  return pet.kind === 'bunny' || /bunny/i.test(pet.name);
+}
 
 type MeadowPetProps = {
   pet: Pet;
@@ -62,6 +67,19 @@ export function MeadowPet({
   const hopTimeoutRef = useRef<number | null>(null);
   posRef.current = pos;
 
+  const bunny = isBunnyPet(pet);
+
+  const triggerHop = () => {
+    setHop(true);
+    if (hopTimeoutRef.current != null) {
+      window.clearTimeout(hopTimeoutRef.current);
+    }
+    hopTimeoutRef.current = window.setTimeout(() => {
+      hopTimeoutRef.current = null;
+      setHop(false);
+    }, bunny ? 520 : 450);
+  };
+
   useEffect(() => {
     if (!canWander || sick) return;
 
@@ -78,10 +96,11 @@ export function MeadowPet({
       const id = window.setTimeout(() => {
         setFacing(dx < 0 ? 'left' : 'right');
         setPos({
-          x: current.x + dx * 0.42,
-          y: current.y + dy * 0.42,
+          x: current.x + dx * (bunny ? 0.55 : 0.42),
+          y: current.y + dy * (bunny ? 0.55 : 0.42),
         });
-      }, 90 + animOffset * 70);
+        if (bunny) triggerHop();
+      }, bunny ? 70 + animOffset * 50 : 90 + animOffset * 70);
       return () => window.clearTimeout(id);
     }
 
@@ -89,13 +108,14 @@ export function MeadowPet({
     let timeoutId = 0;
 
     const schedule = () => {
-      const idleMs = 2800 + Math.random() * 4200;
+      const idleMs = bunny ? 1400 + Math.random() * 2200 : 2800 + Math.random() * 4200;
       timeoutId = window.setTimeout(() => {
         if (cancelled) return;
         const current = posRef.current;
         const next = randomPos(current);
         setFacing(next.x < current.x ? 'left' : 'right');
         setPos(next);
+        if (bunny) triggerHop();
         schedule();
       }, idleMs);
     };
@@ -105,7 +125,7 @@ export function MeadowPet({
       cancelled = true;
       window.clearTimeout(timeoutId);
     };
-  }, [canWander, sick, animOffset, followTarget]);
+  }, [canWander, sick, animOffset, followTarget, bunny]);
 
   useEffect(() => {
     return () => {
@@ -124,14 +144,7 @@ export function MeadowPet({
   const handleFeed = () => {
     if (sick || points < 5) return;
     onFeed();
-    setHop(true);
-    if (hopTimeoutRef.current != null) {
-      window.clearTimeout(hopTimeoutRef.current);
-    }
-    hopTimeoutRef.current = window.setTimeout(() => {
-      hopTimeoutRef.current = null;
-      setHop(false);
-    }, 450);
+    triggerHop();
   };
 
   const bobDuration = `${1.25 + animOffset * 0.22}s`;
@@ -143,7 +156,7 @@ export function MeadowPet({
 
   return (
     <div
-      className={`meadow-pet ${moodClass}${selected ? ' is-selected' : ''}${hop ? ' is-hop' : ''}${sick ? ' is-sick' : ''}`}
+      className={`meadow-pet ${moodClass}${selected ? ' is-selected' : ''}${hop ? ' is-hop' : ''}${sick ? ' is-sick' : ''}${bunny ? ' is-bunny' : ''}`}
       data-facing={facing}
       style={{
         left: `${pos.x}%`,
@@ -166,7 +179,7 @@ export function MeadowPet({
       >
         <div className="meadow-pet-bob">
           <div className="meadow-pet-mochi">
-            <MochiCloud />
+            {bunny ? <MochiBunny /> : <MochiCloud />}
           </div>
         </div>
         <span className="meadow-pet-name">{pet.name}</span>

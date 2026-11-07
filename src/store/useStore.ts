@@ -84,6 +84,7 @@ function advanceIncubation(s: NestSlice, delta: number): Partial<NestSlice> {
   }
 
   const name = s.incubatingEgg.name;
+  const kind = /bunny/i.test(name) || s.incubatingEgg.catalogId === 'egg5' ? 'bunny' as const : 'cloud' as const;
   const alreadyOwned = s.pets.some((p) => p.name.toLowerCase() === name.toLowerCase());
   const pets = alreadyOwned
     ? s.pets
@@ -96,6 +97,7 @@ function advanceIncubation(s: NestSlice, delta: number): Partial<NestSlice> {
           energy: 80,
           level: 1,
           experience: 0,
+          kind,
         },
       ];
 
@@ -484,6 +486,13 @@ export const useStore = create<Store>((set, get) => ({
       description: 'A toasted sesame mochi with marbled charcoal shell.',
       type: 'egg',
       artSrc: EGG_ART_BY_ID.egg4,
+    },
+    {
+      id: 'egg5',
+      name: 'Bunny Mochi',
+      cost: 60,
+      description: 'A soft pink bunny mochi who hops around the meadow.',
+      type: 'egg',
     },
   ],
   storeCareItems: [

@@ -15,7 +15,7 @@ Built with Electron, React, TypeScript, Vite, and Zustand.
 | Playable meadow | Original farm meadow with side farm plots. Walk with WASD or arrow keys, or click to move. Mochi pets follow you |
 | Onboarding | Name + welcome points; clear rocks on first visit to welcome your first mochi |
 | Pets | Idle bounce, blink, and wander; click to view energy and feed |
-| Store | Buy mochi eggs (Sakura, Matcha, Yuzu, Sesame) and Meadow Mist |
+| Store | Buy mochi eggs (Sakura, Matcha, Yuzu, Sesame, Bunny) and Meadow Mist |
 | Nest | Barn scene with pet collection shelf and a straw hatching bed |
 | Egg incubation | Bought eggs warm in the nest as you study/earn points, then hatch into new pets |
 | Brain-rot fog | Miss a full calendar day of studying; buy Meadow Mist to clear it |

@@ -5,6 +5,8 @@ export type Task = {
   points: number;
 };
 
+export type PetKind = 'cloud' | 'bunny';
+
 export type Pet = {
   id: string;
   name: string;
@@ -13,6 +15,8 @@ export type Pet = {
   level: number;
   /** Gentle growth earned while their caretaker studies. */
   experience: number;
+  /** Visual species — bunny mochi hops with soft ears. */
+  kind?: PetKind;
 };
 
 export type GardenAccess = 'locked' | 'unlocked';

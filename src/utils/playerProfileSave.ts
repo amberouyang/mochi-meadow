@@ -76,6 +76,7 @@ export const COMPANIONS = [
   { id: 'matcha', label: 'Matcha Mochi', type: 'mochi', desc: 'Calm tea sipper' },
   { id: 'yuzu', label: 'Yuzu Mochi', type: 'mochi', desc: 'Zesty sunny ball of joy' },
   { id: 'sesame', label: 'Sesame Mochi', type: 'mochi', desc: 'Quiet midnight thinker' },
+  { id: 'bunny', label: 'Bunny Mochi', type: 'mochi', desc: 'Soft pink hopper with fluffy ears' },
   { id: 'calico', label: 'Meadow Calico', type: 'cat', desc: 'Sleepy farm kitten' },
 ];
 
