@@ -24,6 +24,16 @@
   filter: drop-shadow(0 8px 16px rgba(45, 75, 40, 0.28));
 }
 
+/* Hand-drawn cafe stays put on hover — no pop/lift */
+.meadow-building-spot.cafe-spot:hover {
+  transform: translate(-50%, -75%);
+  filter: none;
+}
+
+.meadow-building-spot.cafe-spot.is-active {
+  filter: drop-shadow(0 0 10px rgba(255, 235, 175, 0.55));
+}
+
 .meadow-building-spot.is-active {
   filter: drop-shadow(0 0 14px rgba(255, 235, 175, 0.85))
     drop-shadow(0 8px 16px rgba(45, 75, 40, 0.3));
