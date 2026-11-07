@@ -954,3 +954,167 @@
   background: var(--surface);
   color: var(--text);
 }
+
+/* ========================================================
+   Real-Time Day / Sunset / Night Lighting & Fireflies
+   ======================================================== */
+
+.meadow-lighting-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.4s ease, background 1.4s ease;
+}
+
+/* Daytime (7 AM – 4:59 PM): Clear sunlit meadow */
+.meadow-lighting--day {
+  opacity: 0;
+  background: transparent;
+}
+
+/* Late Afternoon Sunset (5 PM – 7:59 PM): Golden hour glow */
+.meadow-lighting--sunset {
+  opacity: 1;
+  background:
+    radial-gradient(circle at 18% 25%, rgba(255, 235, 175, 0.35) 0%, transparent 58%),
+    linear-gradient(180deg, rgba(255, 150, 65, 0.26) 0%, rgba(240, 118, 68, 0.18) 50%, rgba(195, 78, 55, 0.3) 100%);
+  mix-blend-mode: multiply;
+}
+
+.meadow-lighting--sunset::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(145deg, rgba(255, 205, 110, 0.16) 0%, rgba(255, 135, 80, 0.12) 100%);
+  mix-blend-mode: color-dodge;
+  pointer-events: none;
+}
+
+/* Night (8 PM – 4:59 AM): Twilight indigo & moonlight */
+.meadow-lighting--night {
+  opacity: 1;
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 32%, rgba(24, 34, 72, 0.45) 0%, rgba(10, 16, 38, 0.65) 100%),
+    linear-gradient(180deg, rgba(16, 24, 52, 0.4) 0%, rgba(8, 14, 32, 0.58) 100%);
+  mix-blend-mode: multiply;
+}
+
+.meadow-lighting--night::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 82% 18%, rgba(200, 225, 255, 0.18) 0%, transparent 45%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+/* Dawn (5 AM – 6:59 AM): Pastel lavender morning */
+.meadow-lighting--dawn {
+  opacity: 1;
+  background: linear-gradient(180deg, rgba(255, 190, 210, 0.22) 0%, rgba(200, 185, 240, 0.18) 60%, rgba(160, 215, 180, 0.14) 100%);
+  mix-blend-mode: overlay;
+}
+
+/* Soft glowing fireflies at night */
+.meadow-fireflies-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.meadow-firefly {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  transform: translate(-50%, -50%) scale(var(--ff-scale, 1));
+  animation:
+    meadow-firefly-float var(--ff-float-dur, 5s) ease-in-out infinite alternate,
+    meadow-firefly-glow var(--ff-glow-dur, 2.6s) ease-in-out infinite;
+  animation-delay: var(--ff-delay, 0s);
+  will-change: transform, opacity;
+}
+
+.meadow-firefly-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(230, 255, 115, 0.9) 0%, rgba(185, 245, 60, 0.45) 45%, transparent 75%);
+  filter: blur(1.5px);
+  transform: scale(1.7);
+}
+
+.meadow-firefly-spark {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow:
+    0 0 5px 2px rgba(225, 255, 110, 0.95),
+    0 0 12px 5px rgba(180, 240, 60, 0.6);
+}
+
+@keyframes meadow-firefly-float {
+  0% {
+    transform: translate(-50%, -50%) translate(0, 0);
+  }
+  30% {
+    transform: translate(-50%, -50%) translate(9px, -15px);
+  }
+  65% {
+    transform: translate(-50%, -50%) translate(-11px, -7px);
+  }
+  100% {
+    transform: translate(-50%, -50%) translate(7px, -22px);
+  }
+}
+
+@keyframes meadow-firefly-glow {
+  0%, 100% {
+    opacity: 0.15;
+    filter: brightness(0.65);
+  }
+  42%, 62% {
+    opacity: 1;
+    filter: brightness(1.3);
+  }
+}
+
+/* Time-of-day indicator & preview badge in sky */
+.meadow-lighting-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 7;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.28rem 0.65rem;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  background: rgba(22, 36, 26, 0.72);
+  backdrop-filter: blur(6px);
+  color: #fffde8;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28);
+  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+}
+
+.meadow-lighting-badge:hover {
+  transform: translateY(-1px) scale(1.03);
+  background: rgba(30, 50, 36, 0.88);
+  border-color: rgba(255, 255, 255, 0.85);
+}
+
+.meadow-lighting-badge:active {
+  transform: translateY(0) scale(0.97);
+}

@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useStore } from '../store/useStore';
 import meadowUrl from '../assets/meadow-background.png';
+import { MeadowLighting } from './MeadowLighting';
 
 type DustPuffData = {
   id: number;
@@ -340,6 +341,7 @@ export function PlayableMeadow({ children }: PlayableMeadowProps) {
   return (
     <div className="meadow-game-scene" onClick={handleSceneClick} role="application" aria-label="Playable meadow. Use WASD or arrow keys to walk.">
       <MeadowBackdrop />
+      <MeadowLighting />
       <div className="meadow-game-sign" aria-hidden>
         <span>{playerName ? `${playerName}'s Meadow` : 'Mochi Meadow'}</span>
       </div>
