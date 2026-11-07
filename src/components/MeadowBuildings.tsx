@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import type { MeadowPlayerPos } from './PlayableMeadow';
 import './MeadowBuildings.css';
 
@@ -54,41 +54,29 @@ const BUILDINGS: BuildingDef[] = [
 ];
 
 export function MeadowBuildings({ playerPos, onEnterBuilding }: MeadowBuildingsProps) {
-  // Determine which building player is closest to
-  let nearest: BuildingDef | null = null;
-  let nearestDist = Infinity;
+  // Grace period so exiting a building doesn't immediately suck the player back in
+  const cooldownRef = useRef(Date.now() + 1000);
 
-  for (const b of BUILDINGS) {
-    const dist = Math.hypot(playerPos.x - b.doorX, playerPos.y - b.doorY);
-    if (dist < b.radius && dist < nearestDist) {
-      nearest = b;
-      nearestDist = dist;
-    }
-  }
-
-  // Keyboard listener: Press 'E' or 'Enter' when near doorway to enter
+  // Check if player walked right up to any doorway to enter seamlessly!
   useEffect(() => {
-    if (!nearest) return;
-    const currentNearest = nearest;
+    if (Date.now() < cooldownRef.current) return;
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const isTyping = (e.target as HTMLElement)?.closest?.('input, textarea, select');
-      if (isTyping) return;
-      if (e.key === 'e' || e.key === 'E' || e.key === 'Enter') {
-        e.preventDefault();
-        onEnterBuilding(currentNearest.id);
+    for (const b of BUILDINGS) {
+      const dist = Math.hypot(playerPos.x - b.doorX, playerPos.y - b.doorY);
+      // When player walks to the doorway, step directly inside!
+      if (dist < 5.8) {
+        cooldownRef.current = Date.now() + 1200;
+        onEnterBuilding(b.id);
+        break;
       }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [nearest, onEnterBuilding]);
+    }
+  }, [playerPos, onEnterBuilding]);
 
   return (
     <div className="meadow-buildings-layer" aria-label="Meadow study locations">
       {/* 1. STUDY CAFE (Left) */}
       <div
-        className={`meadow-building-spot cafe-spot ${nearest?.id === 'cafe' ? 'is-active' : ''}`}
+        className="meadow-building-spot cafe-spot"
         style={{ left: '17%', top: '38%' }}
         onClick={() => onEnterBuilding('cafe')}
         role="button"
@@ -170,7 +158,7 @@ export function MeadowBuildings({ playerPos, onEnterBuilding }: MeadowBuildingsP
 
       {/* 2. YOUR COZY ROOM (Center - Fantage inspired) */}
       <div
-        className={`meadow-building-spot room-spot ${nearest?.id === 'room' ? 'is-active' : ''}`}
+        className="meadow-building-spot room-spot"
         style={{ left: '50%', top: '32%' }}
         onClick={() => onEnterBuilding('room')}
         role="button"
@@ -271,7 +259,7 @@ export function MeadowBuildings({ playerPos, onEnterBuilding }: MeadowBuildingsP
 
       {/* 3. THE NEST BARN (Right) */}
       <div
-        className={`meadow-building-spot barn-spot ${nearest?.id === 'nest' ? 'is-active' : ''}`}
+        className="meadow-building-spot barn-spot"
         style={{ left: '83%', top: '38%' }}
         onClick={() => onEnterBuilding('nest')}
         role="button"
@@ -342,27 +330,7 @@ export function MeadowBuildings({ playerPos, onEnterBuilding }: MeadowBuildingsP
           <span className="meadow-b-title">The Barn</span>
         </div>
       </div>
-
-      {/* FLOATING PROXIMITY SPEECH BUBBLE */}
-      {nearest && (
-        <div
-          className="meadow-door-prompt"
-          style={{
-            left: `${nearest.doorX}%`,
-            top: `${nearest.doorY + 2}%`,
-          }}
-          onClick={() => onEnterBuilding(nearest!.id)}
-        >
-          <div className="meadow-prompt-bubble">
-            <span className="meadow-prompt-name">{nearest.name}</span>
-            <span className="meadow-prompt-sep">·</span>
-            <span className="meadow-prompt-action">
-              Press <kbd>E</kbd> or Walk In
-            </span>
-          </div>
-          <div className="meadow-prompt-pointer" />
-        </div>
-      )}
     </div>
   );
 }
+
