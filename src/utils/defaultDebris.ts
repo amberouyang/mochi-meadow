@@ -2,7 +2,8 @@ import type { GardenDebris } from '../types';
 
 /** Fresh tutorial rock layout (shared by store init + reset). */
 export const DEFAULT_DEBRIS: GardenDebris[] = [
-  { id: 'd1', kind: 'rock', cleared: false, assetIndex: 0, leftPct: 18, bottomPct: 56 },
+  // Keep this clear of the café's footprint so every tutorial rock stays clickable.
+  { id: 'd1', kind: 'rock', cleared: false, assetIndex: 0, leftPct: 32, bottomPct: 54 },
   { id: 'd2', kind: 'rock', cleared: false, assetIndex: 1, leftPct: 28, bottomPct: 26 },
   { id: 'd3', kind: 'rock', cleared: false, assetIndex: 2, leftPct: 48, bottomPct: 22 },
   { id: 'd4', kind: 'rock', cleared: false, assetIndex: 3, leftPct: 68, bottomPct: 26 },
