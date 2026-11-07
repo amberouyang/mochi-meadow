@@ -85,50 +85,6 @@
   text-shadow: 0 1px 0 rgba(80, 48, 20, 0.55);
 }
 
-.meadow-move-hint {
-  position: absolute;
-  top: 0.85rem;
-  left: 50%;
-  z-index: 6;
-  transform: translateX(-50%);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0;
-  color: #ffffff;
-  font-size: 0.78rem;
-  font-weight: 900;
-  letter-spacing: 0.02em;
-  pointer-events: none;
-  text-shadow:
-    -1px 0 0 #5db9c9,
-    1px 0 0 #5db9c9,
-    0 -1px 0 #5db9c9,
-    0 2px 0 rgba(38, 83, 50, 0.55),
-    0 3px 6px rgba(38, 83, 50, 0.35);
-}
-
-.meadow-move-hint span {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.16rem;
-  white-space: nowrap;
-}
-
-.meadow-move-hint kbd {
-  min-width: 1rem;
-  height: 1rem;
-  padding: 0 0.14rem;
-  border-radius: 3px;
-  border: 1px solid rgba(38, 83, 50, 0.5);
-  border-bottom-width: 2px;
-  background: rgba(255, 254, 242, 0.92);
-  color: #2f5f3d;
-  font: 800 0.6rem/1rem var(--font);
-  text-align: center;
-  text-shadow: none;
-}
-
 .meadow-player-anchor {
   position: absolute;
   z-index: 5;
@@ -219,12 +175,6 @@
 @media (max-width: 680px) {
   .meadow-game-sign {
     display: none;
-  }
-
-  .meadow-move-hint {
-    top: auto;
-    bottom: 0.65rem;
-    font-size: 0.64rem;
   }
 }
 

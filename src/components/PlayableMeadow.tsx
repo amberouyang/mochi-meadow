@@ -341,10 +341,6 @@ export function PlayableMeadow({ children }: PlayableMeadowProps) {
       <div className="meadow-game-sign" aria-hidden>
         <span>{playerName ? `${playerName}'s Meadow` : 'Mochi Meadow'}</span>
       </div>
-      <div className="meadow-move-hint" aria-hidden>
-        <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span>
-        <span>to move</span>
-      </div>
 
       {/* Walking dust puffs */}
       {dustPuffs.map((puff) => (
