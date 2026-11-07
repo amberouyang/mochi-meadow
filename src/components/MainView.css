@@ -29,12 +29,18 @@
   --dock-muted: #8c5d45;
 }
 
-/* Points chip — top right, light pastel styling */
-.main-top-chip {
+/* Top HUD chips cluster — top right, light pastel styling */
+.main-top-chips-cluster {
   position: absolute;
   top: 0.65rem;
   right: 0.75rem;
   z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.main-top-chip {
   min-height: 38px;
   padding: 0 0.85rem;
   border-radius: 999px;
@@ -45,7 +51,39 @@
   border: 2px solid #fed7aa;
   box-shadow: 0 3px 8px rgba(180, 110, 40, 0.08);
   font-variant-numeric: tabular-nums;
-  pointer-events: none;
+}
+
+.main-passport-chip {
+  cursor: pointer;
+  pointer-events: auto;
+  border-color: #bbf7d0;
+  background: #fdfdfd;
+  color: #2e5a40;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.main-passport-chip:hover {
+  background: #f0fdf4;
+  border-color: #86efac;
+  transform: translateY(-1px);
+}
+
+.passport-chip-name {
+  font-family: var(--font-display, 'Fredoka', cursive);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #244833;
+}
+
+.passport-chip-lvl {
+  padding: 2px 7px;
+  background: #dcfce7;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #166534;
 }
 
 .main-points-label {

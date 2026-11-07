@@ -186,7 +186,7 @@ export function MeadowPet({
                 disabled={points < 5}
                 onClick={handleFeed}
               >
-                Feed (5 pts) 🍡
+                Feed (5 pts)
               </button>
               <button
                 type="button"

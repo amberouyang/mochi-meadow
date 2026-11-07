@@ -36,6 +36,11 @@ import {
   saveRoomDecor,
   type RoomDecor,
 } from '../utils/roomDecorSave';
+import {
+  loadPlayerProfile,
+  savePlayerProfile,
+  type PlayerProfile,
+} from '../utils/playerProfileSave';
 import sesameMochiEggArt from '../assets/eggs/sesame-mochi-egg.png';
 
 type StudyState = 'idle' | 'studying';
@@ -56,6 +61,10 @@ const savedLightingMode = loadLightingMode();
 const savedProgress = loadProgress();
 const savedRoomDecor = loadRoomDecor();
 const savedDrinkBuff = loadActiveDrinkBuff();
+const savedPlayerProfile = loadPlayerProfile();
+if (savedProgress.playerName && (!savedPlayerProfile.name || savedPlayerProfile.name === 'Little Caretaker')) {
+  savedPlayerProfile.name = savedProgress.playerName;
+}
 
 type NestSlice = {
   eggProgress: number;
@@ -174,6 +183,8 @@ type Store = {
   // Player
   playerName: string;
   setPlayerName: (name: string) => void;
+  playerProfile: PlayerProfile;
+  setPlayerProfile: (profile: Partial<PlayerProfile>) => void;
 
   // Audio prefs (ready for theme / SFX later)
   soundMuted: boolean;
@@ -203,8 +214,16 @@ export const useStore = create<Store>((set, get) => ({
   setStudyMinutesToday: (n) => set({ studyMinutesToday: Math.max(0, n) }),
   addStudyMinute: () => {
     get().recordStudyDay();
+    const currentProf = get().playerProfile;
+    const nextTotalMins = (currentProf.totalStudyMinutesAllTime || 0) + 1;
+    const updatedProf: PlayerProfile = {
+      ...currentProf,
+      totalStudyMinutesAllTime: nextTotalMins,
+    };
+    savePlayerProfile(updatedProf);
     set((s) => ({
       studyMinutesToday: s.studyMinutesToday + 1,
+      playerProfile: updatedProf,
       ...advanceIncubation(s, 5),
     }));
   },
@@ -302,10 +321,22 @@ export const useStore = create<Store>((set, get) => ({
     set((s) => ({
       tasks: [...s.tasks, { id: crypto.randomUUID(), title, done: false, points }],
     })),
-  toggleTask: (id) =>
+  toggleTask: (id) => {
+    const task = get().tasks.find((t) => t.id === id);
+    const becomingDone = task && !task.done;
+    if (becomingDone) {
+      const currentProf = get().playerProfile;
+      const updatedProf: PlayerProfile = {
+        ...currentProf,
+        totalTasksCompleted: (currentProf.totalTasksCompleted || 0) + 1,
+      };
+      savePlayerProfile(updatedProf);
+      set({ playerProfile: updatedProf });
+    }
     set((s) => ({
       tasks: s.tasks.map((t) => (t.id === id ? { ...t, done: !t.done } : t)),
-    })),
+    }));
+  },
   removeTask: (id) => set((s) => ({ tasks: s.tasks.filter((t) => t.id !== id) })),
 
   points: savedProgress.points,
@@ -443,8 +474,31 @@ export const useStore = create<Store>((set, get) => ({
   },
 
   // Player
-  playerName: savedProgress.playerName,
-  setPlayerName: (name) => set({ playerName: name.trim().slice(0, 24) }),
+  playerName: savedProgress.playerName || savedPlayerProfile.name,
+  setPlayerName: (name) => {
+    const clean = name.trim().slice(0, 24);
+    const currentProf = get().playerProfile;
+    const updatedProf: PlayerProfile = { ...currentProf, name: clean };
+    savePlayerProfile(updatedProf);
+    set({ playerName: clean, playerProfile: updatedProf });
+    saveProgress({ playerName: clean });
+  },
+  playerProfile: savedPlayerProfile,
+  setPlayerProfile: (partial) => {
+    const current = get().playerProfile;
+    const next: PlayerProfile = {
+      ...current,
+      ...partial,
+      avatar: partial.avatar ? { ...current.avatar, ...partial.avatar } : current.avatar,
+    };
+    savePlayerProfile(next);
+    set({ playerProfile: next });
+    if (partial.name !== undefined && partial.name.trim()) {
+      const clean = partial.name.trim().slice(0, 24);
+      set({ playerName: clean });
+      saveProgress({ playerName: clean });
+    }
+  },
 
   soundMuted: savedSoundMuted,
   setSoundMuted: (muted) => {

@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import { useStore } from '../store/useStore';
 import { calendarDaysBetween, todayKey } from '../utils/studyCalendar';
 import { formatStudyMinutes } from '../utils/formatStudyTime';
+import { PlayerProfileTab } from './PlayerProfileTab';
 import './NotebookModal.css';
 
-type NotebookTab = 'timer' | 'tasks' | 'log';
+export type NotebookTab = 'timer' | 'tasks' | 'profile' | 'log';
 
 interface NotebookModalProps {
   onClose: () => void;
@@ -49,6 +50,7 @@ export function NotebookModal({ onClose, initialTab = 'timer' }: NotebookModalPr
   const lastStudyDate = useStore((s) => s.lastStudyDate);
   const incubatingEgg = useStore((s) => s.incubatingEgg);
   const eggProgress = useStore((s) => s.eggProgress);
+  const playerProfile = useStore((s) => s.playerProfile);
 
   // Task input state
   const [taskInput, setTaskInput] = useState('');
@@ -154,7 +156,7 @@ export function NotebookModal({ onClose, initialTab = 'timer' }: NotebookModalPr
             onClick={() => setActiveTab('timer')}
           >
             <span className="notebook-tab-stitch" />
-            <span className="notebook-tab-text">Timer</span>
+            <span className="notebook-tab-text">Focus Timer</span>
           </button>
           <button
             type="button"
@@ -165,8 +167,18 @@ export function NotebookModal({ onClose, initialTab = 'timer' }: NotebookModalPr
           >
             <span className="notebook-tab-stitch" />
             <span className="notebook-tab-text">
-              Checklist {tasks.length > 0 ? `(${doneCount}/${tasks.length})` : ''}
+              Daily Goals {tasks.length > 0 ? `(${doneCount}/${tasks.length})` : ''}
             </span>
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === 'profile'}
+            className={`notebook-tab ${activeTab === 'profile' ? 'is-active' : ''}`}
+            onClick={() => setActiveTab('profile')}
+          >
+            <span className="notebook-tab-stitch" />
+            <span className="notebook-tab-text">Passport</span>
           </button>
           <button
             type="button"
@@ -176,7 +188,7 @@ export function NotebookModal({ onClose, initialTab = 'timer' }: NotebookModalPr
             onClick={() => setActiveTab('log')}
           >
             <span className="notebook-tab-stitch" />
-            <span className="notebook-tab-text">Log & Streak</span>
+            <span className="notebook-tab-text">Journal & Lore</span>
           </button>
 
           {/* Close button at top right */}
@@ -198,13 +210,13 @@ export function NotebookModal({ onClose, initialTab = 'timer' }: NotebookModalPr
             <div className="notebook-pane notebook-pane--timer">
               <div className="notebook-section-header">
                 <div>
-                  <h3 className="notebook-heading">Focus Timer</h3>
+                  <h3 className="notebook-heading">Cozy Focus Nook</h3>
                   <p className="notebook-subheading">
-                    Timer continues running in the background when you explore the meadow.
+                    Your quiet timer ticks peacefully while you wander the meadow or sip café tea.
                   </p>
                 </div>
                 <div className="notebook-points-pill">
-                  <span className="notebook-points-label">Total Points</span>
+                  <span className="notebook-points-label">Meadow Points</span>
                   <span className="notebook-points-val">{points}</span>
                 </div>
               </div>
@@ -347,13 +359,13 @@ export function NotebookModal({ onClose, initialTab = 'timer' }: NotebookModalPr
             <div className="notebook-pane notebook-pane--tasks">
               <div className="notebook-section-header">
                 <div>
-                  <h3 className="notebook-heading">To-Do Checklist</h3>
+                  <h3 className="notebook-heading">Daily Goals & Kind To-Dos</h3>
                   <p className="notebook-subheading">
-                    Check off assignments and to-dos to earn meadow points and unlock new areas.
+                    Little daily steps grow your sanctuary! Every triumph earns sparkles for your mochi.
                   </p>
                 </div>
                 <div className="notebook-points-pill">
-                  <span className="notebook-points-label">Completed</span>
+                  <span className="notebook-points-label">Bloomed</span>
                   <span className="notebook-points-val">
                     {doneCount} of {tasks.length}
                   </span>
@@ -365,7 +377,7 @@ export function NotebookModal({ onClose, initialTab = 'timer' }: NotebookModalPr
                 <input
                   type="text"
                   className="notebook-task-input"
-                  placeholder="Write a study task or homework..."
+                  placeholder="Sprinkle a new goal or homework here..."
                   value={taskInput}
                   onChange={(e) => setTaskInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleAddTask()}
@@ -375,7 +387,7 @@ export function NotebookModal({ onClose, initialTab = 'timer' }: NotebookModalPr
                   className="notebook-task-add-btn"
                   onClick={handleAddTask}
                 >
-                  Add Task
+                  Plant Goal
                 </button>
               </div>
 
@@ -383,9 +395,9 @@ export function NotebookModal({ onClose, initialTab = 'timer' }: NotebookModalPr
               <div className="notebook-tasks-scroll">
                 {tasks.length === 0 ? (
                   <div className="notebook-empty-tasks">
-                    <p className="notebook-empty-title">All caught up!</p>
+                    <p className="notebook-empty-title">All clear & cozy!</p>
                     <p className="notebook-empty-sub">
-                      Add your study tasks above to stay organized and earn points.
+                      Your meadow checklist is blooming. Add a gentle task whenever you&apos;re ready.
                     </p>
                   </div>
                 ) : (
@@ -425,7 +437,14 @@ export function NotebookModal({ onClose, initialTab = 'timer' }: NotebookModalPr
             </div>
           )}
 
-          {/* TAB 3: LOG & STREAK */}
+          {/* TAB 3: PASSPORT & PROFILE (Stardew Valley Style) */}
+          {activeTab === 'profile' && (
+            <div className="notebook-pane notebook-pane--profile">
+              <PlayerProfileTab onConfirm={onClose} />
+            </div>
+          )}
+
+          {/* TAB 4: LOG & STREAK */}
           {activeTab === 'log' && (
             <div className="notebook-pane notebook-pane--log">
               <div className="notebook-section-header">
@@ -442,6 +461,16 @@ export function NotebookModal({ onClose, initialTab = 'timer' }: NotebookModalPr
               </div>
 
               <div className="notebook-stats-grid">
+                <div className="notebook-stat-card">
+                  <span className="notebook-stat-label">All-Time Focused</span>
+                  <span className="notebook-stat-value">
+                    {Math.floor(playerProfile.totalStudyMinutesAllTime / 60)}h {playerProfile.totalStudyMinutesAllTime % 60}m
+                  </span>
+                  <span className="notebook-stat-sub">
+                    {playerProfile.totalStudyMinutesAllTime} total minutes logged
+                  </span>
+                </div>
+
                 <div className="notebook-stat-card">
                   <span className="notebook-stat-label">Today&apos;s Focus Time</span>
                   <span className="notebook-stat-value">

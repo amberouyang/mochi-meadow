@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useStore } from '../store/useStore';
 import { InfoTip } from './InfoTip';
+import { SkyIconEgg } from './SkyHudPixelIcons';
 import './StorePanel.css';
 
 export function StorePanel() {
@@ -83,7 +84,7 @@ export function StorePanel() {
               {egg.artSrc ? (
                 <img className="store-egg-art" src={egg.artSrc} alt="" />
               ) : (
-                '🥚'
+                <SkyIconEgg />
               )}
             </div>
             <div className="store-egg-info">

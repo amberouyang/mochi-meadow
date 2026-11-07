@@ -74,7 +74,11 @@ export function Garden({ locked, onUnlockHint, onEnterBuilding }: GardenProps) {
           </div>
         </div>
         <div className="garden-lock-message">
-          <span className="garden-lock-emojis">🌿 🌸 ✨ 🌿</span>
+          <div className="garden-lock-sprout-icon" aria-hidden>
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none">
+              <path d="M12 21V11M12 11c0-4-4-7-9-7 0 6 4 9 9 7zM12 11c0-4 4-7 9-7 0 6-4 9-9 7z" fill="#88cfae" stroke="#5a9e7f" strokeWidth="1.5" />
+            </svg>
+          </div>
           <p className="garden-lock-title">Your meadow is waiting ~</p>
           <p className="garden-lock-text">
             Finish your tasks or meet your study goal to unlock the garden and visit your mochi pets.
@@ -147,7 +151,9 @@ export function Garden({ locked, onUnlockHint, onEnterBuilding }: GardenProps) {
                       }}
                     >
                       <span className="garden-debris-arrow" aria-hidden>
-                        ⬇︎
+                        <svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                          <path d="M6 2v8M2 6l4 4 4-4" />
+                        </svg>
                       </span>
                       <img
                         src={debrisRockSrc(d.kind, d.assetIndex)}

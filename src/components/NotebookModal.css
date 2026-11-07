@@ -25,8 +25,8 @@
 .notebook-frame {
   position: relative;
   width: 100%;
-  max-width: 660px;
-  max-height: calc(100vh - 4rem);
+  max-width: 760px;
+  max-height: calc(100vh - 3.5rem);
   display: flex;
   flex-direction: column;
   animation: notebook-slide-up 0.18s cubic-bezier(0.16, 1, 0.3, 1);

@@ -45,7 +45,9 @@ export function SidebarView() {
       </div>
       {allDone && (
         <div className="sidebar-done" title="Garden unlocked!">
-          ✓
+          <svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <polyline points="2 6 5 9 10 3" />
+          </svg>
         </div>
       )}
     </div>

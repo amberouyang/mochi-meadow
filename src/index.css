@@ -9,7 +9,8 @@
   --red: #f7768e;
   --pink: #bb9af7;
   --text: #e8f2e4;
-  --font: 'Nunito', system-ui, sans-serif;
+  --font: 'Quicksand', 'Comfortaa', system-ui, -apple-system, sans-serif;
+  --font-display: 'Fredoka', 'Comfortaa', cursive, sans-serif;
 
   /* Shared meadow UI — cards, dock, toasts, buttons */
   --mm-ink: #1a3d28;

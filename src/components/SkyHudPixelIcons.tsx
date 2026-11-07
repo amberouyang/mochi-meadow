@@ -243,3 +243,29 @@ export function SkyIconRooms() {
     </PixelIcon>
   );
 }
+
+export function SkyIconProfile() {
+  return (
+    <PixelIcon>
+      {/* Hair top */}
+      <rect x="5" y="2" width="6" height="2" fill="currentColor" opacity="0.9" />
+      <rect x="4" y="3" width="8" height="2" fill="currentColor" opacity="0.9" />
+      {/* Face */}
+      <rect x="5" y="5" width="6" height="5" fill="currentColor" opacity="0.3" />
+      {/* Hair sides */}
+      <rect x="4" y="5" width="1" height="4" fill="currentColor" opacity="0.85" />
+      <rect x="11" y="5" width="1" height="4" fill="currentColor" opacity="0.85" />
+      {/* Eyes */}
+      <rect x="6" y="6" width="1" height="2" fill="currentColor" opacity="0.95" />
+      <rect x="9" y="6" width="1" height="2" fill="currentColor" opacity="0.95" />
+      {/* Blush */}
+      <rect x="5" y="8" width="1" height="1" fill="currentColor" opacity="0.5" />
+      <rect x="10" y="8" width="1" height="1" fill="currentColor" opacity="0.5" />
+      {/* Neck & Collar */}
+      <rect x="7" y="10" width="2" height="1" fill="currentColor" opacity="0.4" />
+      <rect x="4" y="11" width="8" height="3" fill="currentColor" opacity="0.85" />
+      <rect x="6" y="11" width="4" height="2" fill="currentColor" opacity="0.3" />
+    </PixelIcon>
+  );
+}
+

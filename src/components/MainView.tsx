@@ -7,8 +7,9 @@ import { Garden } from './Garden';
 import { EggSanctuary } from './EggSanctuary';
 import { StudyCafe } from './StudyCafe';
 import { CozyRoom } from './CozyRoom';
-import { NotebookModal } from './NotebookModal';
+import { NotebookModal, type NotebookTab } from './NotebookModal';
 import { type MeadowBuildingId } from './MeadowBuildings';
+import { getCaretakerRank } from '../utils/playerProfileSave';
 import { StorePanel } from './StorePanel';
 import { StoragePanel } from './StoragePanel';
 import { SettingsPanel } from './SettingsPanel';
@@ -18,6 +19,7 @@ import {
   SkyIconGear,
   SkyIconMeadow,
   SkyIconNotebook,
+  SkyIconProfile,
   SkyIconRoom,
   SkyIconStorage,
   SkyIconStore,
@@ -43,6 +45,7 @@ export function MainView() {
   const studyGoalOverlay = useStore((s) => s.studyGoalOverlay);
   const clearStudyGoalOverlay = useStore((s) => s.clearStudyGoalOverlay);
   const playerName = useStore((s) => s.playerName);
+  const playerProfile = useStore((s) => s.playerProfile);
   const evaluateBrainRot = useStore((s) => s.evaluateBrainRot);
 
   const season = useMemo(() => getCalendarSeason(), []);
@@ -51,9 +54,14 @@ export function MainView() {
     evaluateBrainRot();
   }, [evaluateBrainRot]);
 
-  const [notebookTab, setNotebookTab] = useState<'timer' | 'tasks' | 'log'>('timer');
+  const rank = useMemo(
+    () => getCaretakerRank(playerProfile.totalStudyMinutesAllTime),
+    [playerProfile.totalStudyMinutesAllTime],
+  );
 
-  const openNotebook = (tab: 'timer' | 'tasks' | 'log' = 'timer') => {
+  const [notebookTab, setNotebookTab] = useState<NotebookTab>('timer');
+
+  const openNotebook = (tab: NotebookTab = 'timer') => {
     setSoonToast(null);
     if (panel === 'notebook' && notebookTab === tab) {
       setPanel('none');
@@ -102,9 +110,23 @@ export function MainView() {
     <div className="main-view" data-season={season}>
       <StudyTicker />
       <section className={`main-garden-area${screen !== 'meadow' ? ' is-indoor-page' : ''}`}>
-        <div className="main-top-chip" aria-label={`Points: ${points}`}>
-          <span className="main-points-label">Points</span>
-          <span className="main-points-value">{points}</span>
+        <div className="main-top-chips-cluster">
+          <div className="main-top-chip" aria-label={`Points: ${points}`}>
+            <span className="main-points-label">Points</span>
+            <span className="main-points-value">{points}</span>
+          </div>
+
+          <button
+            type="button"
+            className="main-top-chip main-passport-chip"
+            onClick={() => openNotebook('profile')}
+            title="Open Caretaker Passport & Stats"
+            aria-label="Open Caretaker Passport"
+          >
+            <SkyIconProfile />
+            <span className="passport-chip-name">{playerProfile.name || 'Passport'}</span>
+            <span className="passport-chip-lvl">Lv. {rank.level}</span>
+          </button>
         </div>
 
         {screen === 'cafe' && (
@@ -254,7 +276,11 @@ export function MainView() {
               {showSanctuaryArrow && (
                 <div className="egg-hint egg-hint--dock" aria-hidden>
                   <span className="egg-hint-text">Open barn</span>
-                  <span className="egg-hint-arrow">⬇︎</span>
+                  <span className="egg-hint-arrow">
+                    <svg viewBox="0 0 10 10" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <path d="M5 2v6M2 5l3 3 3-3" />
+                    </svg>
+                  </span>
                 </div>
               )}
             </div>
@@ -274,18 +300,20 @@ export function MainView() {
           <div
             className="main-dock-center"
             aria-live="polite"
-            onClick={() => openNotebook('timer')}
-            title="Click to open Focus Timer in Notebook"
+            onClick={() => openNotebook('profile')}
+            title="Click to view Caretaker Passport & Stats"
             role="button"
             tabIndex={0}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                openNotebook('timer');
+                openNotebook('profile');
               }
             }}
           >
-            <span className="main-dock-focus-name">{playerName || 'Friend'}</span>
+            <span className="main-dock-focus-name">
+              {playerProfile.name || playerName || 'Little Friend'} · Lv.{rank.level}
+            </span>
             <span className="main-dock-focus-status">{focusLabel}</span>
             <span className="main-dock-focus-time">
               {formatStudyMinutes(studyMinutesToday)} / {formatStudyMinutes(studyMinutesGoal)}
