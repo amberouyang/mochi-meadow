@@ -16,6 +16,11 @@ import {
 import { loadStudyGoalDefault, saveStudyGoalDefault } from '../utils/studyGoalDefault';
 import { loadSoundMuted, saveSoundMuted } from '../utils/soundSettings';
 import {
+  loadLightingMode,
+  saveLightingMode,
+  type LightingMode,
+} from '../utils/lightingSettings';
+import {
   clearProgressSave,
   DEFAULT_PETS,
   DEFAULT_TASKS,
@@ -39,6 +44,7 @@ function withEggArt(egg: IncubatingEgg | null): IncubatingEgg | null {
 const streakSave = loadStudyStreak();
 const savedStudyGoal = loadStudyGoalDefault();
 const savedSoundMuted = loadSoundMuted();
+const savedLightingMode = loadLightingMode();
 const savedProgress = loadProgress();
 
 type NestSlice = {
@@ -155,6 +161,10 @@ type Store = {
   // Audio prefs (ready for theme / SFX later)
   soundMuted: boolean;
   setSoundMuted: (muted: boolean) => void;
+
+  // Meadow atmosphere & lighting
+  lightingMode: LightingMode;
+  setLightingMode: (mode: LightingMode) => void;
 
   /** Wipe progress and local meadow saves back to a fresh start. */
   resetProgress: () => void;
@@ -394,6 +404,12 @@ export const useStore = create<Store>((set, get) => ({
   setSoundMuted: (muted) => {
     set({ soundMuted: muted });
     saveSoundMuted(muted);
+  },
+
+  lightingMode: savedLightingMode,
+  setLightingMode: (mode) => {
+    set({ lightingMode: mode });
+    saveLightingMode(mode);
   },
 
   resetProgress: () => {

@@ -19,6 +19,8 @@ export function SettingsPanel() {
   const resetProgress = useStore((s) => s.resetProgress);
   const soundMuted = useStore((s) => s.soundMuted);
   const setSoundMuted = useStore((s) => s.setSoundMuted);
+  const lightingMode = useStore((s) => s.lightingMode);
+  const setLightingMode = useStore((s) => s.setLightingMode);
 
   const parts = goalParts(studyMinutesGoal);
   const [nameDraft, setNameDraft] = useState(playerName);
@@ -167,6 +169,61 @@ export function SettingsPanel() {
             }}
           >
             <span className="settings-toggle-knob" />
+          </button>
+        </div>
+      </section>
+
+      <section className="settings-section" aria-labelledby="settings-lighting-heading">
+        <h3 id="settings-lighting-heading" className="settings-section-title">
+          Meadow Atmosphere
+        </h3>
+        <p className="settings-hint">
+          Choose your meadow lighting. Auto matches your real clock (sunset 5–7 PM, night fireflies 8 PM+).
+        </p>
+        <div className="settings-lighting-grid">
+          <button
+            type="button"
+            className={`settings-lighting-chip${lightingMode === 'auto' ? ' is-active' : ''}`}
+            onClick={() => {
+              setLightingMode('auto');
+              setMessage('Lighting set to Auto (matches your local clock).');
+            }}
+          >
+            <span className="settings-lighting-title">Auto</span>
+            <span className="settings-lighting-desc">Live clock</span>
+          </button>
+          <button
+            type="button"
+            className={`settings-lighting-chip${lightingMode === 'day' ? ' is-active' : ''}`}
+            onClick={() => {
+              setLightingMode('day');
+              setMessage('Lighting set to Sunny Day.');
+            }}
+          >
+            <span className="settings-lighting-title">Day</span>
+            <span className="settings-lighting-desc">Sunlit</span>
+          </button>
+          <button
+            type="button"
+            className={`settings-lighting-chip${lightingMode === 'sunset' ? ' is-active' : ''}`}
+            onClick={() => {
+              setLightingMode('sunset');
+              setMessage('Lighting set to Golden Sunset.');
+            }}
+          >
+            <span className="settings-lighting-title">Sunset</span>
+            <span className="settings-lighting-desc">Golden hour</span>
+          </button>
+          <button
+            type="button"
+            className={`settings-lighting-chip${lightingMode === 'night' ? ' is-active' : ''}`}
+            onClick={() => {
+              setLightingMode('night');
+              setMessage('Lighting set to Night with fireflies.');
+            }}
+          >
+            <span className="settings-lighting-title">Night</span>
+            <span className="settings-lighting-desc">Fireflies</span>
           </button>
         </div>
       </section>

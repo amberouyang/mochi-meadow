@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useStore } from '../store/useStore';
 
-export type LightingMode = 'auto' | 'day' | 'sunset' | 'night' | 'dawn';
 export type TimeOfDay = 'day' | 'sunset' | 'night' | 'dawn';
 
 export function getSystemTimeOfDay(): TimeOfDay {
@@ -41,7 +41,7 @@ const STATIC_FIREFLIES: FireflyData[] = [
 ];
 
 export function MeadowLighting() {
-  const [mode, setMode] = useState<LightingMode>('auto');
+  const lightingMode = useStore((s) => s.lightingMode);
   const [systemTime, setSystemTime] = useState<TimeOfDay>(getSystemTimeOfDay);
 
   useEffect(() => {
@@ -52,30 +52,7 @@ export function MeadowLighting() {
     return () => window.clearInterval(interval);
   }, []);
 
-  const activeLighting = mode === 'auto' ? systemTime : mode;
-
-  const cycleMode = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setMode((current) => {
-      if (current === 'auto') return 'sunset';
-      if (current === 'sunset') return 'night';
-      if (current === 'night') return 'day';
-      return 'auto';
-    });
-  };
-
-  const badgeLabel = useMemo(() => {
-    if (mode === 'auto') {
-      if (systemTime === 'sunset') return '🌇 Sunset (Live)';
-      if (systemTime === 'night') return '🌙 Night (Live)';
-      if (systemTime === 'dawn') return '🌅 Dawn (Live)';
-      return '☀️ Day (Live)';
-    }
-    if (mode === 'sunset') return '🌇 Sunset';
-    if (mode === 'night') return '🌙 Night';
-    if (mode === 'day') return '☀️ Day';
-    return '🌅 Dawn';
-  }, [mode, systemTime]);
+  const activeLighting = lightingMode === 'auto' ? systemTime : lightingMode;
 
   return (
     <>
@@ -107,17 +84,6 @@ export function MeadowLighting() {
           ))}
         </div>
       )}
-
-      {/* Real-time lighting indicator & manual preview toggle */}
-      <button
-        type="button"
-        className="meadow-lighting-badge"
-        onClick={cycleMode}
-        title={`Current lighting: ${badgeLabel}. Click to cycle preview / auto.`}
-        aria-label={`Lighting mode: ${badgeLabel}. Click to toggle lighting.`}
-      >
-        <span>{badgeLabel}</span>
-      </button>
     </>
   );
 }

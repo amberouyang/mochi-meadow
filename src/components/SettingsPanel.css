@@ -158,3 +158,58 @@
   font-weight: 600;
   color: var(--mm-leaf);
 }
+
+/* Meadow atmosphere selector */
+.settings-lighting-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.45rem;
+  margin-top: 0.2rem;
+}
+
+@media (max-width: 440px) {
+  .settings-lighting-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.settings-lighting-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.18rem;
+  padding: 0.65rem 0.4rem;
+  border-radius: var(--mm-radius-sm);
+  border: 2px solid rgba(47, 95, 61, 0.22);
+  background: rgba(255, 255, 255, 0.82);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-family: inherit;
+}
+
+.settings-lighting-chip:hover {
+  transform: translateY(-1px);
+  border-color: rgba(47, 95, 61, 0.45);
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.settings-lighting-chip.is-active {
+  border-color: var(--mm-leaf);
+  background: linear-gradient(145deg, #e4f4d2 0%, #ccebb2 100%);
+  box-shadow: 0 3px 8px rgba(74, 138, 92, 0.22);
+}
+
+.settings-lighting-title {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--mm-ink);
+  letter-spacing: 0.01em;
+}
+
+.settings-lighting-desc {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--mm-ink-muted);
+}
+
