@@ -11,6 +11,7 @@ import { NotebookModal, type NotebookTab } from './NotebookModal';
 import { type MeadowBuildingId } from './MeadowBuildings';
 import { getCaretakerRank } from '../utils/playerProfileSave';
 import { MILESTONES } from '../utils/gamification';
+import { getSystemTimeOfDay, type TimeOfDay } from './MeadowLighting';
 import { StorePanel } from './StorePanel';
 import { StoragePanel } from './StoragePanel';
 import { SettingsPanel } from './SettingsPanel';
@@ -49,9 +50,18 @@ export function MainView() {
   const dismissMilestoneNotice = useStore((s) => s.dismissMilestoneNotice);
   const playerName = useStore((s) => s.playerName);
   const playerProfile = useStore((s) => s.playerProfile);
+  const lightingMode = useStore((s) => s.lightingMode);
   const evaluateBrainRot = useStore((s) => s.evaluateBrainRot);
 
   const season = useMemo(() => getCalendarSeason(), []);
+  const [systemTime, setSystemTime] = useState<TimeOfDay>(getSystemTimeOfDay);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => setSystemTime(getSystemTimeOfDay()), 30_000);
+    return () => window.clearInterval(interval);
+  }, []);
+
+  const activeLighting = lightingMode === 'auto' ? systemTime : lightingMode;
 
   useEffect(() => {
     evaluateBrainRot();
@@ -110,7 +120,7 @@ export function MainView() {
         : 'Ready to study';
 
   return (
-    <div className="main-view" data-season={season}>
+    <div className="main-view" data-season={season} data-lighting={activeLighting}>
       <StudyTicker />
       <section className={`main-garden-area${screen !== 'meadow' ? ' is-indoor-page' : ''}`}>
         <div className="main-top-chips-cluster">

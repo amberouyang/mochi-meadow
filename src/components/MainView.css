@@ -29,6 +29,86 @@
   --dock-muted: #8c5d45;
 }
 
+/* Night should feel like a warm lantern-lit control desk, not daytime stationery. */
+.main-view[data-lighting='night'] {
+  --dock-bg: rgba(20, 29, 43, 0.96);
+  --dock-edge: #49627a;
+  --dock-btn: linear-gradient(180deg, #33445a 0%, #253448 100%);
+  --dock-btn-active: linear-gradient(180deg, #596b59 0%, #3c5348 100%);
+  --dock-ink: #edf2e8;
+  --dock-muted: #b8c8ba;
+}
+
+.main-view[data-lighting='night'] .main-dock-inner {
+  box-shadow: 0 0 0 1px rgba(214, 235, 203, 0.08) inset, 0 8px 20px rgba(3, 9, 18, 0.5);
+}
+
+.main-view[data-lighting='night'] .main-dock {
+  background: linear-gradient(180deg, #142231 0%, #101a28 100%);
+  border-top: 1px solid rgba(126, 158, 173, 0.28);
+  box-shadow: inset 0 10px 20px rgba(2, 8, 15, 0.22);
+}
+
+.main-view[data-lighting='night'] .main-dock-btn {
+  border-color: #4e6479;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.28), inset 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.main-view[data-lighting='night'] .main-dock-btn:hover,
+.main-view[data-lighting='night'] .main-dock-btn:focus-visible {
+  border-color: #91b99a;
+}
+
+.main-view[data-lighting='night'] .main-dock-center {
+  border-color: #506d70;
+  background: #1c2c3b;
+  color: #e8f3df;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.04), 0 2px 6px rgba(0, 0, 0, .28);
+}
+
+.main-view[data-lighting='night'] .main-dock-center:hover { background: #273a4a; border-color: #81aa91; }
+.main-view[data-lighting='night'] .main-dock-focus-name { color: #f0f4df; }
+.main-view[data-lighting='night'] .main-dock-focus-status { color: #b8d0c2; }
+.main-view[data-lighting='night'] .main-dock-focus-time { color: #d4db91; }
+
+.main-view[data-lighting='night'] .main-top-chip {
+  background: linear-gradient(145deg, #27384b, #1b2939);
+  border-color: #657b93;
+  box-shadow: 0 3px 10px rgba(1, 7, 14, .42), inset 0 1px rgba(255, 255, 255, .06);
+}
+
+.main-view[data-lighting='night'] .main-points-label { color: #f0c979; }
+.main-view[data-lighting='night'] .main-points-value { color: #f7f0db; }
+.main-view[data-lighting='night'] .main-passport-chip { border-color: #719b89; background: linear-gradient(145deg, #283f42, #1b3034); color: #e4f2df; }
+.main-view[data-lighting='night'] .main-passport-chip:hover { background: #314d4e; border-color: #a0c9a9; }
+.main-view[data-lighting='night'] .passport-chip-name { color: #edf2dc; }
+.main-view[data-lighting='night'] .passport-chip-lvl { background: #385a4a; border-color: #64987c; color: #e0f6d7; }
+
+/* Keep alerts calm after dark too: blue-grey parchment rather than bright white cards. */
+.main-view[data-lighting='night'] .garden-tutorial-overlay {
+  background: radial-gradient(ellipse 80% 70% at 50% 45%, rgba(5, 16, 24, .15), rgba(3, 10, 18, .58));
+}
+
+.main-view[data-lighting='night'] .garden-tutorial-card,
+.main-view[data-lighting='night'] .main-study-goal-card {
+  background: linear-gradient(180deg, #283a47 0%, #1b2b38 100%);
+  border-color: #668879;
+  box-shadow: 0 8px 24px rgba(2, 8, 15, .55), inset 0 1px rgba(245, 239, 210, .08);
+}
+
+.main-view[data-lighting='night'] .garden-tutorial-card::before { border-color: rgba(185, 215, 190, .22); }
+.main-view[data-lighting='night'] .garden-tutorial-message,
+.main-view[data-lighting='night'] .garden-tutorial-message strong,
+.main-view[data-lighting='night'] .main-study-goal-title { color: #eef0da; }
+.main-view[data-lighting='night'] .main-study-goal-text { color: #c1d2c7; }
+.main-view[data-lighting='night'] .garden-tutorial-close { border-color: #60788a; background: #314958; color: #edf1df; }
+.main-view[data-lighting='night'] .garden-tutorial-close:hover { background: #3b5867; }
+.main-view[data-lighting='night'] .garden-reveal-btn,
+.main-view[data-lighting='night'] .main-study-goal-btn { background: linear-gradient(145deg, #5e896f, #446954); color: #f4f2d9; box-shadow: 0 3px 9px rgba(0, 0, 0, .28); }
+.main-view[data-lighting='night'] .main-soon-toast { background: #243846; border-color: #668879; color: #ebf0dc; box-shadow: 0 4px 14px rgba(2, 8, 15, .48); }
+.main-view[data-lighting='night'] .main-milestone-toast { background: linear-gradient(135deg, #34364d, #273542); border-color: #85789d; color: #f0ebdd; box-shadow: 0 6px 0 rgba(8, 9, 20, .35), 0 8px 20px rgba(2, 8, 15, .4); }
+.main-view[data-lighting='night'] .main-milestone-toast button { color: #d8cae4; }
+
 /* Top HUD chips cluster — top right, light pastel styling */
 .main-top-chips-cluster {
   position: absolute;
