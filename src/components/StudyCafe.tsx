@@ -75,6 +75,33 @@ const DRINKS: Drink[] = [
   },
 ];
 
+const SEAT_AMBIENCE: Record<CafeSeat, AudioMode> = {
+  window: 'rain',
+  counter: 'cafe',
+  fireplace: 'chimes',
+};
+
+const SEAT_COPY: Record<
+  CafeSeat,
+  { title: string; hint: string; action: string }
+> = {
+  window: {
+    title: 'Window Booth',
+    hint: 'Meadow light, soft rain, and deep focus',
+    action: 'Sit & study',
+  },
+  counter: {
+    title: 'Barista Counter',
+    hint: 'Order a study drink for a 30-minute buff',
+    action: 'Order a drink',
+  },
+  fireplace: {
+    title: 'Fireplace Corner',
+    hint: 'Warm glow and gentle study energy',
+    action: 'Cozy up & study',
+  },
+};
+
 export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
   const points = useStore((s) => s.points);
   const spendPoints = useStore((s) => s.spendPoints);
@@ -88,14 +115,14 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
   const setDrinkBuff = useStore((s) => s.setDrinkBuff);
 
   const [activeSeat, setActiveSeat] = useState<CafeSeat>('window');
-  const [audioMode, setAudioMode] = useState<AudioMode>('none');
+  const [audioMode, setAudioMode] = useState<AudioMode>('rain');
   const [toast, setToast] = useState<string | null>(null);
   const [activeDrink, setActiveDrink] = useState<Drink>(DRINKS[0]);
+  const [panelOpen, setPanelOpen] = useState(true);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const soundNodeRef = useRef<{ stop: () => void } | null>(null);
 
-  // Esc key to exit
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onBackToMeadow();
@@ -104,16 +131,28 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onBackToMeadow]);
 
-  // Web Audio ambient audio & lo-fi beat synthesizer (100% offline, zero network requests)
+  // Seat choice sets the room vibe (ambience + open the matching panel)
+  const chooseSeat = (seat: CafeSeat) => {
+    setActiveSeat(seat);
+    setAudioMode(SEAT_AMBIENCE[seat]);
+    setPanelOpen(true);
+    if (seat === 'window') {
+      setToast('Window booth ready — soft rain for focus.');
+    } else if (seat === 'counter') {
+      setToast('Barista counter open — pick a study drink.');
+    } else {
+      setToast('Fireplace corner warmed up — cozy study time.');
+    }
+    window.setTimeout(() => setToast(null), 2600);
+  };
+
   useEffect(() => {
     if (soundNodeRef.current) {
       soundNodeRef.current.stop();
       soundNodeRef.current = null;
     }
 
-    if (audioMode === 'none') {
-      return;
-    }
+    if (audioMode === 'none') return;
 
     try {
       const AudioCtx =
@@ -128,12 +167,11 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
       }
 
       if (audioMode === 'lofi') {
-        // Soothing Lo-Fi 7th Chords sequence on warm electric piano (Cmaj7 -> Am7 -> Dm7 -> G7)
         const chordProgression = [
-          [261.63, 329.63, 392.0, 493.88], // Cmaj7: C4, E4, G4, B4
-          [220.0, 261.63, 329.63, 392.0],  // Am7: A3, C4, E4, G4
-          [293.66, 349.23, 440.0, 523.25], // Dm7: D4, F4, A4, C5
-          [196.0, 246.94, 293.66, 349.23], // G7: G3, B3, D4, F4
+          [261.63, 329.63, 392.0, 493.88],
+          [220.0, 261.63, 329.63, 392.0],
+          [293.66, 349.23, 440.0, 523.25],
+          [196.0, 246.94, 293.66, 349.23],
         ];
         let chordIdx = 0;
         let isStopped = false;
@@ -143,34 +181,26 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
           if (isStopped) return;
           const chord = chordProgression[chordIdx % chordProgression.length];
           chordIdx++;
-
           chord.forEach((freq, i) => {
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
             const filter = ctx.createBiquadFilter();
-
             osc.type = i === 0 ? 'triangle' : 'sine';
             osc.frequency.setValueAtTime(freq, ctx.currentTime);
-
             filter.type = 'lowpass';
             filter.frequency.setValueAtTime(800, ctx.currentTime);
-
             const t = ctx.currentTime + i * 0.035;
             gain.gain.setValueAtTime(0, t);
             gain.gain.linearRampToValueAtTime(0.045, t + 0.08);
             gain.gain.exponentialRampToValueAtTime(0.0001, t + 3.2);
-
             osc.connect(filter);
             filter.connect(gain);
             gain.connect(ctx.destination);
-
             osc.start(t);
             osc.stop(t + 3.3);
           });
-
           timerId = window.setTimeout(playNextChord, 3400);
         };
-
         playNextChord();
         soundNodeRef.current = {
           stop: () => {
@@ -182,12 +212,14 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
         const bufferSize = ctx.sampleRate * 2;
         const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const data = buffer.getChannelData(0);
-        let b0 = 0, b1 = 0, b2 = 0;
+        let b0 = 0,
+          b1 = 0,
+          b2 = 0;
         for (let i = 0; i < bufferSize; i++) {
           const white = Math.random() * 2 - 1;
           b0 = 0.99886 * b0 + white * 0.0555179;
           b1 = 0.99332 * b1 + white * 0.0750759;
-          b2 = 0.96900 * b2 + white * 0.1538520;
+          b2 = 0.969 * b2 + white * 0.153852;
           data[i] = (b0 + b1 + b2) * 0.04;
         }
         const source = ctx.createBufferSource();
@@ -216,7 +248,6 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
         let timerId: number | null = null;
         let isStopped = false;
         const notes = [523.25, 587.33, 659.25, 783.99, 880.0];
-
         const playChime = () => {
           if (isStopped) return;
           const osc = ctx.createOscillator();
@@ -268,7 +299,7 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
         };
       }
     } catch {
-      /* AudioContext not allowed before user interaction */
+      /* AudioContext blocked until gesture */
     }
 
     return () => {
@@ -287,213 +318,253 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
       addPoints(10);
     }
 
-    // Activate the drink buff for 30 minutes!
-    const newBuff = {
+    setDrinkBuff({
       drinkId: drink.id,
       name: drink.name,
       effectLabel: drink.buffSummary,
       bonusRate: drink.bonusRate,
       expiresAt: Date.now() + 30 * 60 * 1000,
-    };
-    setDrinkBuff(newBuff);
+    });
 
     if (drink.id === 'caramel') {
       addPoints(10);
     }
 
-    setToast(`Enjoy your ${drink.name}! Active buff: ${drink.buffTitle} (${drink.buffSummary}) for 30 min.`);
-    window.setTimeout(() => setToast(null), 4000);
+    setToast(`Sipped ${drink.name} — ${drink.buffTitle} for 30 min.`);
+    window.setTimeout(() => setToast(null), 3500);
   };
 
   const buffRemainingMin = drinkBuff
     ? Math.max(0, Math.ceil((drinkBuff.expiresAt - Date.now()) / 60000))
     : 0;
 
+  const seat = SEAT_COPY[activeSeat];
+  const studying = studyState === 'studying';
+
   return (
-    <div className="study-cafe-screen">
-      {/* Top Bar */}
+    <div className={`study-cafe-screen seat-${activeSeat}`}>
       <header className="cafe-top-bar">
         <button type="button" className="cafe-back-btn" onClick={onBackToMeadow}>
           ← Back to Meadow
         </button>
         <div className="cafe-brand">
           <span className="cafe-title">The Study Café</span>
-          <span className="cafe-tagline">Fresh tea, lo-fi beats, and peaceful focus</span>
+          <span className="cafe-tagline">Pick a spot · sip · study</span>
         </div>
-        {/* Points live in the shared meadow top chips — avoid a second overlapping pill */}
         <div className="cafe-top-spacer" aria-hidden />
       </header>
 
-      {/* Active Drink Buff Ribbon */}
       {drinkBuff && buffRemainingMin > 0 && (
         <div className="cafe-buff-banner">
-          <span className="cafe-buff-badge">Active Sip:</span>
+          <span className="cafe-buff-badge">Sipping</span>
           <span className="cafe-buff-name">{drinkBuff.name}</span>
           <span className="cafe-buff-sep">·</span>
           <span className="cafe-buff-desc">{drinkBuff.effectLabel}</span>
-          <span className="cafe-buff-time">({buffRemainingMin} min left)</span>
+          <span className="cafe-buff-time">({buffRemainingMin}m left)</span>
         </div>
       )}
 
-      {/* Seating Picker Strip */}
-      <div className="cafe-seat-strip">
-        <span className="cafe-seat-label">Select Table:</span>
-        <div className="cafe-seat-options">
+      <div className="cafe-stage">
+        {/* Interactive café interior */}
+        <div className="cafe-scene" aria-label="Study café interior">
+          <div className="cafe-scene-sky" aria-hidden />
+          <div className="cafe-scene-wall" aria-hidden />
+          <div className="cafe-scene-floor" aria-hidden />
+
+          {/* Window booth — left */}
           <button
             type="button"
-            className={`cafe-seat-btn ${activeSeat === 'window' ? 'is-active' : ''}`}
-            onClick={() => setActiveSeat('window')}
+            className={`cafe-hotspot cafe-hotspot--window ${activeSeat === 'window' ? 'is-active' : ''}`}
+            onClick={() => chooseSeat('window')}
+            aria-label="Window booth. Sit and study by the meadow view."
           >
-            Window Booth
+            <div className="cafe-prop cafe-prop-window" aria-hidden>
+              <div className="cafe-window-glass">
+                <span className="cafe-window-cloud c1" />
+                <span className="cafe-window-cloud c2" />
+              </div>
+              <div className="cafe-window-sill" />
+              <div className="cafe-booth-table" />
+              <div className="cafe-booth-seat" />
+            </div>
+            <span className="cafe-hotspot-label">Window Booth</span>
           </button>
+
+          {/* Barista counter — center */}
           <button
             type="button"
-            className={`cafe-seat-btn ${activeSeat === 'counter' ? 'is-active' : ''}`}
-            onClick={() => setActiveSeat('counter')}
+            className={`cafe-hotspot cafe-hotspot--counter ${activeSeat === 'counter' ? 'is-active' : ''}`}
+            onClick={() => chooseSeat('counter')}
+            aria-label="Barista counter. Order a study drink."
           >
-            Barista Counter
+            <div className="cafe-prop cafe-prop-counter" aria-hidden>
+              <div className="cafe-counter-top" />
+              <div className="cafe-counter-front" />
+              <div className="cafe-espresso" />
+              <div className="cafe-menu-board" />
+            </div>
+            <span className="cafe-hotspot-label">Barista Counter</span>
           </button>
+
+          {/* Fireplace — right */}
           <button
             type="button"
-            className={`cafe-seat-btn ${activeSeat === 'fireplace' ? 'is-active' : ''}`}
-            onClick={() => setActiveSeat('fireplace')}
+            className={`cafe-hotspot cafe-hotspot--fireplace ${activeSeat === 'fireplace' ? 'is-active' : ''}`}
+            onClick={() => chooseSeat('fireplace')}
+            aria-label="Fireplace corner. Cozy study spot."
           >
-            Fireplace Corner
+            <div className="cafe-prop cafe-prop-fireplace" aria-hidden>
+              <div className="cafe-hearth" />
+              <div className="cafe-fire" />
+              <div className="cafe-mantel" />
+              <div className="cafe-fire-chair" />
+            </div>
+            <span className="cafe-hotspot-label">Fireplace</span>
           </button>
+
+          {toast && (
+            <div className="cafe-scene-toast" role="status">
+              {toast}
+            </div>
+          )}
         </div>
-      </div>
 
-      {/* Main Content Layout */}
-      <div className="cafe-content-grid">
-        {/* Left Column: Drink Menu */}
-        <section className="cafe-card cafe-menu-card">
-          <div className="cafe-card-header">
-            <h2 className="cafe-card-title">Drink Menu</h2>
-            <span className="cafe-card-hint">
-              Each handcrafted study drink grants a 30-minute focus buff!
-            </span>
-          </div>
-
-          <div className="cafe-drinks-list">
-            {DRINKS.map((d) => (
-              <div
-                key={d.id}
-                className={`cafe-drink-row ${activeDrink.id === d.id ? 'is-selected' : ''}`}
-                onClick={() => handleOrderDrink(d)}
-                role="button"
-                tabIndex={0}
+        {/* Context panel for the active seat */}
+        {panelOpen && (
+          <aside className="cafe-focus-panel" aria-label={`${seat.title} actions`}>
+            <div className="cafe-focus-head">
+              <div>
+                <h2 className="cafe-focus-title">{seat.title}</h2>
+                <p className="cafe-focus-hint">{seat.hint}</p>
+              </div>
+              <button
+                type="button"
+                className="cafe-focus-close"
+                onClick={() => setPanelOpen(false)}
+                aria-label="Hide panel"
               >
-                <div className="cafe-drink-swatch" style={{ background: d.color }} />
-                <div className="cafe-drink-info">
-                  <div className="cafe-drink-top">
-                    <span className="cafe-drink-name">{d.name}</span>
-                    <span className="cafe-drink-cost">{d.cost} pts</span>
-                  </div>
-                  <p className="cafe-drink-desc">{d.desc}</p>
-                  <span className="cafe-drink-buff-tag">{d.buffTitle}: {d.buffSummary}</span>
+                ×
+              </button>
+            </div>
+
+            {(activeSeat === 'window' || activeSeat === 'fireplace') && (
+              <div className="cafe-study-block">
+                <div className="cafe-mug-chip" style={{ borderColor: activeDrink.color }}>
+                  <span>Sipping</span>
+                  <strong>{activeDrink.name}</strong>
+                </div>
+                <div className="cafe-progress-row">
+                  <span>Today</span>
+                  <strong>
+                    {formatStudyMinutes(studyMinutesToday)} / {formatStudyMinutes(studyMinutesGoal)}
+                  </strong>
+                </div>
+                {activeSeat === 'fireplace' && (
+                  <p className="cafe-cozy-note">
+                    Soft chimes are on. Good for gentle review sessions, {playerName || 'friend'}.
+                  </p>
+                )}
+                <div className="cafe-focus-actions">
+                  <button
+                    type="button"
+                    className={`cafe-primary-btn ${studying ? 'is-on' : ''}`}
+                    onClick={() => setStudyState(studying ? 'idle' : 'studying')}
+                  >
+                    {studying ? 'Pause study' : seat.action}
+                  </button>
+                  <button type="button" className="cafe-secondary-btn" onClick={onOpenNotebook}>
+                    Open notebook
+                  </button>
+                  {activeSeat === 'window' && (
+                    <button
+                      type="button"
+                      className="cafe-secondary-btn"
+                      onClick={() => chooseSeat('counter')}
+                    >
+                      Get a drink
+                    </button>
+                  )}
                 </div>
               </div>
-            ))}
-          </div>
+            )}
 
-          {toast && <div className="cafe-toast-bubble" role="status">{toast}</div>}
-        </section>
-
-        {/* Right Column: Table Study Station & Audio Player */}
-        <div className="cafe-right-col">
-          {/* Active Table Focus Station */}
-          <section className="cafe-card cafe-study-station">
-            <div className="cafe-card-header">
-              <h2 className="cafe-card-title">
-                {activeSeat === 'window'
-                  ? 'Meadow Window Booth'
-                  : activeSeat === 'counter'
-                    ? 'Warm Barista Counter'
-                    : 'Cozy Fireplace Corner'}
-              </h2>
-              <span className="cafe-card-hint">Table reserved for {playerName || 'Friend'}</span>
-            </div>
-
-            <div className="cafe-study-display">
-              <div className="cafe-mug-preview" style={{ borderColor: activeDrink.color }}>
-                <span className="cafe-mug-label">Currently Sipping:</span>
-                <span className="cafe-mug-name">{activeDrink.name}</span>
+            {activeSeat === 'counter' && (
+              <div className="cafe-order-block">
+                <p className="cafe-order-intro">
+                  Tap a drink to order. Buffs last 30 minutes while you study anywhere in the meadow.
+                </p>
+                <div className="cafe-drinks-list">
+                  {DRINKS.map((d) => (
+                    <button
+                      key={d.id}
+                      type="button"
+                      className={`cafe-drink-row ${activeDrink.id === d.id ? 'is-selected' : ''}`}
+                      onClick={() => handleOrderDrink(d)}
+                    >
+                      <span className="cafe-drink-swatch" style={{ background: d.color }} />
+                      <span className="cafe-drink-info">
+                        <span className="cafe-drink-top">
+                          <span className="cafe-drink-name">{d.name}</span>
+                          <span className="cafe-drink-cost">{d.cost} pts</span>
+                        </span>
+                        <span className="cafe-drink-buff-tag">
+                          {d.buffTitle}: {d.buffSummary}
+                        </span>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+                <div className="cafe-focus-actions">
+                  <button
+                    type="button"
+                    className="cafe-primary-btn"
+                    onClick={() => chooseSeat('window')}
+                  >
+                    Take it to the window
+                  </button>
+                  <button
+                    type="button"
+                    className="cafe-secondary-btn"
+                    onClick={() => chooseSeat('fireplace')}
+                  >
+                    Sit by the fire
+                  </button>
+                </div>
               </div>
+            )}
 
-              <div className="cafe-study-meta">
-                <span className="cafe-meta-label">Today&apos;s Focus Progress</span>
-                <span className="cafe-meta-val">
-                  {formatStudyMinutes(studyMinutesToday)} / {formatStudyMinutes(studyMinutesGoal)}
-                </span>
-              </div>
-
-              <div className="cafe-actions-row">
+            <div className="cafe-ambience-row" aria-label="Background ambience">
+              {(
+                [
+                  ['lofi', 'Lo-fi'],
+                  ['rain', 'Rain'],
+                  ['chimes', 'Chimes'],
+                  ['cafe', 'Café'],
+                  ['none', 'Mute'],
+                ] as [AudioMode, string][]
+              ).map(([mode, label]) => (
                 <button
+                  key={mode}
                   type="button"
-                  className={`cafe-action-btn ${studyState === 'studying' ? 'is-studying' : 'is-start'}`}
-                  onClick={() => setStudyState(studyState === 'studying' ? 'idle' : 'studying')}
+                  className={`cafe-ambience-chip ${audioMode === mode ? 'is-active' : ''}`}
+                  onClick={() => setAudioMode(mode)}
                 >
-                  {studyState === 'studying' ? 'Pause Café Study' : 'Start Studying at Table'}
+                  {label}
                 </button>
-                <button
-                  type="button"
-                  className="cafe-action-btn cafe-notebook-btn"
-                  onClick={onOpenNotebook}
-                >
-                  Open Notebook
-                </button>
-              </div>
+              ))}
             </div>
-          </section>
+          </aside>
+        )}
 
-          {/* Lo-Fi & Ambient Sound Controller */}
-          <section className="cafe-card cafe-ambient-card">
-            <div className="cafe-card-header">
-              <h2 className="cafe-card-title">Background Ambience & Lo-Fi</h2>
-              <span className="cafe-card-hint">
-                Gentle audio synthesizer running locally in your browser
-              </span>
-            </div>
-
-            <div className="cafe-ambient-buttons">
-              <button
-                type="button"
-                className={`cafe-ambient-btn ${audioMode === 'lofi' ? 'is-active' : ''}`}
-                onClick={() => setAudioMode('lofi')}
-              >
-                Lo-Fi Chords
-              </button>
-              <button
-                type="button"
-                className={`cafe-ambient-btn ${audioMode === 'rain' ? 'is-active' : ''}`}
-                onClick={() => setAudioMode('rain')}
-              >
-                Rain on Window
-              </button>
-              <button
-                type="button"
-                className={`cafe-ambient-btn ${audioMode === 'chimes' ? 'is-active' : ''}`}
-                onClick={() => setAudioMode('chimes')}
-              >
-                Soft Chimes
-              </button>
-              <button
-                type="button"
-                className={`cafe-ambient-btn ${audioMode === 'cafe' ? 'is-active' : ''}`}
-                onClick={() => setAudioMode('cafe')}
-              >
-                Café Murmur
-              </button>
-              <button
-                type="button"
-                className={`cafe-ambient-btn cafe-mute-btn ${audioMode === 'none' ? 'is-active' : ''}`}
-                onClick={() => setAudioMode('none')}
-              >
-                Mute
-              </button>
-            </div>
-          </section>
-        </div>
+        {!panelOpen && (
+          <button
+            type="button"
+            className="cafe-reopen-panel"
+            onClick={() => setPanelOpen(true)}
+          >
+            Show {seat.title}
+          </button>
+        )}
       </div>
     </div>
   );
