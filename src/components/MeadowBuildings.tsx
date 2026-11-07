@@ -90,12 +90,17 @@ export function MeadowBuildings({ playerPos, onEnterBuilding }: MeadowBuildingsP
           }
         }}
       >
-        <img
-          src={cafeArtUrl}
-          alt=""
-          className="meadow-building-art cafe-building-art"
-          draggable={false}
-        />
+        <div className="cafe-art-wrap">
+          <img
+            src={cafeArtUrl}
+            alt=""
+            className="meadow-building-art cafe-building-art"
+            draggable={false}
+          />
+          {/* Night-only: soft wall wash + floor pool from the right lamp */}
+          <span className="cafe-lamp-beam" aria-hidden />
+          <span className="cafe-lamp-pool" aria-hidden />
+        </div>
       </div>
 
       {/* 2. YOUR COZY ROOM (Center - Fantage inspired) */}
