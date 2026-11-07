@@ -8,14 +8,18 @@ interface StudyCafeProps {
   onOpenNotebook: () => void;
 }
 
-type AmbientSound = 'none' | 'rain' | 'chimes' | 'cafe';
+type AudioMode = 'none' | 'lofi' | 'rain' | 'chimes' | 'cafe';
+type CafeSeat = 'window' | 'counter' | 'fireplace';
 
 interface Drink {
   id: string;
   name: string;
   desc: string;
+  buffTitle: string;
+  buffSummary: string;
   cost: number;
   color: string;
+  bonusRate: number;
 }
 
 const DRINKS: Drink[] = [
@@ -23,29 +27,51 @@ const DRINKS: Drink[] = [
     id: 'matcha',
     name: 'Matcha Cloud Latte',
     desc: 'Sweet iced matcha with oat foam · Calms racing thoughts',
+    buffTitle: 'Matcha Calm',
+    buffSummary: '+2 bonus points every study minute',
     cost: 5,
     color: '#a8d5ba',
+    bonusRate: 2,
   },
   {
     id: 'strawberry',
     name: 'Strawberry Boba Milk',
     desc: 'Fresh strawberry puree & tapioca · Boosts sweet mood',
+    buffTitle: 'Sweet Boost',
+    buffSummary: 'Passively restores pet energy while studying',
     cost: 5,
     color: '#ffccd5',
+    bonusRate: 1,
   },
   {
     id: 'chamomile',
     name: 'Chamomile Honey Pot',
     desc: 'Steamed floral tea with lavender honey · Relieves study stress',
+    buffTitle: 'Stress Relief',
+    buffSummary: '+1 bonus point & warms incubating eggs',
     cost: 5,
     color: '#ffe599',
+    bonusRate: 1,
   },
   {
     id: 'americano',
     name: 'Iced Meadow Americano',
     desc: 'Smooth cold drip coffee with clean finish · Sharpens deep focus',
+    buffTitle: 'Deep Focus',
+    buffSummary: '+2 bonus points during focus sessions',
     cost: 5,
     color: '#b08968',
+    bonusRate: 2,
+  },
+  {
+    id: 'caramel',
+    name: 'Warm Caramel Macchiato',
+    desc: 'Velvety espresso with vanilla bean & warm caramel swirl',
+    buffTitle: 'Cozy Warmth',
+    buffSummary: '+10 instant bonus points on first sip',
+    cost: 5,
+    color: '#d4a373',
+    bonusRate: 1,
   },
 ];
 
@@ -58,10 +84,14 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
   const studyMinutesToday = useStore((s) => s.studyMinutesToday);
   const studyMinutesGoal = useStore((s) => s.studyMinutesGoal);
   const playerName = useStore((s) => s.playerName);
+  const drinkBuff = useStore((s) => s.drinkBuff);
+  const setDrinkBuff = useStore((s) => s.setDrinkBuff);
 
-  const [ambientSound, setAmbientSound] = useState<AmbientSound>('none');
+  const [activeSeat, setActiveSeat] = useState<CafeSeat>('window');
+  const [audioMode, setAudioMode] = useState<AudioMode>('none');
   const [toast, setToast] = useState<string | null>(null);
   const [activeDrink, setActiveDrink] = useState<Drink>(DRINKS[0]);
+
   const audioCtxRef = useRef<AudioContext | null>(null);
   const soundNodeRef = useRef<{ stop: () => void } | null>(null);
 
@@ -74,19 +104,21 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onBackToMeadow]);
 
-  // Web Audio ambient sound synthesizer (100% offline, zero network dependencies)
+  // Web Audio ambient audio & lo-fi beat synthesizer (100% offline, zero network requests)
   useEffect(() => {
     if (soundNodeRef.current) {
       soundNodeRef.current.stop();
       soundNodeRef.current = null;
     }
 
-    if (ambientSound === 'none') {
+    if (audioMode === 'none') {
       return;
     }
 
     try {
-      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const AudioCtx =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       if (!audioCtxRef.current) {
         audioCtxRef.current = new AudioCtx();
       }
@@ -95,8 +127,58 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
         ctx.resume();
       }
 
-      if (ambientSound === 'rain') {
-        // Soft low-passed pink noise buffer
+      if (audioMode === 'lofi') {
+        // Soothing Lo-Fi 7th Chords sequence on warm electric piano (Cmaj7 -> Am7 -> Dm7 -> G7)
+        const chordProgression = [
+          [261.63, 329.63, 392.0, 493.88], // Cmaj7: C4, E4, G4, B4
+          [220.0, 261.63, 329.63, 392.0],  // Am7: A3, C4, E4, G4
+          [293.66, 349.23, 440.0, 523.25], // Dm7: D4, F4, A4, C5
+          [196.0, 246.94, 293.66, 349.23], // G7: G3, B3, D4, F4
+        ];
+        let chordIdx = 0;
+        let isStopped = false;
+        let timerId: number | null = null;
+
+        const playNextChord = () => {
+          if (isStopped) return;
+          const chord = chordProgression[chordIdx % chordProgression.length];
+          chordIdx++;
+
+          chord.forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            const filter = ctx.createBiquadFilter();
+
+            osc.type = i === 0 ? 'triangle' : 'sine';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime);
+
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(800, ctx.currentTime);
+
+            const t = ctx.currentTime + i * 0.035;
+            gain.gain.setValueAtTime(0, t);
+            gain.gain.linearRampToValueAtTime(0.045, t + 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.0001, t + 3.2);
+
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.start(t);
+            osc.stop(t + 3.3);
+          });
+
+          timerId = window.setTimeout(playNextChord, 3400);
+        };
+
+        playNextChord();
+        soundNodeRef.current = {
+          stop: () => {
+            isStopped = true;
+            if (timerId) window.clearTimeout(timerId);
+          },
+        };
+      } else if (audioMode === 'rain') {
         const bufferSize = ctx.sampleRate * 2;
         const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const data = buffer.getChannelData(0);
@@ -113,9 +195,9 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
         source.loop = true;
         const filter = ctx.createBiquadFilter();
         filter.type = 'lowpass';
-        filter.frequency.value = 750;
+        filter.frequency.value = 720;
         const gain = ctx.createGain();
-        gain.gain.value = 0.18;
+        gain.gain.value = 0.16;
         source.connect(filter);
         filter.connect(gain);
         gain.connect(ctx.destination);
@@ -130,11 +212,10 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
             }
           },
         };
-      } else if (ambientSound === 'chimes') {
-        // Periodic gentle soothing bell tones
+      } else if (audioMode === 'chimes') {
         let timerId: number | null = null;
         let isStopped = false;
-        const notes = [523.25, 587.33, 659.25, 783.99, 880.0]; // C5, D5, E5, G5, A5 pentatonic
+        const notes = [523.25, 587.33, 659.25, 783.99, 880.0];
 
         const playChime = () => {
           if (isStopped) return;
@@ -144,13 +225,13 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
           osc.type = 'sine';
           osc.frequency.setValueAtTime(freq, ctx.currentTime);
           gain.gain.setValueAtTime(0, ctx.currentTime);
-          gain.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.05);
+          gain.gain.linearRampToValueAtTime(0.07, ctx.currentTime + 0.05);
           gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 3.5);
           osc.connect(gain);
           gain.connect(ctx.destination);
           osc.start();
           osc.stop(ctx.currentTime + 3.6);
-          timerId = window.setTimeout(playChime, 2200 + Math.random() * 2800);
+          timerId = window.setTimeout(playChime, 2200 + Math.random() * 2600);
         };
         playChime();
         soundNodeRef.current = {
@@ -159,8 +240,7 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
             if (timerId) window.clearTimeout(timerId);
           },
         };
-      } else if (ambientSound === 'cafe') {
-        // Warm low coffee shop murmur
+      } else if (audioMode === 'cafe') {
         const osc1 = ctx.createOscillator();
         const osc2 = ctx.createOscillator();
         const gain = ctx.createGain();
@@ -197,31 +277,48 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
         soundNodeRef.current = null;
       }
     };
-  }, [ambientSound]);
+  }, [audioMode]);
 
   const handleOrderDrink = (drink: Drink) => {
     setActiveDrink(drink);
     if (points >= drink.cost) {
       spendPoints(drink.cost);
-      setToast(`Enjoy your ${drink.name}! You feel calm and focused.`);
     } else {
-      // First order on the house!
       addPoints(10);
-      setToast(`Barista treat: Here is your free ${drink.name}! (+10 pts)`);
     }
-    window.setTimeout(() => setToast(null), 3500);
+
+    // Activate the drink buff for 30 minutes!
+    const newBuff = {
+      drinkId: drink.id,
+      name: drink.name,
+      effectLabel: drink.buffSummary,
+      bonusRate: drink.bonusRate,
+      expiresAt: Date.now() + 30 * 60 * 1000,
+    };
+    setDrinkBuff(newBuff);
+
+    if (drink.id === 'caramel') {
+      addPoints(10);
+    }
+
+    setToast(`Enjoy your ${drink.name}! Active buff: ${drink.buffTitle} (${drink.buffSummary}) for 30 min.`);
+    window.setTimeout(() => setToast(null), 4000);
   };
+
+  const buffRemainingMin = drinkBuff
+    ? Math.max(0, Math.ceil((drinkBuff.expiresAt - Date.now()) / 60000))
+    : 0;
 
   return (
     <div className="study-cafe-screen">
-      {/* Top Navigation Bar */}
+      {/* Top Bar */}
       <header className="cafe-top-bar">
         <button type="button" className="cafe-back-btn" onClick={onBackToMeadow}>
           ← Back to Meadow
         </button>
         <div className="cafe-brand">
           <span className="cafe-title">The Study Café</span>
-          <span className="cafe-tagline">Fresh tea, ambient rain, and peaceful focus</span>
+          <span className="cafe-tagline">Fresh tea, lo-fi beats, and peaceful focus</span>
         </div>
         <div className="cafe-points-pill">
           <span className="cafe-points-label">Points</span>
@@ -229,13 +326,54 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
         </div>
       </header>
 
-      {/* Main Café Interior Layout */}
+      {/* Active Drink Buff Ribbon */}
+      {drinkBuff && buffRemainingMin > 0 && (
+        <div className="cafe-buff-banner">
+          <span className="cafe-buff-badge">Active Sip:</span>
+          <span className="cafe-buff-name">{drinkBuff.name}</span>
+          <span className="cafe-buff-sep">·</span>
+          <span className="cafe-buff-desc">{drinkBuff.effectLabel}</span>
+          <span className="cafe-buff-time">({buffRemainingMin} min left)</span>
+        </div>
+      )}
+
+      {/* Seating Picker Strip */}
+      <div className="cafe-seat-strip">
+        <span className="cafe-seat-label">Select Table:</span>
+        <div className="cafe-seat-options">
+          <button
+            type="button"
+            className={`cafe-seat-btn ${activeSeat === 'window' ? 'is-active' : ''}`}
+            onClick={() => setActiveSeat('window')}
+          >
+            Window Booth
+          </button>
+          <button
+            type="button"
+            className={`cafe-seat-btn ${activeSeat === 'counter' ? 'is-active' : ''}`}
+            onClick={() => setActiveSeat('counter')}
+          >
+            Barista Counter
+          </button>
+          <button
+            type="button"
+            className={`cafe-seat-btn ${activeSeat === 'fireplace' ? 'is-active' : ''}`}
+            onClick={() => setActiveSeat('fireplace')}
+          >
+            Fireplace Corner
+          </button>
+        </div>
+      </div>
+
+      {/* Main Content Layout */}
       <div className="cafe-content-grid">
-        {/* Left Side: Counter & Study Menu */}
+        {/* Left Column: Drink Menu */}
         <section className="cafe-card cafe-menu-card">
           <div className="cafe-card-header">
             <h2 className="cafe-card-title">Drink Menu</h2>
-            <span className="cafe-card-hint">Order a calm sip for your study session</span>
+            <span className="cafe-card-hint">
+              Each handcrafted study drink grants a 30-minute focus buff!
+            </span>
           </div>
 
           <div className="cafe-drinks-list">
@@ -254,6 +392,7 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
                     <span className="cafe-drink-cost">{d.cost} pts</span>
                   </div>
                   <p className="cafe-drink-desc">{d.desc}</p>
+                  <span className="cafe-drink-buff-tag">{d.buffTitle}: {d.buffSummary}</span>
                 </div>
               </div>
             ))}
@@ -262,12 +401,18 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
           {toast && <div className="cafe-toast-bubble" role="status">{toast}</div>}
         </section>
 
-        {/* Right Side: Cozy Study Station */}
+        {/* Right Column: Table Study Station & Audio Player */}
         <div className="cafe-right-col">
-          {/* Focus Station Card */}
+          {/* Active Table Focus Station */}
           <section className="cafe-card cafe-study-station">
             <div className="cafe-card-header">
-              <h2 className="cafe-card-title">Your Café Table</h2>
+              <h2 className="cafe-card-title">
+                {activeSeat === 'window'
+                  ? 'Meadow Window Booth'
+                  : activeSeat === 'counter'
+                    ? 'Warm Barista Counter'
+                    : 'Cozy Fireplace Corner'}
+              </h2>
               <span className="cafe-card-hint">Table reserved for {playerName || 'Friend'}</span>
             </div>
 
@@ -303,41 +448,50 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
             </div>
           </section>
 
-          {/* Ambient Sound Controller */}
+          {/* Lo-Fi & Ambient Sound Controller */}
           <section className="cafe-card cafe-ambient-card">
             <div className="cafe-card-header">
-              <h2 className="cafe-card-title">Background Ambience</h2>
-              <span className="cafe-card-hint">Synthesized audio to block distractions</span>
+              <h2 className="cafe-card-title">Background Ambience & Lo-Fi</h2>
+              <span className="cafe-card-hint">
+                Gentle audio synthesizer running locally in your browser
+              </span>
             </div>
 
             <div className="cafe-ambient-buttons">
               <button
                 type="button"
-                className={`cafe-ambient-btn ${ambientSound === 'none' ? 'is-active' : ''}`}
-                onClick={() => setAmbientSound('none')}
+                className={`cafe-ambient-btn ${audioMode === 'lofi' ? 'is-active' : ''}`}
+                onClick={() => setAudioMode('lofi')}
               >
-                Mute
+                Lo-Fi Chords
               </button>
               <button
                 type="button"
-                className={`cafe-ambient-btn ${ambientSound === 'rain' ? 'is-active' : ''}`}
-                onClick={() => setAmbientSound('rain')}
+                className={`cafe-ambient-btn ${audioMode === 'rain' ? 'is-active' : ''}`}
+                onClick={() => setAudioMode('rain')}
               >
                 Rain on Window
               </button>
               <button
                 type="button"
-                className={`cafe-ambient-btn ${ambientSound === 'chimes' ? 'is-active' : ''}`}
-                onClick={() => setAmbientSound('chimes')}
+                className={`cafe-ambient-btn ${audioMode === 'chimes' ? 'is-active' : ''}`}
+                onClick={() => setAudioMode('chimes')}
               >
                 Soft Chimes
               </button>
               <button
                 type="button"
-                className={`cafe-ambient-btn ${ambientSound === 'cafe' ? 'is-active' : ''}`}
-                onClick={() => setAmbientSound('cafe')}
+                className={`cafe-ambient-btn ${audioMode === 'cafe' ? 'is-active' : ''}`}
+                onClick={() => setAudioMode('cafe')}
               >
                 Café Murmur
+              </button>
+              <button
+                type="button"
+                className={`cafe-ambient-btn cafe-mute-btn ${audioMode === 'none' ? 'is-active' : ''}`}
+                onClick={() => setAudioMode('none')}
+              >
+                Mute
               </button>
             </div>
           </section>

@@ -29,9 +29,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  padding-bottom: 1.25rem;
+  padding-bottom: 1rem;
   border-bottom: 2px dashed #e6dbcb;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .cafe-back-btn {
@@ -103,6 +103,98 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Active Drink Buff Banner */
+.cafe-buff-banner {
+  max-width: 1040px;
+  margin: 0 auto 0.85rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #ecfdf5;
+  border: 1.5px solid #a7f3d0;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: #166534;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.06);
+}
+
+.cafe-buff-badge {
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  color: #059669;
+}
+
+.cafe-buff-name {
+  font-weight: 800;
+  color: #065f46;
+}
+
+.cafe-buff-sep {
+  color: #a7f3d0;
+}
+
+.cafe-buff-desc {
+  font-weight: 600;
+  flex: 1;
+}
+
+.cafe-buff-time {
+  font-weight: 700;
+  color: #047857;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Seating Selection Strip */
+.cafe-seat-strip {
+  max-width: 1040px;
+  margin: 0 auto 1.25rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cafe-seat-label {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.cafe-seat-options {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.cafe-seat-btn {
+  padding: 0.4rem 0.85rem;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cafe-seat-btn:hover {
+  background: #f8fafc;
+  border-color: #88cfae;
+}
+
+.cafe-seat-btn.is-active {
+  background: #88cfae;
+  border-color: #559e7c;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(80, 160, 110, 0.2);
+}
+
 /* Content Grid */
 .cafe-content-grid {
   display: grid;
@@ -158,7 +250,7 @@
 
 .cafe-drink-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.85rem;
   padding: 0.65rem 0.85rem;
   background: #fdfcf9;
@@ -186,6 +278,7 @@
   border-radius: 6px;
   border: 1.5px solid rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .cafe-drink-info {
@@ -214,9 +307,20 @@
 }
 
 .cafe-drink-desc {
-  margin: 0.2rem 0 0;
+  margin: 0.2rem 0 0.35rem;
   font-size: 0.75rem;
   color: #718096;
+}
+
+.cafe-drink-buff-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #047857;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
 }
 
 .cafe-toast-bubble {
@@ -322,7 +426,7 @@
   transform: translateY(-1px);
 }
 
-/* Ambient Sound Buttons */
+/* Ambient & Lo-Fi Sound Buttons */
 .cafe-ambient-buttons {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -349,9 +453,14 @@
 
 .cafe-ambient-btn.is-active {
   background: #eefbf3;
-  border-color: #68b28f;
+  border-color: #68b88f;
   color: #1f4e30;
   box-shadow: 0 2px 4px rgba(40, 90, 60, 0.1);
+}
+
+.cafe-mute-btn {
+  grid-column: span 2;
+  color: #64748b;
 }
 
 @media (max-width: 768px) {

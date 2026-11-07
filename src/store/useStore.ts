@@ -28,6 +28,14 @@ import {
   saveProgress,
 } from '../utils/progressSave';
 import { DEFAULT_DEBRIS } from '../utils/defaultDebris';
+import {
+  loadActiveDrinkBuff,
+  saveActiveDrinkBuff,
+  type ActiveDrinkBuff,
+  loadRoomDecor,
+  saveRoomDecor,
+  type RoomDecor,
+} from '../utils/roomDecorSave';
 import sesameMochiEggArt from '../assets/eggs/sesame-mochi-egg.png';
 
 type StudyState = 'idle' | 'studying';
@@ -46,6 +54,8 @@ const savedStudyGoal = loadStudyGoalDefault();
 const savedSoundMuted = loadSoundMuted();
 const savedLightingMode = loadLightingMode();
 const savedProgress = loadProgress();
+const savedRoomDecor = loadRoomDecor();
+const savedDrinkBuff = loadActiveDrinkBuff();
 
 type NestSlice = {
   eggProgress: number;
@@ -105,6 +115,13 @@ type Store = {
   recordStudyDay: () => void;
   evaluateBrainRot: () => void;
   buyMist: () => boolean;
+  // Café & Buffs
+  drinkBuff: ActiveDrinkBuff | null;
+  setDrinkBuff: (buff: ActiveDrinkBuff | null) => void;
+
+  // Room Customization
+  roomDecor: RoomDecor;
+  setRoomDecor: (decor: Partial<RoomDecor>) => void;
 
   // Tasks
   tasks: Task[];
@@ -191,8 +208,21 @@ export const useStore = create<Store>((set, get) => ({
       ...advanceIncubation(s, 5),
     }));
   },
+  drinkBuff: savedDrinkBuff,
+  setDrinkBuff: (buff) => {
+    saveActiveDrinkBuff(buff);
+    set({ drinkBuff: buff });
+  },
+
+  roomDecor: savedRoomDecor,
+  setRoomDecor: (partial) => {
+    const next = { ...get().roomDecor, ...partial };
+    saveRoomDecor(next);
+    set({ roomDecor: next });
+  },
+
   tickStudySecond: () => {
-    const { studyState, studySessionSeconds, studyMinutesGoal } = get();
+    const { studyState, studySessionSeconds, studyMinutesGoal, drinkBuff } = get();
     if (studyState !== 'studying') return;
     const nextSeconds = studySessionSeconds + 1;
     if (nextSeconds < 60) {
@@ -200,8 +230,24 @@ export const useStore = create<Store>((set, get) => ({
       return;
     }
     set({ studySessionSeconds: 0 });
+
+    let bonusPts = 0;
+    if (drinkBuff) {
+      if (drinkBuff.expiresAt > Date.now()) {
+        bonusPts = drinkBuff.bonusRate || 0;
+        if (drinkBuff.drinkId === 'strawberry') {
+          set((s) => ({
+            pets: s.pets.map((p) => ({ ...p, energy: Math.min(100, p.energy + 2) })),
+          }));
+        }
+      } else {
+        set({ drinkBuff: null });
+        saveActiveDrinkBuff(null);
+      }
+    }
+
     get().addStudyMinute();
-    get().addPoints(5);
+    get().addPoints(5 + bonusPts);
     get().checkGardenAccess();
     if (get().studyMinutesToday >= studyMinutesGoal) {
       set({ studyState: 'idle', studyGoalOverlay: true });
