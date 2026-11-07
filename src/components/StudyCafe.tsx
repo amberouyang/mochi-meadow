@@ -8,7 +8,7 @@ interface StudyCafeProps {
   onOpenNotebook: () => void;
 }
 
-type AudioMode = 'none' | 'lofi' | 'rain' | 'chimes' | 'cafe';
+type AudioMode = 'none' | 'lofi' | 'rain' | 'chimes' | 'waves' | 'park';
 type CafeSeat = 'window' | 'counter' | 'fireplace';
 
 interface Drink {
@@ -76,8 +76,8 @@ const DRINKS: Drink[] = [
 ];
 
 const SEAT_AMBIENCE: Record<CafeSeat, AudioMode> = {
-  window: 'rain',
-  counter: 'cafe',
+  window: 'park',
+  counter: 'waves',
   fireplace: 'chimes',
 };
 
@@ -115,7 +115,7 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
   const setDrinkBuff = useStore((s) => s.setDrinkBuff);
 
   const [activeSeat, setActiveSeat] = useState<CafeSeat>('window');
-  const [audioMode, setAudioMode] = useState<AudioMode>('rain');
+  const [audioMode, setAudioMode] = useState<AudioMode>('park');
   const [toast, setToast] = useState<string | null>(null);
   const [activeDrink, setActiveDrink] = useState<Drink>(DRINKS[0]);
   const [panelOpen, setPanelOpen] = useState(true);
@@ -137,7 +137,7 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
     setAudioMode(SEAT_AMBIENCE[seat]);
     setPanelOpen(true);
     if (seat === 'window') {
-      setToast('Window booth ready — soft rain for focus.');
+      setToast('Window booth ready — park breeze and birds outside.');
     } else if (seat === 'counter') {
       setToast('Barista counter open — pick a study drink.');
     } else {
@@ -271,27 +271,154 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
             if (timerId) window.clearTimeout(timerId);
           },
         };
-      } else if (audioMode === 'cafe') {
-        const osc1 = ctx.createOscillator();
-        const osc2 = ctx.createOscillator();
+      } else if (audioMode === 'waves') {
+        // Ocean waves — same noise path as rain, with slow swell automation
+        const bufferSize = ctx.sampleRate * 2;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        let b0 = 0,
+          b1 = 0,
+          b2 = 0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.99886 * b0 + white * 0.0555179;
+          b1 = 0.99332 * b1 + white * 0.0750759;
+          b2 = 0.969 * b2 + white * 0.153852;
+          data[i] = (b0 + b1 + b2) * 0.12;
+        }
+
+        const source = ctx.createBufferSource();
+        source.buffer = buffer;
+        source.loop = true;
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 700;
+        filter.Q.value = 0.7;
+
+        const foam = ctx.createBiquadFilter();
+        foam.type = 'highpass';
+        foam.frequency.value = 180;
+
         const gain = ctx.createGain();
-        osc1.type = 'sine';
-        osc1.frequency.value = 140;
-        osc2.type = 'triangle';
-        osc2.frequency.value = 175;
-        gain.gain.value = 0.035;
-        osc1.connect(gain);
-        osc2.connect(gain);
+        gain.gain.value = 0.22;
+
+        source.connect(filter);
+        filter.connect(foam);
+        foam.connect(gain);
         gain.connect(ctx.destination);
-        osc1.start();
-        osc2.start();
+        source.start();
+
+        let isStopped = false;
+        let swellTimer: number | null = null;
+        let phase = 0;
+
+        const tickSwell = () => {
+          if (isStopped) return;
+          phase += 0.09;
+          const swell = 0.5 + 0.5 * Math.sin(phase);
+          const now = ctx.currentTime;
+          gain.gain.cancelScheduledValues(now);
+          gain.gain.setValueAtTime(Math.max(0.05, gain.gain.value), now);
+          gain.gain.linearRampToValueAtTime(0.12 + swell * 0.3, now + 0.25);
+          filter.frequency.cancelScheduledValues(now);
+          filter.frequency.setValueAtTime(filter.frequency.value, now);
+          filter.frequency.linearRampToValueAtTime(420 + swell * 780, now + 0.25);
+          swellTimer = window.setTimeout(tickSwell, 220);
+        };
+        tickSwell();
+
         soundNodeRef.current = {
           stop: () => {
+            isStopped = true;
+            if (swellTimer) window.clearTimeout(swellTimer);
             try {
-              osc1.stop();
-              osc2.stop();
-              osc1.disconnect();
-              osc2.disconnect();
+              source.stop();
+              source.disconnect();
+            } catch {
+              /* ignore */
+            }
+          },
+        };
+      } else if (audioMode === 'park') {
+        // Soft park breeze + occasional bird chirps
+        const bufferSize = ctx.sampleRate * 2;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        let b0 = 0,
+          b1 = 0,
+          b2 = 0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.99886 * b0 + white * 0.0555179;
+          b1 = 0.99332 * b1 + white * 0.0750759;
+          b2 = 0.969 * b2 + white * 0.153852;
+          data[i] = (b0 + b1 + b2) * 0.05;
+        }
+
+        const master = ctx.createGain();
+        master.gain.value = 0.4;
+        master.connect(ctx.destination);
+
+        // Wind / leaves bed
+        const wind = ctx.createBufferSource();
+        wind.buffer = buffer;
+        wind.loop = true;
+        const windFilter = ctx.createBiquadFilter();
+        windFilter.type = 'bandpass';
+        windFilter.frequency.value = 380;
+        windFilter.Q.value = 0.6;
+        const windLow = ctx.createBiquadFilter();
+        windLow.type = 'lowpass';
+        windLow.frequency.value = 900;
+        const windGain = ctx.createGain();
+        windGain.gain.value = 0.22;
+        wind.connect(windFilter);
+        windFilter.connect(windLow);
+        windLow.connect(windGain);
+        windGain.connect(master);
+        wind.start();
+
+        let isStopped = false;
+        const timers: number[] = [];
+
+        const chirp = () => {
+          if (isStopped) return;
+          const now = ctx.currentTime;
+          const notes = 1 + Math.floor(Math.random() * 3);
+          let t = now;
+          const base = 1800 + Math.random() * 1400;
+
+          for (let i = 0; i < notes; i++) {
+            const osc = ctx.createOscillator();
+            const g = ctx.createGain();
+            osc.type = 'sine';
+            const startF = base + Math.random() * 400;
+            const endF = startF + 350 + Math.random() * 700;
+            osc.frequency.setValueAtTime(startF, t);
+            osc.frequency.linearRampToValueAtTime(endF, t + 0.07);
+            osc.frequency.linearRampToValueAtTime(startF * 0.92, t + 0.12);
+            g.gain.setValueAtTime(0.0001, t);
+            g.gain.linearRampToValueAtTime(0.055, t + 0.02);
+            g.gain.linearRampToValueAtTime(0.0001, t + 0.14);
+            osc.connect(g);
+            g.connect(master);
+            osc.start(t);
+            osc.stop(t + 0.16);
+            t += 0.11 + Math.random() * 0.08;
+          }
+
+          timers.push(window.setTimeout(chirp, 1400 + Math.random() * 3200));
+        };
+        timers.push(window.setTimeout(chirp, 600));
+
+        soundNodeRef.current = {
+          stop: () => {
+            isStopped = true;
+            for (const id of timers) window.clearTimeout(id);
+            try {
+              wind.stop();
+              wind.disconnect();
             } catch {
               /* ignore */
             }
@@ -536,10 +663,11 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
             <div className="cafe-ambience-row" aria-label="Background ambience">
               {(
                 [
+                  ['park', 'Park'],
                   ['lofi', 'Lo-fi'],
                   ['rain', 'Rain'],
                   ['chimes', 'Chimes'],
-                  ['cafe', 'Café'],
+                  ['waves', 'Waves'],
                   ['none', 'Mute'],
                 ] as [AudioMode, string][]
               ).map(([mode, label]) => (
