@@ -111,15 +111,27 @@ export function MainView() {
       </section>
 
       {panel !== 'none' && screen === 'meadow' && (
-        <div className="main-panel">
-          <div className="main-panel-scroll">
-            {panel === 'todo' && <TodoList />}
-            {panel === 'study' && <StudyBar />}
-            {panel === 'store' && <StorePanel />}
-            {panel === 'storage' && <StoragePanel />}
-            {panel === 'settings' && <SettingsPanel />}
+        <>
+          {panel === 'settings' && (
+            <div
+              className="main-panel-backdrop"
+              onClick={() => setPanel('none')}
+              aria-hidden
+            />
+          )}
+          <div className={`main-panel ${panel === 'settings' ? 'main-panel--settings' : ''}`}>
+            {panel === 'settings' ? (
+              <SettingsPanel onClose={() => setPanel('none')} />
+            ) : (
+              <div className="main-panel-scroll">
+                {panel === 'todo' && <TodoList />}
+                {panel === 'study' && <StudyBar />}
+                {panel === 'store' && <StorePanel />}
+                {panel === 'storage' && <StoragePanel />}
+              </div>
+            )}
           </div>
-        </div>
+        </>
       )}
 
       {soonToast && (

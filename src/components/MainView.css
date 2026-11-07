@@ -331,6 +331,49 @@
   --yellow: #9a6b20;
 }
 
+/* Dimmed backdrop for desktop modal dialogs */
+.main-panel-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 59;
+  background: rgba(12, 24, 16, 0.45);
+  backdrop-filter: blur(2px);
+  animation: fadeInBackdrop 0.18s ease-out;
+}
+
+@keyframes fadeInBackdrop {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Desktop Settings Window Modal */
+.main-panel--settings {
+  top: 48%;
+  bottom: auto;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(640px, calc(100vw - 2.5rem));
+  max-height: min(540px, calc(100vh - 6.5rem));
+  height: 520px;
+  border: 4px solid var(--mm-leaf);
+  border-radius: 18px;
+  box-shadow:
+    0 16px 44px rgba(10, 25, 15, 0.45),
+    0 4px 0 rgba(47, 95, 61, 0.35);
+  animation: desktopModalIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes desktopModalIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -46%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
 .main-panel-scroll {
   flex: 1 1 auto;
   min-height: 0;
