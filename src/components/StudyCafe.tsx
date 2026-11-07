@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useStore } from '../store/useStore';
 import { formatStudyMinutes } from '../utils/formatStudyTime';
+import { getSystemTimeOfDay, type TimeOfDay } from './MeadowLighting';
 import './StudyCafe.css';
 
 interface StudyCafeProps {
@@ -113,12 +114,22 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
   const playerName = useStore((s) => s.playerName);
   const drinkBuff = useStore((s) => s.drinkBuff);
   const setDrinkBuff = useStore((s) => s.setDrinkBuff);
+  const lightingMode = useStore((s) => s.lightingMode);
 
   const [activeSeat, setActiveSeat] = useState<CafeSeat>('window');
   const [audioMode, setAudioMode] = useState<AudioMode>('park');
   const [toast, setToast] = useState<string | null>(null);
   const [activeDrink, setActiveDrink] = useState<Drink>(DRINKS[0]);
   const [panelOpen, setPanelOpen] = useState(true);
+  const [systemTime, setSystemTime] = useState<TimeOfDay>(getSystemTimeOfDay);
+
+  useEffect(() => {
+    const id = window.setInterval(() => setSystemTime(getSystemTimeOfDay()), 30000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const activeLighting = lightingMode === 'auto' ? systemTime : lightingMode;
+  const isNight = activeLighting === 'night';
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const soundNodeRef = useRef<{ stop: () => void } | null>(null);
@@ -469,14 +480,16 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
   const studying = studyState === 'studying';
 
   return (
-    <div className={`study-cafe-screen seat-${activeSeat}`}>
+    <div className={`study-cafe-screen seat-${activeSeat}${isNight ? ' is-night' : ''}`}>
       <header className="cafe-top-bar">
         <button type="button" className="cafe-back-btn" onClick={onBackToMeadow}>
           ← Back to Meadow
         </button>
         <div className="cafe-brand">
           <span className="cafe-title">The Study Café</span>
-          <span className="cafe-tagline">Pick a spot · sip · study</span>
+          <span className="cafe-tagline">
+            {isNight ? 'Lamplit booths · quiet night study' : 'Pick a spot · sip · study'}
+          </span>
         </div>
         <div className="cafe-top-spacer" aria-hidden />
       </header>
@@ -494,9 +507,19 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
       <div className="cafe-stage">
         {/* Interactive café interior */}
         <div className="cafe-scene" aria-label="Study café interior">
-          <div className="cafe-scene-sky" aria-hidden />
+          <div className="cafe-scene-sky" aria-hidden>
+            {isNight && (
+              <>
+                <span className="cafe-night-star s1" />
+                <span className="cafe-night-star s2" />
+                <span className="cafe-night-star s3" />
+                <span className="cafe-night-moon" />
+              </>
+            )}
+          </div>
           <div className="cafe-scene-wall" aria-hidden />
           <div className="cafe-scene-floor" aria-hidden />
+          {isNight && <div className="cafe-night-lamps" aria-hidden />}
 
           {/* Window booth — left */}
           <button
@@ -507,8 +530,19 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
           >
             <div className="cafe-prop cafe-prop-window" aria-hidden>
               <div className="cafe-window-glass">
-                <span className="cafe-window-cloud c1" />
-                <span className="cafe-window-cloud c2" />
+                {!isNight && (
+                  <>
+                    <span className="cafe-window-cloud c1" />
+                    <span className="cafe-window-cloud c2" />
+                  </>
+                )}
+                {isNight && (
+                  <>
+                    <span className="cafe-window-star w1" />
+                    <span className="cafe-window-star w2" />
+                    <span className="cafe-window-moon" />
+                  </>
+                )}
               </div>
               <div className="cafe-window-sill" />
               <div className="cafe-booth-table" />
