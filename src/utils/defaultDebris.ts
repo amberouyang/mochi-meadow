@@ -7,7 +7,8 @@ export const DEFAULT_DEBRIS: GardenDebris[] = [
   { id: 'd2', kind: 'rock', cleared: false, assetIndex: 1, leftPct: 28, bottomPct: 26 },
   { id: 'd3', kind: 'rock', cleared: false, assetIndex: 2, leftPct: 48, bottomPct: 22 },
   { id: 'd4', kind: 'rock', cleared: false, assetIndex: 3, leftPct: 68, bottomPct: 26 },
-  { id: 'd5', kind: 'rock', cleared: false, assetIndex: 4, leftPct: 82, bottomPct: 48 },
+  // Keep clear of The Barn's footprint on the right.
+  { id: 'd5', kind: 'rock', cleared: false, assetIndex: 4, leftPct: 80, bottomPct: 28 },
 ];
 
 export function clearedDebris(): GardenDebris[] {

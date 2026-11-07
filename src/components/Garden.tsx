@@ -145,6 +145,8 @@ export function Garden({ locked, onUnlockHint, onEnterBuilding }: GardenProps) {
                         left: `${d.leftPct ?? 0}%`,
                         bottom: `${d.bottomPct ?? 0}%`,
                       }}
+                      aria-label="Clear rock debris"
+                      title="Click to clear"
                       onClick={() => {
                         clearDebris(d.id);
                         awardIntroPointsIfNeeded();
