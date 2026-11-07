@@ -320,10 +320,8 @@ export function StudyCafe({ onBackToMeadow, onOpenNotebook }: StudyCafeProps) {
           <span className="cafe-title">The Study Café</span>
           <span className="cafe-tagline">Fresh tea, lo-fi beats, and peaceful focus</span>
         </div>
-        <div className="cafe-points-pill">
-          <span className="cafe-points-label">Points</span>
-          <span className="cafe-points-num">{points}</span>
-        </div>
+        {/* Points live in the shared meadow top chips — avoid a second overlapping pill */}
+        <div className="cafe-top-spacer" aria-hidden />
       </header>
 
       {/* Active Drink Buff Ribbon */}
