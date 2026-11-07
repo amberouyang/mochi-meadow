@@ -39,6 +39,27 @@ export function SkyIconTodo() {
   );
 }
 
+export function SkyIconNotebook() {
+  return (
+    <PixelIcon>
+      {/* Book cover outline */}
+      <rect x="3" y="2" width="10" height="12" fill="currentColor" opacity="0.22" />
+      <rect x="3" y="2" width="10" height="1" fill="currentColor" opacity="0.9" />
+      <rect x="3" y="13" width="10" height="1" fill="currentColor" opacity="0.9" />
+      <rect x="3" y="2" width="2" height="12" fill="currentColor" opacity="0.9" />
+      <rect x="12" y="2" width="1" height="12" fill="currentColor" opacity="0.9" />
+      {/* Inner pages rim */}
+      <rect x="5" y="3" width="7" height="1" fill="currentColor" opacity="0.45" />
+      <rect x="5" y="12" width="7" height="1" fill="currentColor" opacity="0.45" />
+      {/* Center ribbon bookmark hanging down */}
+      <rect x="7" y="2" width="2" height="13" fill="currentColor" opacity="0.85" />
+      <rect x="7" y="14" width="2" height="1" fill="currentColor" opacity="0.65" />
+      {/* Cover embossed badge / star */}
+      <rect x="9" y="6" width="2" height="2" fill="currentColor" opacity="0.5" />
+    </PixelIcon>
+  );
+}
+
 export function SkyIconStudy() {
   return (
     <PixelIcon>

@@ -1,0 +1,698 @@
+/* Stardew Valley & Fantage-inspired Study Notebook Modal */
+
+.notebook-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  background: rgba(18, 12, 8, 0.65);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: notebook-fade-in 0.15s ease-out;
+}
+
+@keyframes notebook-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.notebook-frame {
+  position: relative;
+  width: 100%;
+  max-width: 660px;
+  max-height: calc(100vh - 4rem);
+  display: flex;
+  flex-direction: column;
+  animation: notebook-slide-up 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes notebook-slide-up {
+  from {
+    transform: translateY(12px) scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Stardew Valley Hanging Top Tabs */
+.notebook-tabs-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.35rem;
+  padding: 0 1.25rem;
+  margin-bottom: -4px;
+  z-index: 2;
+  position: relative;
+}
+
+.notebook-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.1rem 0.65rem;
+  background: #c98a4a;
+  border: 3px solid #4a270f;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  color: #3b1d09;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: inset 0 2px 0 rgba(255, 235, 195, 0.55), inset 0 -2px 0 rgba(0, 0, 0, 0.12);
+  transition: transform 0.1s ease, background 0.1s ease;
+  user-select: none;
+}
+
+.notebook-tab:hover {
+  background: #db9d5e;
+  transform: translateY(-2px);
+}
+
+.notebook-tab.is-active {
+  background: #faefd8;
+  color: #381e0b;
+  border-color: #4a270f;
+  box-shadow: inset 0 2px 0 #ffffff, 0 4px 0 #faefd8;
+  padding-bottom: 0.85rem;
+  transform: translateY(0);
+}
+
+.notebook-tab-stitch {
+  width: 6px;
+  height: 6px;
+  background: #4a270f;
+  border-radius: 1px;
+  opacity: 0.45;
+}
+
+.notebook-tab.is-active .notebook-tab-stitch {
+  background: #96531f;
+  opacity: 0.8;
+}
+
+/* Stardew Red Close Button */
+.notebook-close-btn {
+  margin-left: auto;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #c53829;
+  border: 3px solid #4a150e;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: inset 0 2px 0 #ef7b6b, inset 0 -2px 0 #731c12, 0 3px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.1s ease, filter 0.1s ease;
+  margin-bottom: 4px;
+}
+
+.notebook-close-btn:hover {
+  filter: brightness(1.1);
+  transform: scale(1.05);
+}
+
+.notebook-close-btn:active {
+  transform: scale(0.95);
+}
+
+/* Parchment Page Interior */
+.notebook-parchment {
+  position: relative;
+  background: #faefd8;
+  border: 4px solid #4a270f;
+  border-radius: 6px;
+  padding: 1.5rem 1.75rem;
+  box-shadow:
+    inset 0 0 0 3px #dfb175,
+    inset 0 0 20px rgba(138, 77, 27, 0.12),
+    0 12px 30px rgba(0, 0, 0, 0.45);
+  color: #3d2311;
+  overflow-y: auto;
+  max-height: calc(100vh - 7rem);
+}
+
+/* Section Header */
+.notebook-section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px dashed #d5a973;
+  margin-bottom: 1.25rem;
+}
+
+.notebook-heading {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #4a270f;
+  letter-spacing: -0.01em;
+}
+
+.notebook-subheading {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  color: #7b4f2c;
+  line-height: 1.4;
+}
+
+.notebook-points-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  background: #eed5b0;
+  border: 2px solid #996232;
+  border-radius: 4px;
+  padding: 0.35rem 0.65rem;
+  min-width: 90px;
+}
+
+.notebook-points-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #704422;
+  font-weight: 700;
+}
+
+.notebook-points-val {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #3d2311;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Pane Layout */
+.notebook-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Timer Hero */
+.notebook-timer-hero {
+  background: #f4e3c3;
+  border: 2px solid #b87c42;
+  border-radius: 6px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  text-align: center;
+  box-shadow: inset 0 2px 4px rgba(74, 39, 15, 0.08);
+}
+
+.notebook-digits-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.notebook-digits {
+  font-size: 3.25rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: #381c09;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-shadow: 1px 1px 0 #fff;
+}
+
+.notebook-digits-unit {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8c572b;
+}
+
+.notebook-timer-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.notebook-status-tag {
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+}
+
+.notebook-status-tag.is-studying {
+  background: #c3e2bb;
+  color: #1f4a18;
+  border: 1px solid #7da874;
+}
+
+.notebook-status-tag.is-complete {
+  background: #d6e8b7;
+  color: #2e4d0e;
+  border: 1px solid #94b568;
+}
+
+.notebook-status-tag.is-paused {
+  background: #fde6aa;
+  color: #5f3e06;
+  border: 1px solid #d49f3e;
+}
+
+.notebook-status-tag.is-ready {
+  background: #eed8ba;
+  color: #633919;
+  border: 1px solid #b38555;
+}
+
+.notebook-timer-sub {
+  font-size: 0.75rem;
+  color: #83552f;
+}
+
+.notebook-main-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 180px;
+  padding: 0.65rem 1.4rem;
+  background: #5b8c3d;
+  color: #ffffff;
+  border: 2px solid #284417;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: inset 0 2px 0 #8dc56b, inset 0 -2px 0 #2e501a, 0 3px 6px rgba(0, 0, 0, 0.18);
+  transition: transform 0.1s ease, filter 0.1s ease;
+}
+
+.notebook-main-cta:hover:not(:disabled) {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.notebook-main-cta:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.notebook-main-cta.is-stop {
+  background: #ba4737;
+  border-color: #55160d;
+  box-shadow: inset 0 2px 0 #e27364, inset 0 -2px 0 #6e1f13, 0 3px 6px rgba(0, 0, 0, 0.18);
+}
+
+.notebook-main-cta:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  filter: grayscale(0.5);
+}
+
+/* Progress bar */
+.notebook-progress-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.notebook-progress-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #6d4220;
+}
+
+.notebook-progress-track {
+  width: 100%;
+  height: 14px;
+  background: #dfc49e;
+  border: 2px solid #6c3b16;
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.2);
+}
+
+.notebook-progress-fill {
+  height: 100%;
+  background: linear-gradient(180deg, #8dc56b 0%, #5b8c3d 100%);
+  border-right: 1px solid #36591f;
+  transition: width 0.3s ease;
+}
+
+/* Goal controls row */
+.notebook-goal-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  background: #f7e8ce;
+  border: 2px dashed #cba06c;
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+.notebook-field-title {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #5c3517;
+  margin-bottom: 0.45rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.notebook-field-group {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.notebook-num-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #7b4e2b;
+}
+
+.notebook-num-input input {
+  width: 72px;
+  padding: 0.35rem 0.5rem;
+  background: #fffdf8;
+  border: 2px solid #996232;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #381c09;
+  text-align: center;
+}
+
+.notebook-num-input input:focus {
+  outline: none;
+  border-color: #5b8c3d;
+  box-shadow: 0 0 0 2px rgba(91, 140, 61, 0.3);
+}
+
+.notebook-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.notebook-preset-btn {
+  padding: 0.35rem 0.65rem;
+  background: #faefd8;
+  border: 2px solid #ab7542;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #4f2c12;
+  cursor: pointer;
+  transition: background 0.1s ease, transform 0.1s ease;
+}
+
+.notebook-preset-btn:hover {
+  background: #ffffff;
+  transform: translateY(-1px);
+}
+
+.notebook-cozy-note {
+  background: #eef4e2;
+  border: 2px solid #97ba74;
+  border-radius: 4px;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.8rem;
+  color: #274716;
+  line-height: 1.4;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.notebook-note-title {
+  font-weight: 800;
+}
+
+/* TAB 2: TASKS CHECKLIST */
+.notebook-task-entry {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.notebook-task-input {
+  flex: 1;
+  padding: 0.55rem 0.85rem;
+  background: #fffdf8;
+  border: 2px solid #8e582b;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: #381c09;
+}
+
+.notebook-task-input:focus {
+  outline: none;
+  border-color: #5b8c3d;
+  box-shadow: 0 0 0 2px rgba(91, 140, 61, 0.25);
+}
+
+.notebook-task-add-btn {
+  padding: 0.55rem 1.15rem;
+  background: #c98a4a;
+  border: 2px solid #4a270f;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #381c09;
+  cursor: pointer;
+  box-shadow: inset 0 2px 0 #f4caa1, inset 0 -2px 0 #7b4317;
+  transition: filter 0.1s ease, transform 0.1s ease;
+  white-space: nowrap;
+}
+
+.notebook-task-add-btn:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.notebook-tasks-scroll {
+  max-height: 280px;
+  overflow-y: auto;
+  border: 2px solid #d5a973;
+  border-radius: 4px;
+  background: #fbf5e6;
+  padding: 0.4rem;
+}
+
+.notebook-task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.notebook-task-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0.65rem;
+  background: #faefd8;
+  border: 1px solid #dfc19c;
+  border-radius: 3px;
+  transition: background 0.1s ease;
+}
+
+.notebook-task-row:hover {
+  background: #fdf7ec;
+}
+
+.notebook-task-row.is-done {
+  opacity: 0.65;
+  background: #eedfc7;
+}
+
+.notebook-task-label {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex: 1;
+  cursor: pointer;
+}
+
+.notebook-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: #5b8c3d;
+  cursor: pointer;
+}
+
+.notebook-task-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #3d2311;
+  word-break: break-word;
+}
+
+.notebook-task-row.is-done .notebook-task-text {
+  text-decoration: line-through;
+  color: #7d593d;
+}
+
+.notebook-task-pts {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #5b8c3d;
+  background: #eef6e4;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  border: 1px solid #bed69c;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.notebook-task-del-btn {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: #9c6742;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.1s ease, background 0.1s ease;
+}
+
+.notebook-task-del-btn:hover {
+  color: #c53829;
+  background: #fae1dd;
+  border-color: #e59d95;
+}
+
+.notebook-empty-tasks {
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.notebook-empty-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #532d13;
+}
+
+.notebook-empty-sub {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  color: #8c5d39;
+}
+
+.notebook-tasks-footer {
+  font-size: 0.75rem;
+  color: #83552f;
+  text-align: right;
+}
+
+/* TAB 3: LOG & STREAK */
+.notebook-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.85rem;
+}
+
+.notebook-stat-card {
+  background: #f4e3c3;
+  border: 2px solid #b87c42;
+  border-radius: 5px;
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.notebook-stat-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #7b4f2c;
+}
+
+.notebook-stat-value {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #381c09;
+  font-variant-numeric: tabular-nums;
+}
+
+.notebook-stat-sub {
+  font-size: 0.75rem;
+  color: #885c37;
+}
+
+.notebook-lore-box {
+  background: #fbf5e6;
+  border: 2px dashed #c99b64;
+  border-radius: 6px;
+  padding: 1rem 1.15rem;
+}
+
+.notebook-lore-title {
+  margin: 0 0 0.4rem;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #4a270f;
+}
+
+.notebook-lore-text {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #633f24;
+}
+
+@media (max-width: 600px) {
+  .notebook-goal-row {
+    grid-template-columns: 1fr;
+  }
+  .notebook-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  .notebook-digits {
+    font-size: 2.5rem;
+  }
+  .notebook-tabs-bar {
+    padding: 0 0.5rem;
+  }
+  .notebook-tab {
+    padding: 0.45rem 0.65rem 0.55rem;
+    font-size: 0.75rem;
+  }
+}

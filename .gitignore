@@ -4,3 +4,8 @@ dist/
 *.log
 .env
 .env.local
+public/assets/aistudio/
+assets/aistudio/
+.reference_screenshots/
+
+

@@ -2,11 +2,10 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useStore } from '../store/useStore';
 import { getCalendarSeason } from '../utils/calendarSeason';
 import { formatStudyMinutes } from '../utils/formatStudyTime';
-import { TodoList } from './TodoList';
-import { StudyBar } from './StudyBar';
 import { StudyTicker } from './StudyTicker';
 import { Garden } from './Garden';
 import { EggSanctuary } from './EggSanctuary';
+import { NotebookModal } from './NotebookModal';
 import { StorePanel } from './StorePanel';
 import { StoragePanel } from './StoragePanel';
 import { SettingsPanel } from './SettingsPanel';
@@ -15,15 +14,14 @@ import {
   SkyIconEgg,
   SkyIconFriends,
   SkyIconGear,
+  SkyIconNotebook,
   SkyIconRooms,
   SkyIconStorage,
   SkyIconStore,
-  SkyIconStudy,
-  SkyIconTodo,
 } from './SkyHudPixelIcons';
 import './MainView.css';
 
-type Panel = 'none' | 'todo' | 'study' | 'store' | 'storage' | 'settings';
+type Panel = 'none' | 'notebook' | 'store' | 'storage' | 'settings';
 type Screen = 'meadow' | 'nest';
 
 export function MainView() {
@@ -49,6 +47,19 @@ export function MainView() {
   useEffect(() => {
     evaluateBrainRot();
   }, [evaluateBrainRot]);
+
+  const [notebookTab, setNotebookTab] = useState<'timer' | 'tasks' | 'log'>('timer');
+
+  const openNotebook = (tab: 'timer' | 'tasks' | 'log' = 'timer') => {
+    setSoonToast(null);
+    setScreen('meadow');
+    if (panel === 'notebook' && notebookTab === tab) {
+      setPanel('none');
+    } else {
+      setNotebookTab(tab);
+      setPanel('notebook');
+    }
+  };
 
   const openPanel = (next: Panel) => {
     setSoonToast(null);
@@ -110,7 +121,11 @@ export function MainView() {
         )}
       </section>
 
-      {panel !== 'none' && screen === 'meadow' && (
+      {panel === 'notebook' && screen === 'meadow' && (
+        <NotebookModal onClose={() => setPanel('none')} initialTab={notebookTab} />
+      )}
+
+      {panel !== 'none' && panel !== 'notebook' && screen === 'meadow' && (
         <>
           {panel === 'settings' && (
             <div
@@ -124,8 +139,6 @@ export function MainView() {
               <SettingsPanel onClose={() => setPanel('none')} />
             ) : (
               <div className="main-panel-scroll">
-                {panel === 'todo' && <TodoList />}
-                {panel === 'study' && <StudyBar />}
                 {panel === 'store' && <StorePanel />}
                 {panel === 'storage' && <StoragePanel />}
               </div>
@@ -170,23 +183,14 @@ export function MainView() {
           <div className="main-dock-group" aria-label="Study tools">
             <button
               type="button"
-              className={`main-dock-btn ${panel === 'todo' ? 'is-active' : ''}`}
-              onClick={() => openPanel('todo')}
+              className={`main-dock-btn ${panel === 'notebook' ? 'is-active' : ''}`}
+              onClick={() => openNotebook('timer')}
+              title="Open Study Notebook"
             >
               <span className="main-dock-icon">
-                <SkyIconTodo />
+                <SkyIconNotebook />
               </span>
-              <span className="main-dock-label">Tasks</span>
-            </button>
-            <button
-              type="button"
-              className={`main-dock-btn ${panel === 'study' ? 'is-active' : ''}`}
-              onClick={() => openPanel('study')}
-            >
-              <span className="main-dock-icon">
-                <SkyIconStudy />
-              </span>
-              <span className="main-dock-label">Study</span>
+              <span className="main-dock-label">Notebook</span>
             </button>
             <div className="main-dock-btn-wrap">
               <button
@@ -229,7 +233,20 @@ export function MainView() {
             </button>
           </div>
 
-          <div className="main-dock-center" aria-live="polite">
+          <div
+            className="main-dock-center"
+            aria-live="polite"
+            onClick={() => openNotebook('timer')}
+            title="Click to open Focus Timer in Notebook"
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                openNotebook('timer');
+              }
+            }}
+          >
             <span className="main-dock-focus-name">{playerName || 'Friend'}</span>
             <span className="main-dock-focus-status">{focusLabel}</span>
             <span className="main-dock-focus-time">
