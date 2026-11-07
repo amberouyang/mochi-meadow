@@ -4,7 +4,8 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 6;
+  /* Under the player avatar; labels/hotspots still clickable via pointer-events */
+  z-index: 4;
 }
 
 .meadow-building-spot {
