@@ -9,23 +9,23 @@
   overflow: hidden;
   background: #2a4530;
 
-  /* Day dock: no colored tray — chips sit directly on the grass */
+  /* Day dock: no colored tray — solid chips sit on the grass */
   --dock-bg: transparent;
   --dock-edge: transparent;
-  --dock-btn: rgba(255, 252, 245, 0.52);
-  --dock-btn-active: rgba(255, 252, 245, 0.82);
+  --dock-btn: #fffaf3;
+  --dock-btn-active: #e7f4e6;
   --dock-ink: #1f3326;
   --dock-muted: #2d4534;
 }
 
 .main-view[data-season='summer'] {
-  --dock-btn: rgba(255, 252, 245, 0.5);
-  --dock-btn-active: rgba(232, 248, 236, 0.8);
+  --dock-btn: #fffaf3;
+  --dock-btn-active: #dff3e6;
 }
 
 .main-view[data-season='autumn'] {
-  --dock-btn: rgba(255, 248, 240, 0.5);
-  --dock-btn-active: rgba(255, 236, 214, 0.8);
+  --dock-btn: #fff8f0;
+  --dock-btn-active: #ffe8d2;
   --dock-ink: #3a2818;
   --dock-muted: #5a4030;
 }
@@ -301,9 +301,7 @@
   justify-content: center;
   gap: 0.15rem;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(20, 40, 25, 0.14);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 2px 6px rgba(20, 40, 25, 0.16);
   transition:
     transform 0.12s ease,
     filter 0.12s ease,
@@ -315,7 +313,7 @@
 .main-dock-btn:hover {
   transform: translateY(-1px);
   border-color: rgba(45, 80, 55, 0.4);
-  background: rgba(255, 252, 245, 0.72);
+  background: #ffffff;
   box-shadow: 0 3px 8px rgba(20, 40, 25, 0.18);
 }
 
@@ -365,7 +363,7 @@
   padding: 0.4rem 0.85rem;
   border-radius: 999px;
   border: 1px solid rgba(45, 70, 50, 0.22);
-  background: rgba(255, 252, 245, 0.48);
+  background: #fffaf3;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -375,14 +373,12 @@
   white-space: nowrap;
   overflow: hidden;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(20, 40, 25, 0.14);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 2px 6px rgba(20, 40, 25, 0.16);
   transition: background 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
 }
 
 .main-dock-center:hover {
-  background: rgba(255, 252, 245, 0.72);
+  background: #ffffff;
   border-color: rgba(45, 80, 55, 0.4);
   transform: translateY(-1px);
 }
