@@ -3,6 +3,7 @@ const STORAGE_KEY = 'mochiMeadow.studyStreak.v2';
 export type StudyStreakSave = {
   lastStudyDate: string | null;
   brainRotActive: boolean;
+  streak: number;
 };
 
 export function todayKey(date = new Date()): string {
@@ -22,14 +23,15 @@ export function calendarDaysBetween(fromKey: string, toKey: string): number {
 export function loadStudyStreak(): StudyStreakSave {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { lastStudyDate: null, brainRotActive: false };
+    if (!raw) return { lastStudyDate: null, brainRotActive: false, streak: 0 };
     const parsed = JSON.parse(raw) as Partial<StudyStreakSave>;
     return {
       lastStudyDate: typeof parsed.lastStudyDate === 'string' ? parsed.lastStudyDate : null,
       brainRotActive: Boolean(parsed.brainRotActive),
+      streak: typeof parsed.streak === 'number' && parsed.streak >= 0 ? Math.floor(parsed.streak) : 0,
     };
   } catch {
-    return { lastStudyDate: null, brainRotActive: false };
+    return { lastStudyDate: null, brainRotActive: false, streak: 0 };
   }
 }
 

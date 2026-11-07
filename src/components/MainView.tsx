@@ -10,6 +10,7 @@ import { CozyRoom } from './CozyRoom';
 import { NotebookModal, type NotebookTab } from './NotebookModal';
 import { type MeadowBuildingId } from './MeadowBuildings';
 import { getCaretakerRank } from '../utils/playerProfileSave';
+import { MILESTONES } from '../utils/gamification';
 import { StorePanel } from './StorePanel';
 import { StoragePanel } from './StoragePanel';
 import { SettingsPanel } from './SettingsPanel';
@@ -44,6 +45,8 @@ export function MainView() {
   const studyState = useStore((s) => s.studyState);
   const studyGoalOverlay = useStore((s) => s.studyGoalOverlay);
   const clearStudyGoalOverlay = useStore((s) => s.clearStudyGoalOverlay);
+  const milestoneNotice = useStore((s) => s.milestoneNotice);
+  const dismissMilestoneNotice = useStore((s) => s.dismissMilestoneNotice);
   const playerName = useStore((s) => s.playerName);
   const playerProfile = useStore((s) => s.playerProfile);
   const evaluateBrainRot = useStore((s) => s.evaluateBrainRot);
@@ -207,6 +210,17 @@ export function MainView() {
               Close
             </button>
           </div>
+        </div>
+      )}
+
+      {milestoneNotice && (
+        <div className="main-milestone-toast" role="status">
+          <span className="main-milestone-icon" aria-hidden>{MILESTONES[milestoneNotice].icon}</span>
+          <div>
+            <strong>Milestone unlocked: {MILESTONES[milestoneNotice].title}</strong>
+            <span>{MILESTONES[milestoneNotice].note}</span>
+          </div>
+          <button type="button" onClick={dismissMilestoneNotice} aria-label="Dismiss milestone">×</button>
         </div>
       )}
 

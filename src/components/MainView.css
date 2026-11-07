@@ -514,6 +514,8 @@
   cursor: pointer;
 }
 
+.main-milestone-toast { position: fixed; z-index: 90; right: 1rem; bottom: 6.2rem; display: flex; align-items: center; gap: .65rem; width: min(330px, calc(100vw - 2rem)); padding: .75rem .85rem; border: 3px solid #9a7090; border-radius: 15px; background: linear-gradient(135deg,#fff3df,#f4ddf3); box-shadow: 0 6px 0 rgba(102,68,85,.2), var(--mm-shadow); color: #553a49; animation: milestone-pop .28s ease-out; }.main-milestone-icon { font-size: 1.7rem; }.main-milestone-toast div { display: grid; gap: .14rem; flex: 1; }.main-milestone-toast strong { font-size: .78rem; }.main-milestone-toast span:not(.main-milestone-icon) { font-size: .67rem; line-height: 1.25; }.main-milestone-toast button { border: 0; background: transparent; color: #76526b; font-size: 1.2rem; cursor: pointer; }@keyframes milestone-pop { from { transform: translateY(14px) scale(.96); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+
 @media (max-width: 720px) {
   .main-dock-center {
     display: none;

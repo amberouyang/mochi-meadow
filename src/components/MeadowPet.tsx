@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Pet } from '../types';
 import { MochiCloud } from './MochiCloud';
+import { petLevelProgress } from '../utils/gamification';
 
 type MeadowPetProps = {
   pet: Pet;
@@ -138,6 +139,7 @@ export function MeadowPet({
   const breatheDuration = `${2.4 + (animOffset % 3) * 0.35}s`;
   const breatheDelay = `${(animOffset * 0.45) % 1.6}s`;
   const moodClass = sick ? 'pet-sad' : `pet-${pet.mood}`;
+  const levelProgress = petLevelProgress(pet);
 
   return (
     <div
@@ -177,6 +179,10 @@ export function MeadowPet({
             <p className="meadow-pet-sick-note">I&apos;m sick :(</p>
           ) : (
             <>
+              <p className="meadow-pet-level">Lv. {pet.level} · {levelProgress.experience}/{levelProgress.required} sparkle</p>
+              <div className="meadow-pet-xp" aria-label={`${levelProgress.percent}% to next level`}>
+                <div style={{ width: `${levelProgress.percent}%` }} />
+              </div>
               <div className="meadow-pet-energy" aria-label={`Energy ${pet.energy}%`}>
                 <div className="meadow-pet-energy-bar" style={{ width: `${pet.energy}%` }} />
               </div>

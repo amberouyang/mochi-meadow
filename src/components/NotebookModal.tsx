@@ -48,6 +48,7 @@ export function NotebookModal({ onClose, initialTab = 'timer' }: NotebookModalPr
   const setStudyMinutesGoal = useStore((s) => s.setStudyMinutesGoal);
   const setStudyState = useStore((s) => s.setStudyState);
   const lastStudyDate = useStore((s) => s.lastStudyDate);
+  const studyStreak = useStore((s) => s.studyStreak);
   const incubatingEgg = useStore((s) => s.incubatingEgg);
   const eggProgress = useStore((s) => s.eggProgress);
   const playerProfile = useStore((s) => s.playerProfile);
@@ -484,9 +485,9 @@ export function NotebookModal({ onClose, initialTab = 'timer' }: NotebookModalPr
                 <div className="notebook-stat-card">
                   <span className="notebook-stat-label">Streak Status</span>
                   <span className="notebook-stat-value">
-                    {lastStudyDate ? lastStudyDate : 'Not started'}
+                    {studyStreak ? `${studyStreak} day${studyStreak === 1 ? '' : 's'}` : 'Not started'}
                   </span>
-                  <span className="notebook-stat-sub">{streakStatus}</span>
+                  <span className="notebook-stat-sub">{lastStudyDate ? streakStatus : 'A gentle start is still a start'}</span>
                 </div>
 
                 <div className="notebook-stat-card">

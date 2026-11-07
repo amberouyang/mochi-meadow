@@ -11,6 +11,8 @@ export type Pet = {
   mood: 'happy' | 'sad' | 'neutral';
   energy: number;
   level: number;
+  /** Gentle growth earned while their caretaker studies. */
+  experience: number;
 };
 
 export type GardenAccess = 'locked' | 'unlocked';

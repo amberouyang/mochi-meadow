@@ -12,7 +12,9 @@ import {
   saveStudyStreak,
   shouldActivateBrainRot,
   todayKey,
+  calendarDaysBetween,
 } from '../utils/studyCalendar';
+import { levelPet, type MilestoneId } from '../utils/gamification';
 import { loadStudyGoalDefault, saveStudyGoalDefault } from '../utils/studyGoalDefault';
 import { loadSoundMuted, saveSoundMuted } from '../utils/soundSettings';
 import {
@@ -93,6 +95,7 @@ function advanceIncubation(s: NestSlice, delta: number): Partial<NestSlice> {
           mood: 'happy' as const,
           energy: 80,
           level: 1,
+          experience: 0,
         },
       ];
 
@@ -113,6 +116,7 @@ type Store = {
   /** Show “goal reached” overlay when the timer hits the daily goal. */
   studyGoalOverlay: boolean;
   lastStudyDate: string | null;
+  studyStreak: number;
   brainRotActive: boolean;
   setStudyMinutesGoal: (n: number) => void;
   setStudyMinutesToday: (n: number) => void;
@@ -124,6 +128,8 @@ type Store = {
   recordStudyDay: () => void;
   evaluateBrainRot: () => void;
   buyMist: () => boolean;
+  milestoneNotice: MilestoneId | null;
+  dismissMilestoneNotice: () => void;
   // Café & Buffs
   drinkBuff: ActiveDrinkBuff | null;
   setDrinkBuff: (buff: ActiveDrinkBuff | null) => void;
@@ -205,6 +211,7 @@ export const useStore = create<Store>((set, get) => ({
   studyState: 'idle',
   studyGoalOverlay: false,
   lastStudyDate: streakSave.lastStudyDate,
+  studyStreak: streakSave.streak,
   brainRotActive: streakSave.brainRotActive,
   setStudyMinutesGoal: (n) => {
     const next = Math.max(0, n);
@@ -220,11 +227,25 @@ export const useStore = create<Store>((set, get) => ({
       ...currentProf,
       totalStudyMinutesAllTime: nextTotalMins,
     };
-    savePlayerProfile(updatedProf);
+    const beforePets = get().pets;
+    const grownPets = beforePets.map((pet) => levelPet(pet, 2));
+    const leveledToThree = grownPets.some((pet, index) => pet.level >= 3 && beforePets[index].level < 3);
+    const nextBadges = new Set(currentProf.unlockedBadges);
+    const newMilestone: MilestoneId | null =
+      !nextBadges.has('first_focus') ? 'first_focus'
+        : nextTotalMins >= 30 && !nextBadges.has('steady_sprout') ? 'steady_sprout'
+        : nextTotalMins >= 120 && !nextBadges.has('cozy_scholar') ? 'cozy_scholar'
+        : leveledToThree && !nextBadges.has('pet_pal') ? 'pet_pal'
+        : null;
+    if (newMilestone) nextBadges.add(newMilestone);
+    const profileWithBadges = { ...updatedProf, unlockedBadges: [...nextBadges] };
+    savePlayerProfile(profileWithBadges);
     set((s) => ({
       studyMinutesToday: s.studyMinutesToday + 1,
-      playerProfile: updatedProf,
-      ...advanceIncubation(s, 5),
+      playerProfile: profileWithBadges,
+      pets: grownPets,
+      milestoneNotice: newMilestone,
+      ...advanceIncubation({ ...s, pets: grownPets }, 5),
     }));
   },
   drinkBuff: savedDrinkBuff,
@@ -279,13 +300,15 @@ export const useStore = create<Store>((set, get) => ({
   clearStudyGoalOverlay: () => set({ studyGoalOverlay: false }),
   recordStudyDay: () => {
     const today = todayKey();
-    const { lastStudyDate, brainRotActive } = get();
+    const { lastStudyDate, brainRotActive, studyStreak } = get();
     if (lastStudyDate === today) return;
-    set({ lastStudyDate: today });
-    saveStudyStreak({ lastStudyDate: today, brainRotActive });
+    const continued = lastStudyDate && calendarDaysBetween(lastStudyDate, today) === 1;
+    const nextStreak = continued ? studyStreak + 1 : 1;
+    set({ lastStudyDate: today, studyStreak: nextStreak });
+    saveStudyStreak({ lastStudyDate: today, brainRotActive, streak: nextStreak });
   },
   evaluateBrainRot: () => {
-    const { lastStudyDate, brainRotActive } = get();
+    const { lastStudyDate, brainRotActive, studyStreak } = get();
     const missedDay = shouldActivateBrainRot(lastStudyDate);
     if (!missedDay && !brainRotActive) return;
 
@@ -298,7 +321,7 @@ export const useStore = create<Store>((set, get) => ({
         energy: nextRot ? Math.min(p.energy, 25) : p.energy,
       })),
     }));
-    saveStudyStreak({ lastStudyDate, brainRotActive: nextRot });
+    saveStudyStreak({ lastStudyDate, brainRotActive: nextRot, streak: studyStreak });
   },
   buyMist: () => {
     const mist = get().storeCareItems.find((i) => i.type === 'mist');
@@ -312,7 +335,7 @@ export const useStore = create<Store>((set, get) => ({
         energy: Math.min(100, p.energy + 30),
       })),
     }));
-    saveStudyStreak({ lastStudyDate: get().lastStudyDate, brainRotActive: false });
+    saveStudyStreak({ lastStudyDate: get().lastStudyDate, brainRotActive: false, streak: get().studyStreak });
     return true;
   },
 
@@ -326,12 +349,19 @@ export const useStore = create<Store>((set, get) => ({
     const becomingDone = task && !task.done;
     if (becomingDone) {
       const currentProf = get().playerProfile;
+      const nextCompleted = (currentProf.totalTasksCompleted || 0) + 1;
+      const badges = new Set(currentProf.unlockedBadges);
+      const earnedTaskChampion = nextCompleted >= 3 && !badges.has('task_champion');
+      if (earnedTaskChampion) badges.add('task_champion');
       const updatedProf: PlayerProfile = {
         ...currentProf,
-        totalTasksCompleted: (currentProf.totalTasksCompleted || 0) + 1,
+        totalTasksCompleted: nextCompleted,
+        unlockedBadges: [...badges],
       };
       savePlayerProfile(updatedProf);
-      set({ playerProfile: updatedProf });
+      set(earnedTaskChampion
+        ? { playerProfile: updatedProf, milestoneNotice: 'task_champion' }
+        : { playerProfile: updatedProf });
     }
     set((s) => ({
       tasks: s.tasks.map((t) => (t.id === id ? { ...t, done: !t.done } : t)),
@@ -366,6 +396,9 @@ export const useStore = create<Store>((set, get) => ({
       pets: s.pets.map((p) => (p.id === id ? { ...p, name } : p)),
       lastEggChoiceName: name,
     })),
+
+  milestoneNotice: null,
+  dismissMilestoneNotice: () => set({ milestoneNotice: null }),
 
   gardenUnlocked: false,
   unlockGarden: () => set({ gardenUnlocked: true }),
@@ -521,6 +554,7 @@ export const useStore = create<Store>((set, get) => ({
       studyState: 'idle',
       studyGoalOverlay: false,
       lastStudyDate: null,
+      studyStreak: 0,
       brainRotActive: false,
       tasks: DEFAULT_TASKS.map((t) => ({ ...t })),
       points: 0,
@@ -536,7 +570,7 @@ export const useStore = create<Store>((set, get) => ({
       welcomeBonusClaimed: false,
       playerName: '',
     });
-    saveStudyStreak({ lastStudyDate: null, brainRotActive: false });
+    saveStudyStreak({ lastStudyDate: null, brainRotActive: false, streak: 0 });
     clearProgressSave();
     try {
       localStorage.removeItem('mochiMeadow.meadowIntro.v1');

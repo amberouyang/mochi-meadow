@@ -32,7 +32,7 @@ export const DEFAULT_TASKS: Task[] = [
 ];
 
 export const DEFAULT_PETS: Pet[] = [
-  { id: 'm1', name: 'Mochi', mood: 'neutral', energy: 50, level: 1 },
+  { id: 'm1', name: 'Mochi', mood: 'neutral', energy: 50, level: 1, experience: 0 },
 ];
 
 const DEFAULTS: ProgressSave = {
@@ -93,12 +93,17 @@ function parsePet(value: unknown): Pet | null {
     typeof value.level === 'number' && Number.isFinite(value.level)
       ? Math.max(1, Math.floor(value.level))
       : 1;
+  const experience =
+    typeof value.experience === 'number' && Number.isFinite(value.experience)
+      ? Math.max(0, Math.floor(value.experience))
+      : 0;
   return {
     id: value.id,
     name: value.name.trim().slice(0, 24),
     mood: parseMood(value.mood),
     energy,
     level,
+    experience,
   };
 }
 

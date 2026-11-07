@@ -818,6 +818,9 @@
   white-space: nowrap;
 }
 
+.meadow-pet-level { margin: 0 0 .28rem; color: #5d4636; font-size: .64rem; font-weight: 800; white-space: nowrap; }
+.meadow-pet-xp { height: 5px; margin: 0 0 .38rem; overflow: hidden; border-radius: 99px; background: #eadcc4; }.meadow-pet-xp > div { height: 100%; border-radius: inherit; background: #b590df; transition: width .25s ease; }
+
 .meadow-pet-bubble {
   position: absolute;
   left: 50%;
