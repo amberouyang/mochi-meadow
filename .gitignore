@@ -4,6 +4,7 @@ dist/
 *.log
 .env
 .env.local
+.cursor/
 public/assets/aistudio/
 assets/aistudio/
 .reference_screenshots/

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import meadowUrl from '../assets/meadow-background.png';
+import meadowUrl from '../assets/meadow-background.jpg';
 
 type MeadowPanBackgroundProps = {
   /** Rendered inside the panning layer so decor moves with the meadow art. */

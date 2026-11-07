@@ -45,19 +45,7 @@
   height: 100%;
   display: block;
   object-fit: cover;
-  object-position: center 68%;
-  image-rendering: pixelated;
-  pointer-events: none;
-  user-select: none;
-}
-
-.meadow-game-backdrop {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  display: block;
+  object-position: center center;
   image-rendering: pixelated;
   pointer-events: none;
   user-select: none;
@@ -184,7 +172,7 @@
   overflow: hidden;
   /* Fallback fill if the pan layer is still measuring */
   background-color: #2a4530;
-  background-image: url('../assets/meadow-background.png');
+  background-image: url('../assets/meadow-background.jpg');
   background-size: cover;
   background-position: center;
 }

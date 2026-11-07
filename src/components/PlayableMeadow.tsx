@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useStore } from '../store/useStore';
-import meadowUrl from '../assets/meadow-background.png';
+import meadowUrl from '../assets/meadow-background.jpg';
 import { MeadowLighting } from './MeadowLighting';
 
 type DustPuffData = {
@@ -67,93 +67,8 @@ function clampPos(pos: MeadowPlayerPos): MeadowPlayerPos {
   };
 }
 
-function PixelBush({ x, y, scale = 1 }: { x: number; y: number; scale?: number }) {
-  return (
-    <g transform={`translate(${x} ${y}) scale(${scale})`} shapeRendering="crispEdges">
-      <rect x="-38" y="16" width="76" height="8" fill="#4f8a4f" opacity="0.3" />
-      <rect x="-30" y="-2" width="60" height="20" fill="#67b768" />
-      <rect x="-18" y="-14" width="38" height="14" fill="#79c978" />
-      <rect x="-24" y="-8" width="10" height="6" fill="#d9ffd2" />
-      <rect x="10" y="-4" width="8" height="5" fill="#d9ffd2" />
-    </g>
-  );
-}
-
-function FlowerPatch({ x, y, flip = false }: { x: number; y: number; flip?: boolean }) {
-  const flowers = [
-    [0, 0, '#ff8fb5'],
-    [22, 8, '#ffffff'],
-    [44, 0, '#ffb45e'],
-    [12, 18, '#ffffff'],
-    [34, 19, '#ff8fb5'],
-  ] as const;
-  return (
-    <g transform={`translate(${x} ${y}) scale(${flip ? -1 : 1} 1)`} shapeRendering="crispEdges">
-      {flowers.map(([fx, fy, color], i) => (
-        <g key={i} transform={`translate(${fx} ${fy})`}>
-          <rect x="-1" y="0" width="2" height="9" fill="#4f8a4f" />
-          <rect x="-5" y="-7" width="10" height="7" fill={color} />
-          <rect x="-2" y="-5" width="4" height="3" fill="#ffd94d" />
-        </g>
-      ))}
-    </g>
-  );
-}
-
 export function MeadowBackdrop() {
-  return (
-    <>
-      <img src={meadowUrl} alt="" className="meadow-original-bg" draggable={false} />
-      <svg className="meadow-game-backdrop" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid slice" aria-hidden>
-        {/* Stepping stone paths leading to the 3 buildings */}
-        <g fill="#e3dbcb" opacity="0.75" shapeRendering="crispEdges">
-          {/* Path to Study Café */}
-          <rect x="160" y="310" width="16" height="8" rx="2" />
-          <rect x="180" y="330" width="20" height="9" rx="2" />
-          <rect x="210" y="355" width="22" height="10" rx="2" />
-          <rect x="250" y="380" width="24" height="10" rx="2" />
-          <rect x="300" y="410" width="26" height="11" rx="2" />
-
-          {/* Path to Your Room (Center) */}
-          <rect x="490" y="270" width="20" height="9" rx="2" />
-          <rect x="485" y="300" width="24" height="10" rx="2" />
-          <rect x="495" y="335" width="22" height="10" rx="2" />
-          <rect x="488" y="370" width="26" height="11" rx="2" />
-          <rect x="492" y="410" width="26" height="11" rx="2" />
-
-          {/* Path to The Barn (Right) */}
-          <rect x="820" y="310" width="18" height="8" rx="2" />
-          <rect x="800" y="330" width="20" height="9" rx="2" />
-          <rect x="770" y="355" width="22" height="10" rx="2" />
-          <rect x="730" y="380" width="24" height="10" rx="2" />
-          <rect x="680" y="410" width="26" height="11" rx="2" />
-
-          {/* Center plaza crossroads */}
-          <rect x="460" y="435" width="80" height="14" rx="3" />
-        </g>
-
-        {/* Flanking decorative bushes & flowers */}
-        <PixelBush x={82} y={320} scale={0.75} />
-        <PixelBush x={924} y={320} scale={0.75} />
-        <PixelBush x={350} y={530} scale={0.78} />
-        <PixelBush x={650} y={530} scale={0.8} />
-
-        <FlowerPatch x={70} y={345} />
-        <FlowerPatch x={880} y={345} flip />
-        <FlowerPatch x={280} y={480} />
-        <FlowerPatch x={680} y={480} flip />
-
-        {/* Scattered soft pastel petals on grass */}
-        <g fill="#ffd1dc" opacity="0.75" shapeRendering="crispEdges">
-          <rect x="238" y="240" width="9" height="5" />
-          <rect x="692" y="250" width="10" height="5" />
-          <rect x="348" y="430" width="9" height="5" />
-          <rect x="646" y="440" width="10" height="5" />
-          <rect x="486" y="210" width="8" height="4" />
-        </g>
-      </svg>
-    </>
-  );
+  return <img src={meadowUrl} alt="" className="meadow-original-bg" draggable={false} />;
 }
 
 function PlayerAvatar({ name, facing, walking }: { name: string; facing: 'left' | 'right'; walking: boolean }) {
