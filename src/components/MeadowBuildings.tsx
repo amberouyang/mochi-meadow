@@ -126,86 +126,119 @@ export function MeadowBuildings({ playerPos, onEnterBuilding }: MeadowBuildingsP
           }
         }}
       >
-        <svg
-          viewBox="0 0 150 140"
-          className="meadow-building-svg"
-          shapeRendering="crispEdges"
-          aria-hidden
-        >
-          {/* Shadow */}
-          <ellipse cx="75" cy="130" rx="66" ry="8" fill="#426b3b" opacity="0.32" />
+        <div className="building-art-wrap room-art-wrap">
+          <svg
+            viewBox="0 0 150 140"
+            className="meadow-building-svg"
+            shapeRendering="crispEdges"
+            aria-hidden
+          >
+            <defs>
+              <linearGradient id="roomNightShade" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#060e1c" stopOpacity="0.78" />
+                <stop offset="28%" stopColor="#0a1420" stopOpacity="0.55" />
+                <stop offset="55%" stopColor="#0e1a28" stopOpacity="0.32" />
+                <stop offset="80%" stopColor="#122030" stopOpacity="0.12" />
+                <stop offset="100%" stopColor="#152430" stopOpacity="0.02" />
+              </linearGradient>
+              <clipPath id="roomBuildingClip">
+                <path d="M12 56 L75 10 L138 56 L123 52 L123 128 L24 128 L24 52 Z" />
+              </clipPath>
+            </defs>
 
-          {/* Cottage Walls (Pastel Lilac / Cream) */}
-          <rect x="24" y="52" width="102" height="76" fill="#fbf8f5" />
-          <rect x="24" y="52" width="102" height="3" fill="#e8ded1" />
-          <rect x="24" y="125" width="102" height="3" fill="#d9cbba" />
-          <rect x="24" y="52" width="3" height="76" fill="#e8ded1" />
-          <rect x="123" y="52" width="3" height="76" fill="#e8ded1" />
+            {/* Shadow */}
+            <ellipse cx="75" cy="130" rx="66" ry="8" fill="#426b3b" opacity="0.32" />
 
-          {/* Fantage Mint-Teal Roof */}
-          <polygon points="12,56 75,10 138,56" fill="#68b2a0" />
-          <polygon points="18,53 75,14 132,53" fill="#88c5b5" />
-          <polygon points="26,50 75,18 124,50" fill="#a0d8c9" />
+            {/* Cottage Walls (Pastel Lilac / Cream) */}
+            <rect x="24" y="52" width="102" height="76" fill="#fbf8f5" />
+            <rect x="24" y="52" width="102" height="3" fill="#e8ded1" />
+            <rect x="24" y="125" width="102" height="3" fill="#d9cbba" />
+            <rect x="24" y="52" width="3" height="76" fill="#e8ded1" />
+            <rect x="123" y="52" width="3" height="76" fill="#e8ded1" />
 
-          {/* Chimney */}
-          <rect x="100" y="16" width="14" height="24" fill="#d6a782" />
-          <rect x="98" y="14" width="18" height="4" fill="#eed5be" />
-          {/* Smoke puff */}
-          <ellipse cx="108" cy="8" rx="5" ry="4" fill="#ffffff" opacity="0.75" />
+            {/* Fantage Mint-Teal Roof */}
+            <polygon points="12,56 75,10 138,56" fill="#68b2a0" />
+            <polygon points="18,53 75,14 132,53" fill="#88c5b5" />
+            <polygon points="26,50 75,18 124,50" fill="#a0d8c9" />
 
-          {/* Moon Crescent Emblem (Fantage Signature) */}
-          <ellipse cx="75" cy="34" rx="8" ry="8" fill="#ffe082" />
-          <ellipse cx="78" cy="33" rx="7" ry="7" fill="#88c5b5" />
+            {/* Chimney */}
+            <rect x="100" y="16" width="14" height="24" fill="#d6a782" />
+            <rect x="98" y="14" width="18" height="4" fill="#eed5be" />
+            {/* Smoke puff */}
+            <ellipse cx="108" cy="8" rx="5" ry="4" fill="#ffffff" opacity="0.75" />
 
-          {/* Decorative Pastel Bunting Under Roof */}
-          <polygon points="30,56 36,56 33,63" fill="#ffb4a2" />
-          <polygon points="38,56 44,56 41,63" fill="#b5e2fa" />
-          <polygon points="46,56 52,56 49,63" fill="#ffeaa7" />
-          <polygon points="54,56 60,56 57,63" fill="#c7f9cc" />
-          <polygon points="90,56 96,56 93,63" fill="#c7f9cc" />
-          <polygon points="98,56 104,56 101,63" fill="#ffeaa7" />
-          <polygon points="106,56 112,56 109,63" fill="#b5e2fa" />
-          <polygon points="114,56 120,56 117,63" fill="#ffb4a2" />
+            {/* Moon Crescent Emblem (Fantage Signature) */}
+            <ellipse cx="75" cy="34" rx="8" ry="8" fill="#ffe082" />
+            <ellipse cx="78" cy="33" rx="7" ry="7" fill="#88c5b5" />
 
-          {/* Upstairs Window */}
-          <circle cx="75" cy="48" r="9" fill="#ffffff" />
-          <circle cx="75" cy="48" r="7" fill="#e2f3f5" />
-          <rect x="74" y="41" width="2" height="14" fill="#88c5b5" />
-          <rect x="68" y="47" width="14" height="2" fill="#88c5b5" />
+            {/* Decorative Pastel Bunting Under Roof */}
+            <polygon points="30,56 36,56 33,63" fill="#ffb4a2" />
+            <polygon points="38,56 44,56 41,63" fill="#b5e2fa" />
+            <polygon points="46,56 52,56 49,63" fill="#ffeaa7" />
+            <polygon points="54,56 60,56 57,63" fill="#c7f9cc" />
+            <polygon points="90,56 96,56 93,63" fill="#c7f9cc" />
+            <polygon points="98,56 104,56 101,63" fill="#ffeaa7" />
+            <polygon points="106,56 112,56 109,63" fill="#b5e2fa" />
+            <polygon points="114,56 120,56 117,63" fill="#ffb4a2" />
 
-          {/* Left Arched Window with Flowers */}
-          <rect x="34" y="70" width="26" height="28" rx="12" fill="#9fd8cb" />
-          <rect x="36" y="72" width="22" height="24" rx="10" fill="#e8f7f5" />
-          <rect x="46" y="72" width="2" height="24" fill="#9fd8cb" />
-          <rect x="36" y="84" width="22" height="2" fill="#9fd8cb" />
-          {/* Flower box */}
-          <rect x="32" y="98" width="30" height="6" fill="#eed7c5" />
-          <rect x="36" y="95" width="6" height="5" fill="#ffb4a2" />
-          <rect x="44" y="94" width="6" height="6" fill="#ffd166" />
-          <rect x="52" y="95" width="6" height="5" fill="#ffb4a2" />
+            {/* Upstairs Window */}
+            <circle cx="75" cy="48" r="9" fill="#ffffff" />
+            <circle cx="75" cy="48" r="7" fill="#e2f3f5" />
+            <rect x="74" y="41" width="2" height="14" fill="#88c5b5" />
+            <rect x="68" y="47" width="14" height="2" fill="#88c5b5" />
 
-          {/* Right Arched Window with Flowers */}
-          <rect x="90" y="70" width="26" height="28" rx="12" fill="#9fd8cb" />
-          <rect x="92" y="72" width="22" height="24" rx="10" fill="#e8f7f5" />
-          <rect x="102" y="72" width="2" height="24" fill="#9fd8cb" />
-          <rect x="92" y="84" width="22" height="2" fill="#9fd8cb" />
-          {/* Flower box */}
-          <rect x="88" y="98" width="30" height="6" fill="#eed7c5" />
-          <rect x="92" y="95" width="6" height="5" fill="#ffd166" />
-          <rect x="100" y="94" width="6" height="6" fill="#ffb4a2" />
-          <rect x="108" y="95" width="6" height="5" fill="#ffd166" />
+            {/* Left Arched Window with Flowers */}
+            <rect x="34" y="70" width="26" height="28" rx="12" fill="#9fd8cb" />
+            <rect x="36" y="72" width="22" height="24" rx="10" fill="#e8f7f5" />
+            <rect x="46" y="72" width="2" height="24" fill="#9fd8cb" />
+            <rect x="36" y="84" width="22" height="2" fill="#9fd8cb" />
+            {/* Flower box */}
+            <rect x="32" y="98" width="30" height="6" fill="#eed7c5" />
+            <rect x="36" y="95" width="6" height="5" fill="#ffb4a2" />
+            <rect x="44" y="94" width="6" height="6" fill="#ffd166" />
+            <rect x="52" y="95" width="6" height="5" fill="#ffb4a2" />
 
-          {/* Front Door */}
-          <rect x="62" y="80" width="26" height="46" rx="4" fill="#68b2a0" />
-          <rect x="64" y="82" width="22" height="44" rx="3" fill="#88c5b5" />
-          {/* Door window crescent */}
-          <ellipse cx="75" cy="94" rx="5" ry="5" fill="#fff4cf" />
-          <ellipse cx="77" cy="94" rx="4" ry="4" fill="#88c5b5" />
-          {/* Golden handle */}
-          <rect x="82" y="104" width="3" height="5" fill="#ffe082" />
-          {/* Stone step */}
-          <rect x="58" y="126" width="34" height="4" rx="2" fill="#d9cbba" />
-        </svg>
+            {/* Right Arched Window with Flowers */}
+            <rect x="90" y="70" width="26" height="28" rx="12" fill="#9fd8cb" />
+            <rect x="92" y="72" width="22" height="24" rx="10" fill="#e8f7f5" />
+            <rect x="102" y="72" width="2" height="24" fill="#9fd8cb" />
+            <rect x="92" y="84" width="22" height="2" fill="#9fd8cb" />
+            {/* Flower box */}
+            <rect x="88" y="98" width="30" height="6" fill="#eed7c5" />
+            <rect x="92" y="95" width="6" height="5" fill="#ffd166" />
+            <rect x="100" y="94" width="6" height="6" fill="#ffb4a2" />
+            <rect x="108" y="95" width="6" height="5" fill="#ffd166" />
+
+            {/* Front Door */}
+            <rect x="62" y="80" width="26" height="46" rx="4" fill="#68b2a0" />
+            <rect x="64" y="82" width="22" height="44" rx="3" fill="#88c5b5" />
+            {/* Door window crescent */}
+            <ellipse cx="75" cy="94" rx="5" ry="5" fill="#fff4cf" />
+            <ellipse cx="77" cy="94" rx="4" ry="4" fill="#88c5b5" />
+            {/* Golden handle */}
+            <rect x="82" y="104" width="3" height="5" fill="#ffe082" />
+            {/* Stone step */}
+            <rect x="58" y="126" width="34" height="4" rx="2" fill="#d9cbba" />
+
+            {/* Night: shade clipped to cottage + warm windows + door spill */}
+            <g className="building-night-fx" pointerEvents="none">
+              <rect
+                className="building-night-shade-fill"
+                x="12"
+                y="10"
+                width="126"
+                height="120"
+                fill="url(#roomNightShade)"
+                clipPath="url(#roomBuildingClip)"
+              />
+              <circle className="building-window-glow" cx="75" cy="48" r="11" fill="#ffe9a8" />
+              <ellipse className="building-window-glow" cx="47" cy="84" rx="14" ry="16" fill="#ffe4a0" />
+              <ellipse className="building-window-glow" cx="103" cy="84" rx="14" ry="16" fill="#ffe4a0" />
+              <ellipse className="building-door-glow" cx="75" cy="100" rx="10" ry="14" fill="#ffd978" />
+            </g>
+          </svg>
+          <span className="room-lamp-pool building-lamp-pool" aria-hidden />
+        </div>
 
         <div className="meadow-building-label">
           <span className="meadow-b-title">Your Room</span>
@@ -227,59 +260,91 @@ export function MeadowBuildings({ playerPos, onEnterBuilding }: MeadowBuildingsP
           }
         }}
       >
-        <svg
-          viewBox="0 0 140 130"
-          className="meadow-building-svg"
-          shapeRendering="crispEdges"
-          aria-hidden
-        >
-          {/* Shadow */}
-          <ellipse cx="70" cy="120" rx="58" ry="8" fill="#426b3b" opacity="0.32" />
+        <div className="building-art-wrap barn-art-wrap">
+          <svg
+            viewBox="0 0 140 130"
+            className="meadow-building-svg"
+            shapeRendering="crispEdges"
+            aria-hidden
+          >
+            <defs>
+              <linearGradient id="barnNightShade" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#060e1c" stopOpacity="0.78" />
+                <stop offset="28%" stopColor="#0a1420" stopOpacity="0.55" />
+                <stop offset="55%" stopColor="#0e1a28" stopOpacity="0.32" />
+                <stop offset="80%" stopColor="#122030" stopOpacity="0.12" />
+                <stop offset="100%" stopColor="#152430" stopOpacity="0.02" />
+              </linearGradient>
+              <clipPath id="barnBuildingClip">
+                <path d="M12 50 L40 24 L100 24 L128 50 L117 44 L117 118 L20 118 L20 44 Z" />
+              </clipPath>
+            </defs>
 
-          {/* Barn walls (Pastel Lavender-Rose) */}
-          <rect x="20" y="44" width="100" height="74" fill="#fcf6f9" />
-          <rect x="20" y="44" width="100" height="3" fill="#e9d3e0" />
-          <rect x="20" y="115" width="100" height="3" fill="#e9d3e0" />
-          <rect x="20" y="44" width="3" height="74" fill="#e9d3e0" />
-          <rect x="117" y="44" width="3" height="74" fill="#e9d3e0" />
+            {/* Shadow */}
+            <ellipse cx="70" cy="120" rx="58" ry="8" fill="#426b3b" opacity="0.32" />
 
-          {/* Barn Gambrel Roof (Pastel Rose) */}
-          <polygon points="12,50 40,24 100,24 128,50" fill="#e898ac" />
-          <polygon points="16,48 42,26 98,26 124,48" fill="#f2b5c4" />
-          <polygon points="22,46 44,30 96,30 118,46" fill="#ffd1dc" />
+            {/* Barn walls (Pastel Lavender-Rose) */}
+            <rect x="20" y="44" width="100" height="74" fill="#fcf6f9" />
+            <rect x="20" y="44" width="100" height="3" fill="#e9d3e0" />
+            <rect x="20" y="115" width="100" height="3" fill="#e9d3e0" />
+            <rect x="20" y="44" width="3" height="74" fill="#e9d3e0" />
+            <rect x="117" y="44" width="3" height="74" fill="#e9d3e0" />
 
-          {/* Weathervane (Egg / Bird) */}
-          <rect x="69" y="10" width="2" height="15" fill="#b07d8d" />
-          <ellipse cx="70" cy="9" rx="4" ry="5" fill="#ffeaa7" />
+            {/* Barn Gambrel Roof (Pastel Rose) */}
+            <polygon points="12,50 40,24 100,24 128,50" fill="#e898ac" />
+            <polygon points="16,48 42,26 98,26 124,48" fill="#f2b5c4" />
+            <polygon points="22,46 44,30 96,30 118,46" fill="#ffd1dc" />
 
-          {/* Hayloft Door / Window */}
-          <rect x="56" y="36" width="28" height="22" rx="4" fill="#8c5867" />
-          <rect x="58" y="38" width="24" height="20" rx="3" fill="#ffeaa7" />
-          {/* Hay sticking out */}
-          <rect x="60" y="54" width="20" height="6" fill="#f6d365" />
-          <rect x="62" y="58" width="5" height="4" fill="#f6d365" />
-          <rect x="72" y="58" width="6" height="3" fill="#f6d365" />
+            {/* Weathervane (Egg / Bird) */}
+            <rect x="69" y="10" width="2" height="15" fill="#b07d8d" />
+            <ellipse cx="70" cy="9" rx="4" ry="5" fill="#ffeaa7" />
 
-          {/* Barn Double Doors with X-Brace */}
-          <rect x="52" y="70" width="36" height="48" fill="#8c5867" />
-          <rect x="54" y="72" width="15" height="46" fill="#d88299" />
-          <rect x="71" y="72" width="15" height="46" fill="#d88299" />
-          {/* X braces */}
-          <line x1="55" y1="73" x2="68" y2="94" stroke="#ffffff" strokeWidth="2" opacity="0.65" />
-          <line x1="55" y1="94" x2="68" y2="73" stroke="#ffffff" strokeWidth="2" opacity="0.65" />
-          <line x1="72" y1="73" x2="85" y2="94" stroke="#ffffff" strokeWidth="2" opacity="0.65" />
-          <line x1="72" y1="94" x2="85" y2="73" stroke="#ffffff" strokeWidth="2" opacity="0.65" />
+            {/* Hayloft Door / Window */}
+            <rect x="56" y="36" width="28" height="22" rx="4" fill="#8c5867" />
+            <rect x="58" y="38" width="24" height="20" rx="3" fill="#ffeaa7" />
+            {/* Hay sticking out */}
+            <rect x="60" y="54" width="20" height="6" fill="#f6d365" />
+            <rect x="62" y="58" width="5" height="4" fill="#f6d365" />
+            <rect x="72" y="58" width="6" height="3" fill="#f6d365" />
 
-          {/* Hanging Lantern */}
-          <rect x="42" y="74" width="2" height="8" fill="#694d58" />
-          <rect x="39" y="82" width="8" height="10" rx="2" fill="#ffeaa7" />
-          <rect x="41" y="84" width="4" height="6" fill="#ffffff" />
+            {/* Barn Double Doors with X-Brace */}
+            <rect x="52" y="70" width="36" height="48" fill="#8c5867" />
+            <rect x="54" y="72" width="15" height="46" fill="#d88299" />
+            <rect x="71" y="72" width="15" height="46" fill="#d88299" />
+            {/* X braces */}
+            <line x1="55" y1="73" x2="68" y2="94" stroke="#ffffff" strokeWidth="2" opacity="0.65" />
+            <line x1="55" y1="94" x2="68" y2="73" stroke="#ffffff" strokeWidth="2" opacity="0.65" />
+            <line x1="72" y1="73" x2="85" y2="94" stroke="#ffffff" strokeWidth="2" opacity="0.65" />
+            <line x1="72" y1="94" x2="85" y2="73" stroke="#ffffff" strokeWidth="2" opacity="0.65" />
 
-          {/* Hay bale next to barn */}
-          <rect x="96" y="98" width="18" height="14" rx="3" fill="#f6d365" />
-          <rect x="98" y="102" width="14" height="2" fill="#e0b84c" />
-          <rect x="98" y="108" width="14" height="2" fill="#e0b84c" />
-        </svg>
+            {/* Hanging Lantern */}
+            <rect x="42" y="74" width="2" height="8" fill="#694d58" />
+            <rect x="39" y="82" width="8" height="10" rx="2" fill="#ffeaa7" />
+            <rect x="41" y="84" width="4" height="6" fill="#ffffff" />
+
+            {/* Hay bale next to barn */}
+            <rect x="96" y="98" width="18" height="14" rx="3" fill="#f6d365" />
+            <rect x="98" y="102" width="14" height="2" fill="#e0b84c" />
+            <rect x="98" y="108" width="14" height="2" fill="#e0b84c" />
+
+            {/* Night: shade clipped to barn + loft/lantern glow */}
+            <g className="building-night-fx" pointerEvents="none">
+              <rect
+                className="building-night-shade-fill"
+                x="12"
+                y="20"
+                width="116"
+                height="100"
+                fill="url(#barnNightShade)"
+                clipPath="url(#barnBuildingClip)"
+              />
+              <rect className="building-window-glow" x="56" y="36" width="28" height="22" rx="4" fill="#ffe9a8" />
+              <ellipse className="building-lantern-glow" cx="43" cy="88" rx="12" ry="14" fill="#ffd978" />
+              <ellipse className="building-door-glow" cx="70" cy="100" rx="16" ry="18" fill="#ffd070" />
+            </g>
+          </svg>
+          <span className="barn-lamp-pool building-lamp-pool" aria-hidden />
+        </div>
 
         <div className="meadow-building-label">
           <span className="meadow-b-title">The Barn</span>

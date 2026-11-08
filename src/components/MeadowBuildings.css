@@ -76,24 +76,77 @@
   z-index: 7;
 }
 
-/* Other buildings stay dusk-dim; café gets its own top→bottom shade */
-.main-view[data-lighting='night'] .room-spot,
-.main-view[data-lighting='night'] .nest-spot {
-  filter: brightness(0.68);
+.building-art-wrap {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+  overflow: visible;
 }
 
-.main-view[data-lighting='night'] .room-spot:hover,
-.main-view[data-lighting='night'] .nest-spot:hover {
-  filter: brightness(0.72) drop-shadow(0 8px 16px rgba(10, 20, 30, 0.35));
+/* SVG night layers (room + barn) — off by day */
+.building-night-fx {
+  opacity: 0;
+  transition: opacity 0.55s ease;
+}
+
+.main-view[data-lighting='night'] .building-night-fx {
+  opacity: 1;
+}
+
+.building-night-shade-fill {
+  mix-blend-mode: multiply;
+}
+
+.building-window-glow,
+.building-door-glow,
+.building-lantern-glow {
+  mix-blend-mode: screen;
+  opacity: 0.55;
+}
+
+.building-lantern-glow {
+  opacity: 0.7;
 }
 
 .cafe-night-shade,
 .cafe-lamp-beam,
-.cafe-lamp-pool {
+.cafe-lamp-pool,
+.building-lamp-pool {
   position: absolute;
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.55s ease;
+}
+
+/* Soft ground pools — room door / barn lantern */
+.building-lamp-pool {
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  filter: blur(3px);
+  z-index: 3;
+  transform: perspective(120px) rotateX(28deg);
+  transform-origin: center top;
+  background: radial-gradient(
+    ellipse 70% 55% at 50% 40%,
+    rgba(255, 232, 155, 0.7) 0%,
+    rgba(255, 200, 95, 0.36) 34%,
+    rgba(255, 165, 55, 0.1) 60%,
+    transparent 78%
+  );
+}
+
+.room-lamp-pool {
+  left: 28%;
+  bottom: 4%;
+  width: 44%;
+  height: 22%;
+}
+
+.barn-lamp-pool {
+  left: 18%;
+  bottom: 2%;
+  width: 52%;
+  height: 24%;
 }
 
 /*
@@ -187,15 +240,17 @@
 
 .main-view[data-lighting='night'] .cafe-night-shade,
 .main-view[data-lighting='night'] .cafe-lamp-beam,
-.main-view[data-lighting='night'] .cafe-lamp-pool {
+.main-view[data-lighting='night'] .cafe-lamp-pool,
+.main-view[data-lighting='night'] .building-lamp-pool {
   opacity: 1;
 }
 
-.main-view[data-lighting='night'] .cafe-lamp-pool {
-  animation: cafe-lamp-pool-pulse 3.2s ease-in-out infinite;
+.main-view[data-lighting='night'] .cafe-lamp-pool,
+.main-view[data-lighting='night'] .building-lamp-pool {
+  animation: building-lamp-pool-pulse 3.2s ease-in-out infinite;
 }
 
-@keyframes cafe-lamp-pool-pulse {
+@keyframes building-lamp-pool-pulse {
   0%,
   100% {
     opacity: 0.88;
