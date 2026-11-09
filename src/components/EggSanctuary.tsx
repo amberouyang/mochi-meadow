@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useStore } from '../store/useStore';
 import { MochiCloud } from './MochiCloud';
 import { InfoTip } from './InfoTip';
+import { PixelEgg, eggVariantFromId } from './PixelEgg';
 import strawNestArt from '../assets/nest/straw-nest.png';
 import './EggSanctuary.css';
 
@@ -157,19 +158,11 @@ export function EggSanctuary({ onBackToMeadow }: EggSanctuaryProps) {
             <div className="nest-scene-bed-inner">
               {isIncubating && incubatingEgg && (
                 <div className="nest-scene-egg-wrap">
-                  {incubatingEgg.artSrc ? (
-                    <img
-                      className="nest-scene-egg-art"
-                      src={incubatingEgg.artSrc}
-                      alt={incubatingEgg.name}
-                    />
-                  ) : (
-                    <div className="egg-outer nest-scene-egg">
-                      <div className="egg-inner">
-                        <span className="egg-face">・‿・</span>
-                      </div>
-                    </div>
-                  )}
+                  <PixelEgg
+                    className="nest-scene-egg-art nest-scene-pixel-egg"
+                    variant={eggVariantFromId(incubatingEgg.catalogId || incubatingEgg.name)}
+                    title={incubatingEgg.name}
+                  />
                   <div className="nest-scene-warm" aria-label={`Warmth ${pct} percent`}>
                     <span className="nest-scene-warm-label">Warmth {pct}%</span>
                     <div className="nest-scene-warm-bar">

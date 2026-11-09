@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useStore } from '../store/useStore';
 import { InfoTip } from './InfoTip';
-import { SkyIconEgg } from './SkyHudPixelIcons';
+import { PixelEgg, eggVariantFromId } from './PixelEgg';
 import './StorePanel.css';
 
 export function StorePanel() {
@@ -81,11 +81,7 @@ export function StorePanel() {
             title={egg.description}
           >
             <div className="store-egg-icon" aria-hidden>
-              {egg.artSrc ? (
-                <img className="store-egg-art" src={egg.artSrc} alt="" />
-              ) : (
-                <SkyIconEgg />
-              )}
+              <PixelEgg className="store-egg-art" variant={eggVariantFromId(egg.id)} />
             </div>
             <div className="store-egg-info">
               <span className="store-egg-name">{egg.name}</span>

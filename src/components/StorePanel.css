@@ -87,10 +87,11 @@
 
 .store-egg-art {
   width: 2.1rem;
-  height: 2.1rem;
+  height: auto;
   object-fit: contain;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
+  overflow: visible;
 }
 
 .store-egg-info {

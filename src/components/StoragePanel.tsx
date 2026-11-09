@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { useStore } from '../store/useStore';
 import { InfoTip } from './InfoTip';
-import { SkyIconEgg } from './SkyHudPixelIcons';
+import { PixelEgg, eggVariantFromId } from './PixelEgg';
 import './StoragePanel.css';
 
 export function StoragePanel() {
@@ -15,7 +15,6 @@ export function StoragePanel() {
   const items: Array<{
     id: string;
     icon: ReactNode;
-    artSrc?: string;
     name: string;
     detail: string;
   }> = [
@@ -33,8 +32,12 @@ export function StoragePanel() {
       ? [
           {
             id: 'incubating',
-            icon: <SkyIconEgg />,
-            artSrc: incubatingEgg.artSrc,
+            icon: (
+              <PixelEgg
+                className="storage-item-pixel-egg"
+                variant={eggVariantFromId(incubatingEgg.catalogId || incubatingEgg.name)}
+              />
+            ),
             name: incubatingEgg.name,
             detail: `Nest warmth ${Math.round((eggProgress / 1000) * 100)}%`,
           },
@@ -67,11 +70,7 @@ export function StoragePanel() {
         {items.map((item) => (
           <li key={item.id} className="storage-item">
             <span className="storage-item-icon" aria-hidden>
-              {item.artSrc ? (
-                <img className="storage-item-art" src={item.artSrc} alt="" />
-              ) : (
-                item.icon
-              )}
+              {item.icon}
             </span>
             <div className="storage-item-info">
               <span className="storage-item-name">{item.name}</span>

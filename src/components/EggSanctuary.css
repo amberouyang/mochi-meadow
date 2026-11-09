@@ -369,6 +369,13 @@
   animation: nest-egg-warm 2.4s ease-in-out infinite;
 }
 
+.nest-scene-pixel-egg {
+  width: min(72%, 7.25rem);
+  max-width: 7.25rem;
+  height: auto;
+  overflow: visible;
+}
+
 @keyframes nest-egg-warm {
   0%,
   100% {
