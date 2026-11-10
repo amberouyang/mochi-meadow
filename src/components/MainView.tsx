@@ -18,6 +18,7 @@ import { SettingsPanel } from './SettingsPanel';
 import {
   SkyIconCafe,
   SkyIconEgg,
+  SkyIconFriends,
   SkyIconGear,
   SkyIconMeadow,
   SkyIconNotebook,
@@ -98,6 +99,18 @@ export function MainView() {
       }
       setScreen('nest');
     }
+  };
+
+  const showComingSoon = (label: string) => {
+    setPanel('none');
+    setSoonToast(`${label} — coming soon!`);
+    if (soonTimeoutRef.current != null) {
+      window.clearTimeout(soonTimeoutRef.current);
+    }
+    soonTimeoutRef.current = window.setTimeout(() => {
+      soonTimeoutRef.current = null;
+      setSoonToast(null);
+    }, 2200);
   };
 
   useEffect(() => {
@@ -330,7 +343,7 @@ export function MainView() {
             </span>
           </div>
 
-          <div className="main-dock-group" aria-label="Notebook, shop, and settings">
+          <div className="main-dock-group" aria-label="Notebook, shop, friends, and settings">
             <button
               type="button"
               className={`main-dock-btn ${panel === 'notebook' ? 'is-active' : ''}`}
@@ -352,6 +365,17 @@ export function MainView() {
                 <SkyIconStore />
               </span>
               <span className="main-dock-label">Store</span>
+            </button>
+            <button
+              type="button"
+              className="main-dock-btn main-dock-btn--soon"
+              onClick={() => showComingSoon('Friends')}
+              title="Connect with friends online (coming soon)"
+            >
+              <span className="main-dock-icon">
+                <SkyIconFriends />
+              </span>
+              <span className="main-dock-label">Friends</span>
             </button>
             <button
               type="button"
