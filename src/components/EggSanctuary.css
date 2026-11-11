@@ -407,15 +407,6 @@
   width: max(120%, 5.5rem);
 }
 
-.nest-scene-warm-label {
-  font-size: clamp(0.58rem, 1.8vw, 0.72rem);
-  font-weight: 800;
-  color: #fff6dc;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-}
-
 .nest-scene-warm-bar {
   width: 100%;
   max-width: 8.5rem;

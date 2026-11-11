@@ -163,8 +163,7 @@ export function EggSanctuary({ onBackToMeadow }: EggSanctuaryProps) {
                     variant={eggVariantFromId(incubatingEgg.catalogId || incubatingEgg.name)}
                     title={incubatingEgg.name}
                   />
-                  <div className="nest-scene-warm" aria-label={`Warmth ${pct} percent`}>
-                    <span className="nest-scene-warm-label">Warmth {pct}%</span>
+                  <div className="nest-scene-warm" aria-label={`Incubation ${pct} percent`}>
                     <div className="nest-scene-warm-bar">
                       <div className="nest-scene-warm-fill" style={{ width: `${pct}%` }} />
                     </div>
