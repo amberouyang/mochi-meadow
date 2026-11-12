@@ -65,7 +65,7 @@ export function MeadowBuildings({ playerPos, onEnterBuilding }: MeadowBuildingsP
     for (const b of BUILDINGS) {
       const dist = Math.hypot(playerPos.x - b.doorX, playerPos.y - b.doorY);
       // When player walks to the doorway, step directly inside!
-      if (dist < 5.8) {
+      if (dist < 3.2) {
         cooldownRef.current = Date.now() + 1200;
         onEnterBuilding(b.id);
         break;
